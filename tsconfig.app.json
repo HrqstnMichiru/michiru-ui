@@ -1,0 +1,17 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "examples/**/*.ts", "examples/**/*.vue"],
+    "exclude": ["src/**/__tests__/*", "node_modules", "dist", "docs"],
+    "compilerOptions": {
+        "composite": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "declaration": true,// 允许生成声明文件
+        "emitDeclarationOnly": true, // 只生成声明文件
+        "noEmit": false, // 允许生成编译产物，包括声明文件和 JavaScript 文件
+        "paths": {
+            "@/*": ["./src/*"]
+        },// 路径别名配置
+        "outDir": "dist",// 输出目录
+        "noUncheckedIndexedAccess": false // 允许访问可能未定义的数组元素
+    }
+}

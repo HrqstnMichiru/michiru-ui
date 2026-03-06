@@ -1,0 +1,17 @@
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    z-index: 10;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: ripple-effect 0.25s forwards;
+}
+
+/* 波纹动画 */
+@keyframes ripple-effect {
+    to {
+        transform: translate(-50%, -50%) scale(var(--ripple-scale));
+        opacity: 0.5;
+    }
+}
