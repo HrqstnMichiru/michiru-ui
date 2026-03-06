@@ -19,6 +19,7 @@ export default defineConfig({
     // 库模式打包配置
     build: {
         outDir: path.resolve(__dirname, "dist"),
+        emptyOutDir: true,
         lib: {
             // 库的入口文件
             entry: path.resolve(__dirname, "src/index.ts"),

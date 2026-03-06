@@ -18,7 +18,7 @@
 
 ```bash
 # 1. 克隆项目
-git clone <repo-url>
+git clone https://github.com/HrqstnMichiru/michiru-ui.git
 cd michiru-ui
 
 # 2. 安装依赖
@@ -180,7 +180,7 @@ import "michiru-ui/style.css";
 然后运行：
 
 ```bash
-# 启动开发服务（默认端口 6750）
+# 启动开发服务（默认端口 6753）
 npm run dev
 ```
 
