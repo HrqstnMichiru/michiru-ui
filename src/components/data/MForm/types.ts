@@ -1,11 +1,12 @@
 import type { InjectionKey } from "vue";
 
 interface Required {
-    reuired: true;
+    required: true;
     message: string;
 }
 
 interface Length {
+    length?: number;
     minLength?: number;
     maxLength?: number;
     message: string;
@@ -50,6 +51,7 @@ export interface MFormItemProps {
     size?: "small" | "medium" | "large"; // 表单项尺寸
     block?: boolean; // 是否为块级元素
     required?: boolean; // 是否必填
+    errorMessage?: string; // 错误提示信息
     gap?: number; // 标签与内容的间距
     aligns?: "flex-start" | "center" | "flex-end"; // 水平模式下标签与内容的对齐方式
     space?: boolean; // 是否在标签与内容之间使用空间分隔
@@ -57,7 +59,7 @@ export interface MFormItemProps {
 
 export interface MFormInstance {
     validateFields: () => Promise<boolean>;
-    validateField: (prop: string) => void;
+    validateField: (prop: string) => Promise<boolean>;
     resetFields: () => void;
     resetField: (prop: string) => void;
 }

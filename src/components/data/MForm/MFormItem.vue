@@ -84,39 +84,38 @@ const _validate = async (): Promise<void> => {
     if (props.required) {
         if (Array.isArray(value)) {
             if (value.length === 0) {
-                throw new Error("该项不能为空");
+                throw new Error(props.errorMessage);
             }
         } else {
             if (value === "" || value === null || value === undefined) {
-                throw new Error("该项不能为空");
+                throw new Error(props.errorMessage);
             }
         }
     }
     for (const rule of rules) {
         if ("required" in rule && rule.required) {
-            if (Array.isArray(value)) {
-                if (value.length === 0) {
-                    throw new Error(rule.message);
-                }
-            } else {
-                if (value === "" || value === null || value === undefined) {
-                    throw new Error(rule.message);
-                }
+            if (Array.isArray(value) && value.length === 0) {
+                throw new Error(rule.message);
+            } else if (!!value) {
+                throw new Error(rule.message);
             }
-        } else if (("minLength" in rule || "maxLength" in rule) && (rule.minLength !== undefined || rule.maxLength !== undefined)) {
+        } else if ("minLength" in rule || "maxLength" in rule || "length" in rule) {
             const testValue = (value as string).trim();
-            if (rule.minLength !== undefined && testValue.length < rule.minLength) {
+            if (!!rule.length && testValue.length !== rule.length) {
                 throw new Error(rule.message);
             }
-            if (rule.maxLength !== undefined && testValue.length > rule.maxLength) {
+            if (!!rule.minLength && testValue.length < rule.minLength) {
                 throw new Error(rule.message);
             }
-        } else if (("min" in rule || "max" in rule) && (rule.min !== undefined || rule.max !== undefined)) {
+            if (!!rule.maxLength && testValue.length > rule.maxLength) {
+                throw new Error(rule.message);
+            }
+        } else if ("min" in rule || "max" in rule) {
             const testValue = value as number;
-            if (rule.min !== undefined && testValue < rule.min) {
+            if (!!rule.min && testValue < rule.min) {
                 throw new Error(rule.message);
             }
-            if (rule.max !== undefined && testValue > rule.max) {
+            if (!!rule.max && testValue > rule.max) {
                 throw new Error(rule.message);
             }
         } else if ("pattern" in rule) {

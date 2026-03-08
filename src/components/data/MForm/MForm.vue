@@ -32,9 +32,8 @@ const validateFields = async () => {
 };
 const validateField = async (prop: string) => {
     const validator = validatorMap.get(prop);
-    if (validator) {
-        validator();
-    }
+    const result = validator ? await validator() : true;
+    return result;
 };
 const resetFields = () => {
     resetHandlerMap.forEach(handler => {

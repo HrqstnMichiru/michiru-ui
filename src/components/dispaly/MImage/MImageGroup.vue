@@ -35,6 +35,7 @@ const previewImage = (index: number) => {
 provide<MImageGroupContext>(MImageGroupContextKey, {
     position: props.position,
     fit: props.fit,
+    lazy: props.lazy,
     urlFormat: props.urlFormat,
     register,
     previewImage

@@ -14,6 +14,7 @@ export interface MImageProps {
     previewDisabled?: boolean; // 是否禁用图片预览功能
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
+    lazy?: boolean; // 是否启用懒加载
     urlFormat?: (url: string) => string; // 图片地址的格式化函数
 }
 export interface MImageInstance {
@@ -30,9 +31,10 @@ export interface MImageGalleryProps {
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
     previewDisabled?: boolean; // 是否禁用图片预览功能
-    urlFormat?: (url: string) => string; // 图片地址的格式化函数
-    thumbnailFormat?: (url: string) => string; // 缩略图地址的格式化函数
     errorSize?: "small" | "medium" | "large" | number; // 错误文字的大小
+    lazy?: boolean; // 是否启用懒加载
+    urlFormat?: (url: string) => string; // 图片地址的格式化函数
+    thumbFormat?: (url: string) => string; // 缩略图地址的格式化函数
 }
 
 export interface MImageGroupProps {
@@ -40,6 +42,7 @@ export interface MImageGroupProps {
     fit?: "fill" | "contain" | "cover" | "scale-down" | "none"; // 图片组适应方式
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
+    lazy?: boolean; // 是否启用懒加载
     urlFormat?: (url: string) => string; // 图片地址的格式化函数
 }
 export interface MImageGroupInstance {
@@ -50,6 +53,7 @@ export interface MImageGroupContext {
     position?: "left" | "center" | "right" | "top" | "bottom"; // 图片组位置
     fit?: "fill" | "contain" | "cover" | "scale-down" | "none"; // 图片组适应方式
     urlFormat?: (url: string) => string; // 图片地址的格式化函数
+    lazy?: boolean; // 是否启用懒加载
     register(src: string): number; // 注册图片并返回索引
 }
 export const MImageGroupContextKey: InjectionKey<MImageGroupContext> = Symbol("MImageGroupContext");

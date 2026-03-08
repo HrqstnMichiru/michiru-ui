@@ -1,6 +1,6 @@
-﻿<template>
+<template>
     <div class="image-gallery">
-        <div class="image-list" :style="{ width: width + 40 + 'px', height: height + 'px' }">
+        <div class="image-list" :style="{ width: `${width + 40}px`, height: `${height}px` }">
             <MImage
                 v-for="(img, index) in list"
                 :class="[
@@ -12,14 +12,15 @@
                 ]"
                 :key="index"
                 :src="img"
+                square
                 :error-size="errorSize"
                 :url-format="urlFormat"
-                square
                 :fit="fit"
                 :position="position"
                 :width="width + 40"
                 :height="height"
                 preview-disabled
+                :lazy="lazy"
                 :style="getImageStyle(index)"
                 @click="onImageClick(index)"></MImage>
         </div>
@@ -27,12 +28,13 @@
             <MImage
                 :error-size="errorSize"
                 :src="img"
-                :url-format="thumbnailFormat"
+                :url-format="thumbFormat"
                 :width="width / 5"
                 :height="height / 5"
                 preview-disabled
                 v-for="(img, index) in list"
                 :key="index"
+                :lazy="lazy"
                 class="thumbnail-item"
                 :class="{ active: currentIndex === index }"
                 @click="onThumbnailClick(index)"></MImage>
@@ -148,7 +150,8 @@ const onThumbnailClick = (index: number) => {
 }
 
 /* ============================================================
-    1. PAGE 鏁堟灉锛堟枩绾挎挄寮€ + 缂╁皬鏄犲嚭锛?============================================================ */
+    1. PAGE
+  ============================================================ */
 .animate-enter-page {
     animation: page-scale-in 1.5s cubic-bezier(0.5, 1, 0.89, 1) forwards;
 }
@@ -177,8 +180,8 @@ const onThumbnailClick = (index: number) => {
 }
 
 /* ============================================================
-    2. ROTATE 鏁堟灉锛堟棆杞鍑猴級
-   ============================================================ */
+    2. ROTATE
+  ============================================================ */
 .animate-enter-rotate-forward,
 .animate-enter-rotate-backward {
     animation: rotate-in 0.8s ease forwards;
@@ -222,7 +225,7 @@ const onThumbnailClick = (index: number) => {
 }
 
 /* ============================================================
-    3. FADE 鏁堟灉锛堥粯璁ゆ贰鍏ユ贰鍑猴級
+    3. FADE
    ============================================================ */
 .animate-enter-fade {
     animation: fade-in 0.8s ease forwards;

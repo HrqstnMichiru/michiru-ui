@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div
         class="image"
         :style="{
@@ -7,7 +7,7 @@
             borderRadius: square ? '0px' : circle ? '50%' : rounded ? '500px' : '10px',
             border: showBorder ? '1px solid #dcdfe6' : 'none'
         }">
-        <div v-if="loading && !hasError" class="image__loading">
+        <div v-if="loading" class="image__loading">
             <MIcon name="hugeicons:image-03"></MIcon>
         </div>
         <div v-else-if="hasError" class="image__error">
@@ -21,9 +21,9 @@
             </span>
         </div>
         <img
+            :loading="customLazy ? 'lazy' : 'eager'"
             @click="handleImageClick"
-            v-if="src && !hasError"
-            v-show="!loading"
+            v-show="!loading && !hasError"
             :src="displaySrc"
             class="image__normal"
             @load="handleLoad"
@@ -59,6 +59,9 @@ const imageGroupContext = inject<MImageGroupContext | null>(MImageGroupContextKe
 if (imageGroupContext) {
     _index.value = imageGroupContext.register(props.src);
 }
+const customLazy = computed(() => {
+    return props.lazy || imageGroupContext?.lazy;
+});
 
 const imagePreviewRef = useTemplateRef<MImagePreviewInstance>("imagePreviewRef");
 const displaySrc = computed(() => {
@@ -82,8 +85,8 @@ const errorFontSize = computed(() => {
     return 14;
 });
 
-const hasError = ref<boolean>(false);
-const loading = ref<boolean>(true);
+const hasError = ref<boolean>(false); // 是否加载失败
+const loading = ref<boolean>(true); // 是否正在加载，初始为true，等待图片加载完成后设置为false
 
 watch(
     () => props.src,
