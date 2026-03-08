@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="table-wrapper" :class="[`table--${size}`]" ref="tableWrapperRef">
         <div class="table-header-wrapper">
             <table class="table-header" ref="headerRef">
@@ -205,24 +205,20 @@ watch(
     () => props.data,
     () => {
         selectedRows.clear();
-        nextTick(() => {
-            syncColumnWidths();
-        });
+        nextTick(syncColumnWidths);
     }
 );
 
 let resizeObserver: ResizeObserver | null = null;
-onMounted(async () => {
+onMounted(() => {
     if (tableWrapperRef.value) {
-        resizeObserver = new ResizeObserver(() => {
-            syncColumnWidths();
-        });
+        resizeObserver = new ResizeObserver(syncColumnWidths);
         resizeObserver.observe(tableWrapperRef.value);
     }
 });
 
 onBeforeUnmount(() => {
-    if (resizeObserver && tableWrapperRef.value) {
+    if (resizeObserver) {
         resizeObserver.disconnect();
         resizeObserver = null;
     }
