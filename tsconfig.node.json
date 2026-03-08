@@ -6,7 +6,7 @@
         "noEmit": true, // 不生成编译产物，仅进行类型检查
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
         "module": "ESNext", // 使用最新的模块标准
-        "moduleResolution": "Bundler",// 使用 Bundler 模块解析策略
-        "types": ["node"]// 包含 Node.js 类型定义
+        "moduleResolution": "Bundler", // 使用 Bundler 模块解析策略
+        "types": ["node"] // 包含 Node.js 类型定义
     }
 }

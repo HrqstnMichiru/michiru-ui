@@ -1,0 +1,305 @@
+﻿<template>
+    <label
+        class="m-radiobox"
+        :class="[
+            `m-radiobox--${size}`,
+            `m-radiobox--${variant}`,
+            `m-radiobox--${groupContext?.type}`,
+            {
+                'm-radiobox--disabled': disabled,
+                'm-radiobox--checked': isChecked
+            }
+        ]">
+        <input type="radio" class="m-radiobox__input" :checked="isChecked" :disabled="disabled" :value="value" @change="handleChange" />
+        <span class="m-radiobox__inner" v-if="groupContext?.type === 'box'"></span>
+        <span class="m-radiobox__label">{{ label }}</span>
+    </label>
+</template>
+
+<script lang="ts" setup>
+import { computed, inject } from "vue";
+import type { MRadioBoxGroupContext, MRadioBoxProps } from "./types";
+import { MRadioBoxGroupContextKey } from "./types";
+
+defineOptions({
+    name: "MRadioBox"
+});
+
+const props = defineProps<MRadioBoxProps>();
+const groupContext = inject<MRadioBoxGroupContext>(MRadioBoxGroupContextKey);
+const disabled = computed(() => {
+    return props.disabled || groupContext?.disabled || false;
+});
+const size = computed(() => {
+    return props.size || groupContext?.size || "medium";
+});
+const variant = computed(() => {
+    return props.variant || groupContext?.variant || "default";
+});
+const isChecked = computed(() => {
+    if (groupContext) {
+        return groupContext.isChecked(props.value!);
+    }
+    return true;
+});
+const handleChange = () => {
+    if (disabled.value) return;
+    if (groupContext) {
+        groupContext.toggleChecked(props.value!);
+    }
+};
+</script>
+
+<style lang="scss" scoped>
+.m-radiobox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    .m-radiobox__input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    // box类型样式
+    &.m-radiobox--box {
+        .m-radiobox__inner {
+            position: relative;
+            display: inline-block;
+            border-radius: 50%;
+            border: 1px solid #dcdfe6;
+            background: #ffffff;
+            // 使用内部圆点表示选中状态
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                border-radius: 50%;
+                background: #ffffff;
+                transition: all 0.2s ease;
+            }
+        }
+        .m-radiobox__label {
+            margin-left: 8px;
+            color: #61666d;
+        }
+
+        // 尺寸变体
+        &.m-radiobox--small {
+            .m-radiobox__inner {
+                width: 14px;
+                height: 14px;
+                &::after {
+                    width: 6px;
+                    height: 6px;
+                }
+            }
+            .m-radiobox__label {
+                font-size: 14px;
+            }
+        }
+        &.m-radiobox--medium {
+            .m-radiobox__inner {
+                width: 16px;
+                height: 16px;
+                &::after {
+                    width: 8px;
+                    height: 8px;
+                }
+            }
+            .m-radiobox__label {
+                font-size: 16px;
+            }
+        }
+        &.m-radiobox--large {
+            .m-radiobox__inner {
+                width: 18px;
+                height: 18px;
+                &::after {
+                    width: 10px;
+                    height: 10px;
+                }
+            }
+            .m-radiobox__label {
+                font-size: 18px;
+            }
+        }
+
+        // 选中状态
+        &.m-radiobox--checked .m-radiobox__inner::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        // 禁用状态
+        &.m-radiobox--disabled {
+            cursor: not-allowed;
+            .m-radiobox__inner {
+                background-color: #f5f7fa;
+                border-color: #e4e7ed;
+            }
+            .m-radiobox__label {
+                color: #c0c4cc;
+            }
+            &.m-radiobox--checked .m-radiobox__inner {
+                background-color: #f2f6fc;
+                border-color: #dcdfe6;
+                &::after {
+                    background-color: #c0c4cc;
+                }
+            }
+        }
+
+        // 颜色变体
+        &.m-radiobox--checked:not(.m-radiobox--disabled) {
+            &.m-radiobox--default .m-radiobox__inner {
+                background-color: #333;
+                border-color: #333;
+            }
+            &.m-radiobox--primary .m-radiobox__inner {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+            &.m-radiobox--success .m-radiobox__inner {
+                background-color: #28a745;
+                border-color: #28a745;
+            }
+            &.m-radiobox--warning .m-radiobox__inner {
+                background-color: #e6a23c;
+                border-color: #e6a23c;
+            }
+            &.m-radiobox--danger .m-radiobox__inner {
+                background-color: #dc3545;
+                border-color: #dc3545;
+            }
+            &.m-radiobox--info .m-radiobox__inner {
+                background-color: #36b5b5;
+                border-color: #36b5b5;
+            }
+            &.m-radiobox--purple .m-radiobox__inner {
+                background-color: #801eff;
+                border-color: #801eff;
+            }
+            &.m-radiobox--pink .m-radiobox__inner {
+                background-color: #ff69b4;
+                border-color: #ff69b4;
+            }
+            &.m-radiobox--gray .m-radiobox__inner {
+                background-color: #6b6b6b;
+                border-color: #6b6b6b;
+            }
+        }
+    }
+
+    // 按钮类型样式
+    &.m-radiobox--button {
+        border: 1px solid #dcdfe6;
+        background-color: #fff;
+        color: #61666d;
+        transition: all 0.3s var(--ease-in-out);
+        &:not(:first-child) {
+            margin-left: -1px;
+        }
+        &:first-child {
+            &.m-radiobox--small {
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+            }
+            &.m-radiobox--medium {
+                border-top-left-radius: 6px;
+                border-bottom-left-radius: 6px;
+            }
+            &.m-radiobox--large {
+                border-top-left-radius: 8px;
+                border-bottom-left-radius: 8px;
+            }
+        }
+        &:last-child {
+            &.m-radiobox--small {
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+            }
+            &.m-radiobox--medium {
+                border-top-right-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+            &.m-radiobox--large {
+                border-top-right-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
+        }
+
+        // 尺寸变体
+        &.m-radiobox--small {
+            height: 28px;
+            padding: 5.2px 9.2px;
+            font-size: 14px;
+            .m-radiobox__label {
+                line-height: 16px;
+            }
+        }
+        &.m-radiobox--medium {
+            height: 34px;
+            font-size: 16px;
+            padding: 7.2px 13.2px;
+            .m-radiobox__label {
+                line-height: 18px;
+            }
+        }
+        &.m-radiobox--large {
+            height: 40px;
+            padding: 9.2px 17.2px;
+            font-size: 18px;
+            .m-radiobox__label {
+                line-height: 20px;
+            }
+        }
+
+        // 选中状态
+        &.m-radiobox--checked {
+            color: #fff;
+        }
+
+        // 禁用状态
+        &.m-radiobox--disabled {
+            background-color: #f5f7fa;
+            border-color: #e4e7ed;
+            color: #c0c4cc;
+            cursor: not-allowed;
+        }
+
+        // 颜色变体 - 选中状态
+        &.m-radiobox--checked:not(.m-radiobox--disabled) {
+            &.m-radiobox--default {
+                background-color: #333;
+            }
+            &.m-radiobox--primary {
+                background-color: #007bff;
+            }
+            &.m-radiobox--success {
+                background-color: #28a745;
+            }
+            &.m-radiobox--warning {
+                background-color: #e6a23c;
+            }
+            &.m-radiobox--danger {
+                background-color: #dc3545;
+            }
+            &.m-radiobox--info {
+                background-color: #36b5b5;
+            }
+            &.m-radiobox--purple {
+                background-color: #801eff;
+            }
+            &.m-radiobox--pink {
+                background-color: #ff69b4;
+            }
+            &.m-radiobox--gray {
+                background-color: #6b6b6b;
+            }
+        }
+    }
+}
+</style>

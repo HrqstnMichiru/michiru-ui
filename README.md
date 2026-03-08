@@ -2,6 +2,8 @@
 
 > A Vue 3 UI Component Library — 基于 Vue 3 + TypeScript 的轻量级 UI 组件库
 
+这个项目起初仅作为个人博客的内部组件库而存在，并无意发展为一个正式的 UI 框架。随着博客功能的持续迭代，所需组件的数量与复杂度不断增加，最后形成了现在的规模。
+
 ## 环境要求
 
 | 工具       | 版本                      |
@@ -165,16 +167,25 @@ import "michiru-ui/style.css";
 
 若需在浏览器中查看组件效果，请先将 `examples` 文件加入编译范围：
 
-将 [tsconfig.app.json](tsconfig.app.json) 中的 `include` 字段修改为：
+将 [tsconfig.app.json](tsconfig.app.json) 修改为：
 
-```jsonc
-"include": [
-  "env.d.ts",
-  "src/**/*.ts",
-  "src/**/*.vue",
-  "examples/**/*.ts",
-  "examples/**/*.vue"
-]
+```json
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": ["env.d.ts", "src/**/*.ts", "src/**/*.vue", "examples/**/*.ts", "examples/**/*.vue"],
+    "exclude": ["src/**/__tests__/*", "node_modules", "dist", "docs"],
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "declaration": true, // 允许生成声明文件
+        "emitDeclarationOnly": true, // 只生成声明文件
+        "noEmit": false, // 允许生成编译产物，包括声明文件和 JavaScript 文件
+        "paths": {
+            "@/*": ["./src/*"]
+        }, // 路径别名配置
+        "outDir": "./dist", // 输出目录
+        "noUncheckedIndexedAccess": false // 允许访问可能未定义的数组元素
+    }
+}
 ```
 
 然后运行：

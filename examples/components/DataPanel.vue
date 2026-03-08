@@ -266,10 +266,10 @@
                 <h4 style="margin: 0 0 16px">基础用法</h4>
                 <div class="actions">
                     <MSelect v-model="selectValue1" placeholder="请选择一个选项">
-                        <MSelectOption label="选项一" :value="1"></MSelectOption>
-                        <MSelectOption label="选项二" :value="2"></MSelectOption>
-                        <MSelectOption label="选项三" :value="3"></MSelectOption>
-                        <MSelectOption label="选项四" :value="4"></MSelectOption>
+                        <MOption label="选项一" :value="1"></MOption>
+                        <MOption label="选项二" :value="2"></MOption>
+                        <MOption label="选项三" :value="3"></MOption>
+                        <MOption label="选项四" :value="4"></MOption>
                     </MSelect>
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前选中: {{ selectValue1 ?? "未选择" }}</p>
@@ -280,10 +280,10 @@
                 <h4 style="margin: 0 0 16px">可清空</h4>
                 <div class="actions">
                     <MSelect v-model="selectValue2" clearable placeholder="选择水果（可清空）">
-                        <MSelectOption label="苹果" value="apple" />
-                        <MSelectOption label="香蕉" value="banana" />
-                        <MSelectOption label="橙子" value="orange" />
-                        <MSelectOption label="葡萄" value="grape" />
+                        <MOption label="苹果" value="apple" />
+                        <MOption label="香蕉" value="banana" />
+                        <MOption label="橙子" value="orange" />
+                        <MOption label="葡萄" value="grape" />
                     </MSelect>
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前选中: {{ selectValue2 || "未选择" }}</p>
@@ -294,16 +294,16 @@
                 <h4 style="margin: 0 0 16px">不同尺寸</h4>
                 <div class="actions">
                     <MSelect v-model="selectValue3" size="small" placeholder="小尺寸">
-                        <MSelectOption label="选项A" value="a" />
-                        <MSelectOption label="选项B" value="b" />
+                        <MOption label="选项A" value="a" />
+                        <MOption label="选项B" value="b" />
                     </MSelect>
                     <MSelect v-model="selectValue3" size="medium" placeholder="中尺寸">
-                        <MSelectOption label="选项A" value="a" />
-                        <MSelectOption label="选项B" value="b" />
+                        <MOption label="选项A" value="a" />
+                        <MOption label="选项B" value="b" />
                     </MSelect>
                     <MSelect v-model="selectValue3" size="large" placeholder="大尺寸">
-                        <MSelectOption label="选项A" value="a" />
-                        <MSelectOption label="选项B" value="b" />
+                        <MOption label="选项A" value="a" />
+                        <MOption label="选项B" value="b" />
                     </MSelect>
                 </div>
             </div>
@@ -313,7 +313,7 @@
                 <h4 style="margin: 0 0 16px">禁用状态</h4>
                 <div class="actions">
                     <MSelect v-model="selectValue4" disabled placeholder="禁用的下拉框">
-                        <MSelectOption label="禁用状态项" value="disabled" />
+                        <MOption label="禁用状态项" value="disabled" />
                     </MSelect>
                 </div>
             </div>
@@ -323,11 +323,11 @@
                 <h4 style="margin: 0 0 16px">多选模式</h4>
                 <div class="actions">
                     <MSelect v-model="selectList1" multiple :width="350" placeholder="多选模式" clearable>
-                        <MSelectOption label="前端开发" value="frontend" />
-                        <MSelectOption label="后端开发" value="backend" />
-                        <MSelectOption label="移动开发" value="mobile" />
-                        <MSelectOption label="运维开发" value="devops" />
-                        <MSelectOption label="测试开发" value="testing" />
+                        <MOption label="前端开发" value="frontend" />
+                        <MOption label="后端开发" value="backend" />
+                        <MOption label="移动开发" value="mobile" />
+                        <MOption label="运维开发" value="devops" />
+                        <MOption label="测试开发" value="testing" />
                     </MSelect>
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选择: {{ selectList1.length ? selectList1.join(", ") : "未选择" }}</p>
@@ -338,11 +338,11 @@
                 <h4 style="margin: 0 0 16px">全选 + 多选</h4>
                 <div class="actions">
                     <MSelect v-model="selectList2" multiple has-select-all :width="350" placeholder="带全选的多选">
-                        <MSelectOption label="JavaScript" value="js" />
-                        <MSelectOption label="TypeScript" value="ts" />
-                        <MSelectOption label="Vue" value="vue" />
-                        <MSelectOption label="React" value="react" />
-                        <MSelectOption label="Angular" value="angular" />
+                        <MOption label="JavaScript" value="js" />
+                        <MOption label="TypeScript" value="ts" />
+                        <MOption label="Vue" value="vue" />
+                        <MOption label="React" value="react" />
+                        <MOption label="Angular" value="angular" />
                     </MSelect>
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选择: {{ selectList2.length ? selectList2.join(", ") : "未选择" }}</p>
@@ -353,10 +353,10 @@
                 <h4 style="margin: 0 0 16px">带前缀图标</h4>
                 <div class="actions">
                     <MSelect v-model="selectValue5" prefix-icon="mdi:magnify" placeholder="搜索文件类型">
-                        <MSelectOption label="文档" value="doc" />
-                        <MSelectOption label="图片" value="image" />
-                        <MSelectOption label="视频" value="video" />
-                        <MSelectOption label="音频" value="audio" />
+                        <MOption label="文档" value="doc" />
+                        <MOption label="图片" value="image" />
+                        <MOption label="视频" value="video" />
+                        <MOption label="音频" value="audio" />
                     </MSelect>
                 </div>
             </div>
@@ -365,9 +365,9 @@
             <div>
                 <h4 style="margin: 0 0 16px">块级布局</h4>
                 <MSelect v-model="selectValue6" block placeholder="块级下拉框，宽度100%">
-                    <MSelectOption label="选项一" value="1" />
-                    <MSelectOption label="选项二" value="2" />
-                    <MSelectOption label="选项三" value="3" />
+                    <MOption label="选项一" value="1" />
+                    <MOption label="选项二" value="2" />
+                    <MOption label="选项三" value="3" />
                 </MSelect>
             </div>
         </MCard>
@@ -446,7 +446,7 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">基础用法</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValue1" placeholder="请选择日期" />
+                    <MDatePicker v-model="dateValue1" placeholder="请选择日期" />
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选日期: {{ dateValue1 || "未选择" }}</p>
             </div>
@@ -455,7 +455,7 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">可清空</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValue2" clearable placeholder="选择日期（点击×清空）" />
+                    <MDatePicker v-model="dateValue2" clearable placeholder="选择日期（点击×清空）" />
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选日期: {{ dateValue2 || "未选择" }}</p>
             </div>
@@ -464,9 +464,9 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">不同尺寸</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValue3" size="small" placeholder="小尺寸" />
-                    <DatePicker v-model="dateValue3" size="medium" placeholder="中尺寸" />
-                    <DatePicker v-model="dateValue3" size="large" placeholder="大尺寸" />
+                    <MDatePicker v-model="dateValue3" size="small" placeholder="小尺寸" />
+                    <MDatePicker v-model="dateValue3" size="medium" placeholder="中尺寸" />
+                    <MDatePicker v-model="dateValue3" size="large" placeholder="大尺寸" />
                 </div>
             </div>
 
@@ -474,7 +474,7 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">禁用状态</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValue4" disabled placeholder="禁用的日期框" />
+                    <MDatePicker v-model="dateValue4" disabled placeholder="禁用的日期框" />
                 </div>
             </div>
 
@@ -482,7 +482,7 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">多选模式</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValues" multiple placeholder="可选择多个日期" :width="300" clearable />
+                    <MDatePicker v-model="dateValues" multiple placeholder="可选择多个日期" :width="300" clearable />
                 </div>
                 <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选日期: {{ dateValues.length ? dateValues.join(", ") : "未选择" }}</p>
             </div>
@@ -491,15 +491,15 @@
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">自定义格式</h4>
                 <div class="actions">
-                    <DatePicker v-model="dateValue5" format="YYYY/MM/DD" placeholder="YYYY/MM/DD 格式" />
-                    <DatePicker v-model="dateValue6" format="MM-DD-YYYY" placeholder="MM-DD-YYYY 格式" />
+                    <MDatePicker v-model="dateValue5" format="YYYY/MM/DD" placeholder="YYYY/MM/DD 格式" />
+                    <MDatePicker v-model="dateValue6" format="MM-DD-YYYY" placeholder="MM-DD-YYYY 格式" />
                 </div>
             </div>
 
             <!-- 块级布局 -->
             <div>
                 <h4 style="margin: 0 0 16px">块级布局</h4>
-                <DatePicker v-model="dateValue7" block placeholder="块级布局，宽度100%" />
+                <MDatePicker v-model="dateValue7" block placeholder="块级布局，宽度100%" />
             </div>
         </MCard>
         <!-- MTimeSelect -->
@@ -815,25 +815,137 @@
                 <MSegmented v-model="segValue1" :options="segOpts1" disabled />
             </div>
         </MCard>
+
+        <!-- MForm -->
+        <MCard title="MForm - 表单">
+            <p>基础表单，支持验证、重置、多种布局。</p>
+
+            <!-- 基础水平布局 -->
+            <p style="margin-top: 16px">基础水平布局</p>
+            <MForm :model="formBasic" :rules="formBasicRules" ref="formBasicRef" label-position="top">
+                <MFlex :gap="30" aligns="end">
+                    <MFormItem label="用户名" prop="username">
+                        <MInput v-model="formBasic.username" placeholder="请输入用户名" :width="200" />
+                    </MFormItem>
+                    <MFormItem label="密码" prop="password">
+                        <MInput v-model="formBasic.password" show-password placeholder="请输入密码" :width="200" />
+                    </MFormItem>
+                    <MFormItem label="邮箱" prop="email">
+                        <MInput v-model="formBasic.email" placeholder="请输入邮箱" :width="200" />
+                    </MFormItem>
+                    <MFlex :gap="10">
+                        <MButton variant="primary" @click="handleFormBasicSubmit">提交</MButton>
+                        <MButton variant="default" @click="handleFormBasicReset">重置</MButton>
+                    </MFlex>
+                </MFlex>
+            </MForm>
+            <p style="margin: 15px 0 0; color: #909399; font-size: 14px">提交结果: {{ formBasicResult }}</p>
+
+            <!-- 垂直布局 -->
+            <p style="margin-top: 24px">垂直布局</p>
+            <MForm :model="formVertical" :rules="formVerticalRules" ref="formVerticalRef" :label-width="60">
+                <MFlex vertical :gap="15">
+                    <MFormItem label="昵称" prop="nickname" block>
+                        <MInput v-model="formVertical.nickname" placeholder="请输入昵称" />
+                    </MFormItem>
+                    <MFormItem label="年龄" prop="age" block>
+                        <MNumberInput v-model="formVertical.age" :min="1" :max="120" />
+                    </MFormItem>
+                    <MFormItem label="个人简介" prop="bio" block required>
+                        <MInput v-model="formVertical.bio" placeholder="请输入个人简介（10-200字）" />
+                    </MFormItem>
+                    <MFlex :gap="8" justify="center">
+                        <MButton variant="primary" @click="handleFormVerticalSubmit">提交</MButton>
+                        <MButton variant="default" @click="handleFormVerticalReset">重置</MButton>
+                    </MFlex>
+                </MFlex>
+            </MForm>
+            <p style="margin: 8px 0 0; color: #909399; font-size: 14px">提交结果: {{ formVerticalResult }}</p>
+
+            <!-- 不同尺寸 -->
+            <p style="margin-top: 24px">表单尺寸</p>
+            <MFlex vertical :gap="24" aligns="start">
+                <MFlex vertical :gap="8" aligns="start">
+                    <p style="margin: 0; font-size: 13px; color: #606266">Small</p>
+                    <MForm :model="formSize" size="small">
+                        <MFlex vertical :gap="4" style="width: 500px">
+                            <MFormItem label="姓名" prop="name" space>
+                                <MInput v-model="formSize.name" placeholder="请输入" />
+                            </MFormItem>
+                            <MFormItem label="备注" prop="remark">
+                                <MInput v-model="formSize.remark" placeholder="请输入" />
+                            </MFormItem>
+                        </MFlex>
+                    </MForm>
+                </MFlex>
+                <MFlex vertical :gap="8" aligns="start">
+                    <p style="margin: 0; font-size: 13px; color: #606266">Medium（默认）</p>
+                    <MForm :model="formSize" size="medium">
+                        <MFlex vertical :gap="4">
+                            <MFormItem label="姓名" prop="name">
+                                <MInput v-model="formSize.name" placeholder="请输入" />
+                            </MFormItem>
+                            <MFormItem label="备注" prop="remark">
+                                <MInput v-model="formSize.remark" placeholder="请输入" />
+                            </MFormItem>
+                        </MFlex>
+                    </MForm>
+                </MFlex>
+                <MFlex vertical :gap="8" aligns="start">
+                    <p style="margin: 0; font-size: 13px; color: #606266">Large</p>
+                    <MForm :model="formSize" size="large">
+                        <MFlex vertical :gap="4">
+                            <MFormItem label="姓名" prop="name">
+                                <MInput v-model="formSize.name" placeholder="请输入" />
+                            </MFormItem>
+                            <MFormItem label="备注" prop="remark">
+                                <MInput v-model="formSize.remark" placeholder="请输入" />
+                            </MFormItem>
+                        </MFlex>
+                    </MForm>
+                </MFlex>
+            </MFlex>
+
+            <!-- 自定义验证 -->
+            <p style="margin-top: 24px">自定义验证器</p>
+            <MForm :model="formCustom" :rules="formCustomRules" ref="formCustomRef" :label-width="60">
+                <MFlex vertical :gap="20">
+                    <MFormItem label="手机号" prop="phone">
+                        <MInput v-model="formCustom.phone" placeholder="请输入11位手机号" />
+                    </MFormItem>
+                    <MFormItem label="确认密码" prop="confirmPwd">
+                        <MInput v-model="formCustom.confirmPwd" show-password placeholder="请再次输入密码" />
+                    </MFormItem>
+                    <MFormItem>
+                        <MButton variant="primary" @click="handleFormCustomSubmit">验证</MButton>
+                    </MFormItem>
+                </MFlex>
+            </MForm>
+        </MCard>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { MCheckBoxGroupInstance } from "@/components";
+import type { MCheckBoxGroupInstance, MFormInstance } from "@/components";
 import {
     MButton,
     MCard,
     MCheckBox,
     MCheckBoxGroup,
+    MDatePicker,
+    MFlex,
+    MForm,
+    MFormItem,
+    MInput,
     MInputTag,
     MNumberInput,
+    MOption,
     MProgress,
     MRadioBox,
     MRadioBoxGroup,
     MRating,
     MSegmented,
     MSelect,
-    MSelectOption,
     MSwitch,
     MTimeSelect,
     MTreeSelect,
@@ -841,7 +953,6 @@ import {
     MVirtualSelect
 } from "@/components";
 import { ref, useTemplateRef } from "vue";
-
 // 多选框状态变量
 const checkboxGroup9 = useTemplateRef<MCheckBoxGroupInstance>("checkboxGroup9");
 const checkboxValues1 = ref<Array<string | number>>(["apple"]);
@@ -999,6 +1110,79 @@ const switchValue5 = ref(0);
 const switchValue6 = ref(0);
 const switchValue7 = ref(0);
 const switchValue8 = ref(0);
+
+// MForm - 基础水平表单
+const formBasicRef = useTemplateRef<MFormInstance>("formBasicRef");
+const formBasic = ref({ username: "", password: "", email: "" });
+const formBasicRules = {
+    username: [
+        { required: true, message: "用户名不能为空" },
+        { minLength: 3, maxLength: 20, message: "用户名长度为 3~20 个字符" }
+    ],
+    password: [
+        { required: true, message: "密码不能为空" },
+        { minLength: 6, message: "密码至少 6 个字符" }
+    ],
+    email: [{ pattern: /^[\w.-]+@[\w.-]+\.[a-z]{2,}$/i, message: "请输入有效的邮箱地址" }]
+};
+const formBasicResult = ref("");
+const handleFormBasicSubmit = async () => {
+    const ok = await formBasicRef.value?.validateFields();
+    formBasicResult.value = ok ? `提交成功：${JSON.stringify(formBasic.value)}` : "验证失败，请检查表单";
+};
+const handleFormBasicReset = () => {
+    formBasicRef.value?.resetFields();
+    formBasic.value = { username: "", password: "", email: "" };
+    formBasicResult.value = "";
+};
+
+// MForm - 垂直布局表单
+const formVerticalRef = useTemplateRef<MFormInstance>("formVerticalRef");
+const formVertical = ref({ nickname: "", age: 18, bio: "" });
+const formVerticalRules = {
+    nickname: [{ required: true, message: "昵称不能为空" }],
+    age: [
+        { required: true, message: "年龄不能为空" },
+        { min: 1, max: 120, message: "年龄须在 1~120 之间" }
+    ],
+    bio: [{ minLength: 10, maxLength: 200, message: "简介长度为 10~200 个字符" }]
+};
+const formVerticalResult = ref("");
+const handleFormVerticalSubmit = async () => {
+    const ok = await formVerticalRef.value?.validateFields();
+    formVerticalResult.value = ok ? `提交成功：${JSON.stringify(formVertical.value)}` : "验证失败，请检查表单";
+};
+const handleFormVerticalReset = () => {
+    formVerticalRef.value?.resetFields();
+    formVerticalResult.value = "";
+};
+
+// MForm - 尺寸演示
+const formSize = ref({ name: "", remark: "" });
+
+// MForm - 自定义验证
+const formCustomRef = useTemplateRef<MFormInstance>("formCustomRef");
+const formCustomPwd = ref("Abc123");
+const formCustom = ref({ phone: "", confirmPwd: "" });
+const formCustomRules = {
+    phone: [
+        { required: true, message: "手机号不能为空" },
+        {
+            validator: async () => /^1[3-9]\d{9}$/.test(formCustom.value.phone),
+            message: "请输入正确的 11 位手机号"
+        }
+    ],
+    confirmPwd: [
+        { required: true, message: "确认密码不能为空" },
+        {
+            validator: async () => formCustom.value.confirmPwd === formCustomPwd.value,
+            message: "两次密码输入不一致"
+        }
+    ]
+};
+const handleFormCustomSubmit = async () => {
+    await formCustomRef.value?.validateFields();
+};
 
 // MSegmented
 const segValue1 = ref<string | number>("day");
