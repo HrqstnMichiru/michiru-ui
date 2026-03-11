@@ -21,7 +21,7 @@ defineOptions({
 const props = withDefaults(defineProps<MDividerProps>(), {
     dashed: false,
     thickness: 1,
-    color: "#rgba(0, 0, 0, 0.12)",
+    color: "rgb(170, 170, 177)",
     margin: 0,
     vertical: false
 });

@@ -233,7 +233,6 @@ defineExpose<MDrawerInstance>({
 
 .drawer-wrapper {
     background-color: #fff;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     border: 1px solid #d1d9e6;
@@ -245,6 +244,7 @@ defineExpose<MDrawerInstance>({
         left: 0;
         height: 100vh;
         min-width: 300px;
+        box-shadow: 6px 0px 12px rgba(0, 0, 0, 0.15);
     }
 
     &.drawer-wrapper--right {
@@ -252,6 +252,7 @@ defineExpose<MDrawerInstance>({
         right: 0;
         height: 100vh;
         min-width: 300px;
+        box-shadow: -6px 0px 12px rgba(0, 0, 0, 0.15);
     }
 
     &.drawer-wrapper--top {
@@ -261,6 +262,7 @@ defineExpose<MDrawerInstance>({
         transform: translate(-50%, 0);
         min-width: 600px;
         border-radius: 0 0 16px 16px;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     &.drawer-wrapper--bottom {
@@ -270,6 +272,7 @@ defineExpose<MDrawerInstance>({
         transform: translate(-50%, 0);
         min-width: 600px;
         border-radius: 16px 16px 0 0;
+        box-shadow: 0px -6px 12px rgba(0, 0, 0, 0.15);
     }
 }
 

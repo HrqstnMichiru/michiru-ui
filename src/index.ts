@@ -1,5 +1,9 @@
 import type { App, Plugin } from "vue";
 
+// 导入样式
+import "./assets/style/base.css";
+import "./assets/style/ripple.css";
+
 // 导入所有组件和指令
 import * as components from "./components";
 import loading from "./directives/loading";

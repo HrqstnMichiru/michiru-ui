@@ -1,6 +1,6 @@
 import type { InjectionKey } from "vue";
 
-type MRadioBoxVariant = "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray" | "default";
+type MRadioBoxVariant = "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray";
 type MRadioBoxSize = "small" | "medium" | "large";
 
 export interface MRadioBoxProps {

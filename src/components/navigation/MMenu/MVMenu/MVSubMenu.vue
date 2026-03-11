@@ -62,7 +62,7 @@ const menuStyle = computed(() => {
 });
 const labelStyle = computed(() => {
     if (!isCollapsed.value) return {};
-    return { marginLeft: !context ? "12px" : "6px" };
+    return { marginLeft: !context ? "12px" : "6px", color: isActive.value ? "#801eff" : "#666" };
 });
 const menuClasses = computed(() => {
     if (isCollapsed.value) {
@@ -72,11 +72,13 @@ const menuClasses = computed(() => {
         };
     }
     return {
-        "sub-menu--disabled": props.disabled
+        "sub-menu--disabled": props.disabled,
+        "sub-menu--expanded": isExpanded.value
     };
 });
 
-const stateList = shallowReactive<Array<{ active: boolean; name: string | number }>>([]); provide<MVSubMenuContext>(MVSubMenuContextKey, {
+const stateList = shallowReactive<Array<{ active: boolean; name: string | number }>>([]);
+provide<MVSubMenuContext>(MVSubMenuContextKey, {
     level: context ? context.level || 0 + 1 : 0,
     parentName: props.name,
     registerState: state => stateList.push(state),
@@ -184,7 +186,7 @@ onMounted(() => {
             margin-left: 30px;
             display: inline-flex;
             align-items: center;
-            transition: transform 0.2s ease;
+            transition: transform var(--menu-speed) ease;
         }
         &:hover {
             background-color: rgba(0, 0, 0, 0.1);
@@ -207,6 +209,11 @@ onMounted(() => {
             }
             &:hover {
                 background-color: transparent;
+            }
+        }
+        &.sub-menu--expanded {
+            .right {
+                transform: rotate(90deg);
             }
         }
     }

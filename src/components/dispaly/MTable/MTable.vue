@@ -1,403 +1,575 @@
 <template>
-    <div class="table-wrapper" :class="[`table--${size}`]" ref="tableWrapperRef">
-        <div class="table-header-wrapper">
-            <table class="table-header" ref="headerRef">
-                <thead>
-                    <tr class="table-header-row">
-                        <th v-if="selectable" style="text-align: center; width: 30px" class="table-header-check">
-                            <CheckBox color="rgba(192, 162, 109, 1)" @click.stop :size="size" @update:model-value="toggleAll" :model-value="checkAll"></CheckBox>
-                        </th>
-                        <th v-if="showRowKey" class="table-header-cell" style="text-align: center; width: 80px">{{ rowKey }}</th>
-                        <th v-for="col in filteredColumns" :key="col.prop" :style="{ textAlign: col.align || 'center' }" class="table-header-cell">
-                            {{ col.label }}
-                        </th>
-                    </tr>
-                </thead>
-            </table>
+    <div
+        class="table-wrapper"
+        :class="{
+            [`table--${props.size}`]: true,
+            'table--bordered': props.bordered
+        }">
+        <div class="table-column-register">
+            <slot></slot>
         </div>
-        <MScrollBar :height="height" thumb-color="rgba(192, 162, 109, 0.3)" v-loading="loading">
-            <div class="table-body-wrapper" v-if="data && data.length > 0">
-                <table
-                    class="table-body"
-                    :class="{
-                        'table-body--striped': striped
-                    }"
-                    ref="bodyRef">
-                    <tbody>
-                        <tr v-for="(row, index) in data" :key="getKey(row)" class="table-body-row" :class="{ 'table-body-row--hoverable': hoverable }" @click="handleRowClick(row)">
-                            <td v-if="selectable" style="text-align: center; width: 30px" class="table-body-check">
-                                <CheckBox color="rgba(192, 162, 109, 1)" @click.stop :size="size" :model-value="isSelected(row)" @update:model-value="() => toggleRow(row)"></CheckBox>
-                            </td>
-                            <td v-if="showRowKey" class="table-body-cell" style="text-align: center; font-weight: 500; width: 80px">
-                                {{ row[rowKey] }}
-                            </td>
-                            <td v-for="col in filteredColumns" :key="col.prop" class="table-body-cell" :style="{ width: col.width + 'px', textAlign: col.align || 'center' }">
-                                <template v-if="col.scopedSlot">
-                                    <div
-                                        class="table-body-cell--scoped"
-                                        :style="{
-                                            justifyContent: alignToFlex(col.align),
-                                            flexWrap: col.wrap ? 'wrap' : 'nowrap',
-                                            gap: col.gap ? `${col.gap}px` : '0px'
-                                        }">
-                                        <slot :name="col.scopedSlot" :row="row" :index="index"></slot>
-                                    </div>
+
+        <div ref="headerScrollbarRef" class="table-header-scrollbar">
+            <div class="table-content">
+                <div class="table-header-wrapper">
+                    <div class="table-header-row table-grid-row" :style="headerGridStyle">
+                        <div v-for="column in renderColumns" :key="column.key" class="table-header-cell" :class="getCellClass(column, true)" :style="getCellStyle(column, true)">
+                            <template v-if="column.type === 'selection'">
+                                <MCheckBox @click.stop :size="size" :model-value="checkAll" @update:model-value="toggleAll"></MCheckBox>
+                            </template>
+                            <template v-else-if="column.type === 'index'">
+                                {{ column.label || "#" }}
+                            </template>
+                            <template v-else>
+                                <RenderSlot v-if="getColumnSlot(column, 'header')" :render="getColumnSlot(column, 'header')" :scope="{ column }"></RenderSlot>
+                                <template v-else>
+                                    {{ column.label }}
                                 </template>
-                                <template v-else-if="col.prop">
-                                    <template v-if="col.clamp">
-                                        <p class="table-body-cell--clamped" :style="{ '-webkit-line-clamp': col.clamp, 'line-clamp': col.clamp }">
-                                            {{ row[col.prop] }}
-                                        </p>
-                                    </template>
-                                    <template v-else>
-                                        {{ row[col.prop] }}
-                                    </template>
-                                </template>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </template>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <MEmpty description="暂无数据" v-else></MEmpty>
-        </MScrollBar>
-        <div class="pagination" v-if="showPagination && totalCount > 0">
-            <MPagination
-                :total-count="totalCount"
-                page-size-select-position="top"
-                :page-button-count="5"
-                :page-size-options="pageSizeOptions"
-                :default-page-size="defaultPageSize"
-                show-page-size-change
-                show-total
-                @page-change="handlePageChange"
-                @page-size-change="handlePageSizeChange"
-                size="small" />
         </div>
+
+        <div
+            v-if="data.length > 0"
+            ref="bodyScrollbarRef"
+            class="table-body-scrollbar"
+            :style="{
+                height: `${height}px`,
+                maxHeight: `${maxHeight}px`
+            }"
+            v-loading="loading">
+            <div class="table-content">
+                <div class="table-body">
+                    <div
+                        v-for="(row, rowIndex) in data"
+                        :key="getRowKey(row)"
+                        class="table-body-row table-grid-row"
+                        :class="{ 'table-body-row--hoverable': hoverable, 'table-body-row--striped': striped && rowIndex % 2 === 1 }"
+                        :style="bodyGridStyle"
+                        @click="handleRowClick(row)">
+                        <div v-for="column in renderColumns" :key="column.key" class="table-body-cell" :class="getCellClass(column, false)" :style="getCellStyle(column, false)">
+                            <template v-if="column.type === 'selection'">
+                                <MCheckBox @click.stop :size="size" :model-value="isSelected(row)" @update:model-value="() => toggleRow(row)"></MCheckBox>
+                            </template>
+                            <template v-else-if="column.type === 'index'">
+                                {{ rowIndex + 1 }}
+                            </template>
+                            <template v-else-if="getColumnSlot(column, 'default')">
+                                <div class="table-body-cell--scoped" :style="{ justifyContent: alignMap[column.aligns || 'center'] }">
+                                    <RenderSlot :render="getColumnSlot(column, 'default')" :scope="{ row, index: rowIndex, column }"></RenderSlot>
+                                </div>
+                            </template>
+                            <template v-else-if="column.prop">
+                                <span class="table-body-cell__value">{{ row[column.prop] }}</span>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <MEmpty
+            v-else
+            description="暂无数据"
+            :style="{
+                height: `${height}px`,
+                maxHeight: `${maxHeight}px`
+            }"></MEmpty>
     </div>
 </template>
 
 <script lang="ts" setup generic="T extends Record<string, any>">
-import { MEmpty, MPagination, MScrollBar } from "@/components";
+import { MCheckBox, MEmpty } from "@/components";
 import vLoading from "@/directives/loading";
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowReactive, useTemplateRef, watch } from "vue";
-import type { MTableEmits, MTableInstance, MTableProps } from "./types";
+import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, shallowReactive, useTemplateRef, watch, type CSSProperties, type PropType } from "vue";
+import type { MRenderColumn, MResolvedColumn, MTableEmits, MTableFixed, MTableInstance, MTableProps } from "./types";
+import { MTableContextKey } from "./types";
+
+const DEFAULT_FIXED_COLUMN_WIDTH = "160px";
+const SELECTION_COLUMN_WIDTH = "44px";
+const INDEX_COLUMN_WIDTH = "72px";
+const NATIVE_SCROLLBAR_COMPENSATION = 6;
 
 defineOptions({
     name: "MTable"
 });
 
 const props = withDefaults(defineProps<MTableProps<T>>(), {
-    size: "medium",
-    showPagination: true,
-    totalCount: 0,
-    extHeight: 0,
-    defaultPageSize: 15,
-    pageSizeOptions: () => [15, 30, 50, 100]
+    size: "medium"
 });
 const emits = defineEmits<MTableEmits<T>>();
 
-const headerRef = useTemplateRef<HTMLTableElement>("headerRef");
-const bodyRef = useTemplateRef<HTMLTableElement>("bodyRef");
-const tableWrapperRef = useTemplateRef<HTMLDivElement>("tableWrapperRef");
+const headerScrollbarRef = useTemplateRef<HTMLDivElement>("headerScrollbarRef");
+const bodyScrollbarRef = useTemplateRef<HTMLDivElement>("bodyScrollbarRef");
+const loading = ref(false);
+const slotColumns = reactive<MResolvedColumn[]>([]);
+const selectedRows = shallowReactive<Map<keyof T, T>>(new Map());
+const hasVerticalScrollbar = ref(false);
+const showLeftShadow = ref(false);
+const showRightShadow = ref(false);
 
-const loading = ref<boolean>(false);
-const pageNo = ref<number>(1);
-const pageSize = ref<number>(15);
+let isSyncingScroll = false;
+let bodyResizeObserver: ResizeObserver | null = null;
 
-const height = computed(() => {
-    return window.innerHeight - props.extHeight - 40 - 20 - 10 - 41.8;
+const RenderSlot = defineComponent({
+    name: "MTableRenderSlot",
+    props: {
+        render: Function as PropType<((scope: Record<string, any>) => unknown) | undefined>,
+        scope: {
+            type: Object as PropType<Record<string, any>>,
+            default: () => ({})
+        }
+    },
+    setup(renderProps) {
+        return () => renderProps.render?.(renderProps.scope) ?? null;
+    }
 });
+
 const alignMap = {
     left: "flex-start",
     center: "center",
     right: "flex-end"
 };
-const alignToFlex = (align: "left" | "center" | "right" = "center") => {
-    return alignMap[align];
+const resolveFixedSide = (fixed?: MTableFixed): "left" | "right" | undefined => {
+    if (fixed === true) return "left";
+    if (fixed === "left" || fixed === "right") return fixed;
+    return undefined;
+};
+const mergeCssLengths = (lengths: string[]) => {
+    if (lengths.length === 0) return "0px";
+    if (lengths.length === 1) return lengths[0]!;
+    return `calc(${lengths.join(" + ")})`;
+};
+const normalizeWidth = (column: MResolvedColumn) => {
+    if (column.minWidth !== undefined) return `minmax(${column.minWidth}px, 1fr)`;
+    if (column.width !== undefined) return `${column.width}px`;
+    if (column.type === "selection") return SELECTION_COLUMN_WIDTH;
+    if (column.type === "index") return INDEX_COLUMN_WIDTH;
+    return resolveFixedSide(column.fixed) ? DEFAULT_FIXED_COLUMN_WIDTH : "minmax(0, 1fr)";
 };
 
-const filteredColumns = computed(() => {
-    return props.columns.filter(column => column.prop !== props.rowKey);
+const renderColumns = computed<MRenderColumn[]>(() => {
+    const columns: MRenderColumn[] = slotColumns.map(column => ({
+        ...column,
+        trackWidth: normalizeWidth(column),
+        fixedSide: resolveFixedSide(column.fixed)
+    }));
+
+    const leftOffsets: string[] = [];
+    columns.forEach(column => {
+        if (column.fixedSide !== "left") return;
+        column.stickyOffset = mergeCssLengths(leftOffsets);
+        leftOffsets.push(column.trackWidth);
+    });
+
+    const rightOffsets: string[] = [];
+    [...columns].reverse().forEach(column => {
+        if (column.fixedSide !== "right") return;
+        column.stickyOffset = mergeCssLengths(rightOffsets);
+        rightOffsets.push(column.trackWidth);
+    });
+
+    return columns;
 });
 
-const selectedRows = shallowReactive<Map<keyof T, T>>(new Map());
-const getKey = (row: T) => row[props.rowKey];
-const isSelected = (row: T) => {
-    return selectedRows.has(getKey(row));
+const leftFixedColumns = computed(() => renderColumns.value.filter(column => column.fixedSide === "left"));
+const rightFixedColumns = computed(() => renderColumns.value.filter(column => column.fixedSide === "right"));
+const lastLeftFixedKey = computed(() => {
+    const columns = leftFixedColumns.value;
+    return columns[columns.length - 1]?.key;
+});
+const firstRightFixedKey = computed(() => rightFixedColumns.value[0]?.key);
+
+const compensateTracks = (tracks: string[]) => {
+    if (!hasVerticalScrollbar.value || tracks.length === 0) return tracks;
+    return tracks.map((track, index) => (index === tracks.length - 1 ? `calc(${track} + ${NATIVE_SCROLLBAR_COMPENSATION}px)` : track));
 };
 
-const checkAll = computed(() => {
-    return props.data && props.data.length > 0 && selectedRows.size === props.data.length;
+const bodyGridStyle = computed<CSSProperties>(() => ({
+    gridTemplateColumns: renderColumns.value.map(column => column.trackWidth).join(" ") || "minmax(0, 1fr)"
+}));
+const headerGridStyle = computed<CSSProperties>(() => ({
+    gridTemplateColumns: compensateTracks(renderColumns.value.map(column => column.trackWidth)).join(" ") || "minmax(0, 1fr)"
+}));
+
+const wrapperClass = computed(() => ({
+    [`table--${props.size}`]: true,
+    "table--bordered": props.bordered
+}));
+
+const updateScrollState = () => {
+    const bodyEl = bodyScrollbarRef.value;
+    if (!bodyEl) return;
+    hasVerticalScrollbar.value = bodyEl.scrollHeight > bodyEl.clientHeight + 0.5;
+    const maxScrollLeft = Math.max(0, bodyEl.scrollWidth - bodyEl.clientWidth);
+    showLeftShadow.value = bodyEl.scrollLeft > 0.5;
+    showRightShadow.value = bodyEl.scrollLeft < maxScrollLeft - 0.5;
+};
+
+const syncScrollPosition = (source: "header" | "body") => {
+    if (isSyncingScroll) return;
+    const headerEl = headerScrollbarRef.value;
+    const bodyEl = bodyScrollbarRef.value;
+    if (!headerEl || !bodyEl) return;
+
+    isSyncingScroll = true;
+    if (source === "body") headerEl.scrollLeft = bodyEl.scrollLeft;
+    else bodyEl.scrollLeft = headerEl.scrollLeft;
+
+    requestAnimationFrame(() => {
+        isSyncingScroll = false;
+    });
+};
+
+const handleHeaderScroll = () => {
+    syncScrollPosition("header");
+    updateScrollState();
+};
+const handleBodyScroll = () => {
+    syncScrollPosition("body");
+    updateScrollState();
+};
+
+const getCellStyle = (column: MRenderColumn, isHeader: boolean): CSSProperties => {
+    const style: CSSProperties = {
+        textAlign: column.aligns || "center"
+    };
+    if (!column.fixedSide) return style;
+    style.position = "sticky";
+    style.zIndex = isHeader ? 10 : 4;
+    if (column.fixedSide === "left") style.left = column.stickyOffset || "0px";
+    if (column.fixedSide === "right") style.right = column.stickyOffset || "0px";
+    return style;
+};
+
+const getCellClass = (column: MRenderColumn, isHeader: boolean) => ({
+    [isHeader ? "table-header-check" : "table-body-check"]: column.type === "selection",
+    "table-cell--index": column.type === "index",
+    "table-cell--fixed-left": column.fixedSide === "left",
+    "table-cell--fixed-right": column.fixedSide === "right",
+    "table-cell--fixed-left-shadow": column.key === lastLeftFixedKey.value && showLeftShadow.value,
+    "table-cell--fixed-right-shadow": column.key === firstRightFixedKey.value && showRightShadow.value
 });
+
+const getColumnSlot = (column: MResolvedColumn, slotName: "default" | "header") => column.slots?.[slotName];
+
+const hasSelectionColumn = computed(() => renderColumns.value.some(column => column.type === "selection"));
+const checkAll = computed(() => hasSelectionColumn.value && props.data.length > 0 && selectedRows.size === props.data.length);
+
+const getRowKey = (row: T) => {
+    return row[props.rowKey];
+};
+const isSelected = (row: T) => selectedRows.has(row[props.rowKey]);
+const getSelectedRows = () => Array.from(selectedRows.values());
+const clearSelection = () => selectedRows.clear();
 
 const toggleAll = () => {
-    if (checkAll.value) {
-        selectedRows.clear();
-    } else {
-        props.data.forEach(row => {
-            selectedRows.set(getKey(row), row);
-        });
-    }
+    if (!hasSelectionColumn.value) return;
+    if (checkAll.value) selectedRows.clear();
+    else props.data.forEach(row => selectedRows.set(row[props.rowKey], row));
     emits("selection-change", getSelectedRows());
 };
-
 const toggleRow = (row: T) => {
-    if (!props.selectable) return;
-    const key = getKey(row);
-    if (selectedRows.has(key)) {
-        selectedRows.delete(key);
-    } else {
+    if (!hasSelectionColumn.value) return;
+    const key = row[props.rowKey];
+    if (selectedRows.has(key)) selectedRows.delete(key);
+    else {
         selectedRows.set(key, row);
         emits("row-select", row);
     }
     emits("selection-change", getSelectedRows());
 };
+const handleRowClick = (row: T) => emits("row-click", row);
 
-const handleRowClick = (row: T) => {
-    emits("row-click", row);
-};
-
-const handleRequest = async (showLoading: boolean = false): Promise<void> => {
-    if (props.request) {
-        if (showLoading) {
-            loading.value = true;
-        }
-        await props.request(pageNo.value, pageSize.value);
-        loading.value = false;
+provide(MTableContextKey, {
+    registerColumn(column) {
+        const key = Symbol("table-column");
+        slotColumns.push({
+            ...column,
+            key
+        });
+        return key;
+    },
+    updateColumn(key, column) {
+        const index = slotColumns.findIndex(item => item.key === key);
+        if (index === -1) return;
+        slotColumns[index] = {
+            ...column,
+            key
+        };
+    },
+    unregisterColumn(key) {
+        const index = slotColumns.findIndex(item => item.key === key);
+        if (index === -1) return;
+        slotColumns.splice(index, 1);
     }
-};
+});
 
-const getSelectedRows = () => {
-    return Array.from(selectedRows.values());
-};
-
-const getSelectionSize = () => {
-    return selectedRows.size;
-};
-
-const handlePageSizeChange = async (newPage: number, newSize: number) => {
-    pageNo.value = newPage;
-    pageSize.value = newSize;
-    console.log(newPage, newSize);
-    await handleRequest();
-};
-
-const handlePageChange = async (newPage: number) => {
-    pageNo.value = newPage;
-    console.log(newPage);
-    await handleRequest();
-};
-
-const syncColumnWidths = () => {
-    if (!headerRef.value || !bodyRef.value) return;
-    const headerTh = headerRef.value.querySelectorAll("th");
-    const firstRowTds = bodyRef.value.querySelector("tr")?.querySelectorAll("td");
-    if (!headerTh || !firstRowTds) return;
-    firstRowTds.forEach((td, i) => {
-        const rowWidth = td.clientWidth;
-        if (headerTh[i]) {
-            headerTh[i].style.width = `${rowWidth}px`;
-        }
-    });
-};
-
+// 监听数据变化，清空选择并更新滚动状态
 watch(
     () => props.data,
     () => {
         selectedRows.clear();
-        nextTick(syncColumnWidths);
+        nextTick(updateScrollState);
     }
 );
 
-let resizeObserver: ResizeObserver | null = null;
+// 监听列配置变化，更新滚动状态和滚动位置
+watch(
+    renderColumns,
+    () => {
+        nextTick(() => {
+            updateScrollState();
+            handleBodyScroll();
+        });
+    },
+    { deep: true }
+);
+
 onMounted(() => {
-    if (tableWrapperRef.value) {
-        resizeObserver = new ResizeObserver(syncColumnWidths);
-        resizeObserver.observe(tableWrapperRef.value);
+    const headerEl = headerScrollbarRef.value;
+    const bodyEl = bodyScrollbarRef.value;
+    headerEl?.addEventListener("scroll", handleHeaderScroll, { passive: true });
+    bodyEl?.addEventListener("scroll", handleBodyScroll, { passive: true });
+    if (bodyEl) {
+        bodyResizeObserver = new ResizeObserver(updateScrollState);
+        bodyResizeObserver.observe(bodyEl);
     }
+    nextTick(() => {
+        updateScrollState();
+        handleBodyScroll();
+    });
 });
 
 onBeforeUnmount(() => {
-    if (resizeObserver) {
-        resizeObserver.disconnect();
-        resizeObserver = null;
-    }
+    const headerEl = headerScrollbarRef.value;
+    const bodyEl = bodyScrollbarRef.value;
+    headerEl?.removeEventListener("scroll", handleHeaderScroll);
+    bodyEl?.removeEventListener("scroll", handleBodyScroll);
+    bodyResizeObserver?.disconnect();
+    bodyResizeObserver = null;
 });
 
 defineExpose<MTableInstance<T>>({
     getSelectedRows,
+    get selectionSize() {
+        return selectedRows.size;
+    },
     toggleRowSelected: toggleRow,
-    refresh: handleRequest,
-    getSelectionSize
+    clearSelection
 });
 </script>
 
 <style lang="scss" scoped>
 .table-wrapper {
+    --table-cell-padding-y: 8px;
+    --table-cell-padding-x: 12px;
+    --table-font-size: 14px;
+    --table-line-height: 23px;
+    --table-header-color: #909399;
+    --table-body-color: #606266;
+    --table-row-bg: #fff;
+    --table-row-hover-bg: #ecf5ff;
+    --table-row-striped-bg: #f5f7fa;
+    --table-border-color: #ebeef5;
+    --table-shadow-width: 12px;
+    --table-shadow-color: rgba(0, 0, 0, 0.12);
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+
     &.table--small {
-        .table-header-cell,
-        .table-body-cell {
-            height: 100%;
-            padding: 4px 0px;
-            font-size: 12px;
-        }
-        .table-header-cell {
-            padding-bottom: 12px;
-        }
-        .table-header-check {
-            height: 100%;
-            padding-bottom: 8px;
-        }
+        --table-cell-padding-y: 6px;
+        --table-cell-padding-x: 8px;
+        --table-font-size: 12px;
+        --table-line-height: 18px;
     }
 
     &.table--large {
+        --table-cell-padding-y: 10px;
+        --table-cell-padding-x: 14px;
+        --table-line-height: 24px;
+    }
+
+    &.table--bordered {
+        border: 1px solid var(--table-border-color);
+
         .table-header-cell,
         .table-body-cell {
-            height: 100%;
-            padding: 8px 0px;
-            font-size: 16px;
+            border-right: 1px solid var(--table-border-color);
         }
-        .table-header-cell {
-            padding-bottom: 16px;
-        }
-        .table-header-check {
-            height: 100%;
-            padding-bottom: 8px;
+
+        .table-header-cell:last-child,
+        .table-body-cell:last-child {
+            border-right: none;
         }
     }
-    &.table--medium {
-        .table-header-cell,
-        .table-body-cell {
-            height: 100%;
-            padding: 6px 0px;
-            font-size: 14px;
-        }
-        .table-header-cell {
-            padding-bottom: 14px;
-        }
-        .table-header-check {
-            height: 100%;
-            padding-bottom: 8px;
-        }
-    }
+}
+
+.table-column-register {
+    display: none;
+}
+
+.table-header-scrollbar {
     width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        height: 0;
+    }
+}
+
+.table-body-scrollbar {
+    width: 100%;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+.table-content,
+.table-grid-row,
+.table-body {
+    width: max-content;
+    min-width: 100%;
+}
+
+.table-content {
+    position: relative;
+}
+
+.table-grid-row {
+    display: grid;
+    align-items: stretch;
+}
+
+.table-header-wrapper {
+    z-index: 6;
     background: #fff;
-    .table-header-wrapper {
-        width: 100%;
-        .table-header {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            table-layout: fixed;
-            .table-header-row {
-                th {
-                    text-wrap: nowrap;
-                    font-weight: 600;
-                    position: relative;
-                    &::before {
-                        content: "";
-                        position: absolute;
-                        bottom: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 8px;
-                        background-image: linear-gradient(180deg, rgba(192, 162, 109, 1) 25%, rgba(255, 255, 255, 0) 25% 50%, rgba(192, 162, 109, 0.97) 50%);
-                    }
-                }
-            }
+}
+
+.table-header-cell,
+.table-body-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: var(--table-cell-padding-y) var(--table-cell-padding-x);
+    font-size: var(--table-font-size);
+    line-height: var(--table-line-height);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.table-header-cell {
+    color: var(--table-header-color);
+    font-weight: 500;
+    background: #fff;
+    border-bottom: 1px solid var(--table-border-color);
+    text-wrap: nowrap;
+}
+
+.table-body-row {
+    --table-current-row-bg: var(--table-row-bg);
+    background-color: var(--table-current-row-bg);
+    transition: background-color 0.2s ease;
+
+    &.table-body-row--striped {
+        --table-current-row-bg: var(--table-row-striped-bg);
+    }
+
+    &.table-body-row--hoverable {
+        cursor: pointer;
+
+        &:hover {
+            --table-current-row-bg: var(--table-row-hover-bg);
         }
     }
-    .table-body-wrapper {
-        width: 100%;
-        .table-body {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            &--striped {
-                .table-body-row:nth-child(even) {
-                    background-color: #e8f4fd;
-                }
-            }
-            .table-body-row {
-                transition: background-color 0.2s ease;
-                &:last-child {
-                    border-bottom: none;
-                }
-                &--hoverable {
-                    cursor: pointer;
-                    &:hover {
-                        background-color: #e8f4fdbb;
-                    }
-                }
-                .table-body-check {
-                    height: 100%;
-                    padding-bottom: 1px;
-                }
-                td {
-                    color: #606266;
-                    height: 100%;
-                    position: relative;
-                    text-wrap: wrap;
-                    word-break: break-word;
-                    .table-body-cell--scoped {
-                        width: 100%;
-                        display: flex;
-                        align-items: center;
-                    }
-                    .table-body-cell--clamped {
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        display: -webkit-box;
-                        -webkit-box-orient: vertical;
-                    }
-                }
-                &:not(:last-child) td {
-                    color: #606266;
-                    height: 100%;
-                    position: relative;
-                    &:first-child:before {
-                        content: "";
-                        position: absolute;
-                        left: 0;
-                        right: 0;
-                        bottom: -6.5px;
-                        height: 13px;
-                        background: url("@/assets/image/icon_accent-y.png") no-repeat bottom left / 12px 13px;
-                    }
-                    &:last-child::before {
-                        content: "";
-                        position: absolute;
-                        left: 0;
-                        right: 0;
-                        bottom: -6.5px;
-                        height: 13px;
-                        background: url("@/assets/image/icon_accent-y.png") no-repeat bottom right / 12px 13px;
-                    }
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        left: 0;
-                        right: 0;
-                        bottom: -0.5px;
-                        height: 1px;
-                        background-color: #c1a26d;
-                    }
-                    &:first-child:after {
-                        left: 10px;
-                    }
-                    &:last-child:after {
-                        right: 10px;
-                    }
-                }
-            }
-        }
+
+    &:not(:last-child) .table-body-cell {
+        border-bottom: 1px solid var(--table-border-color);
     }
-    .pagination {
-        margin-top: 10px;
-        padding: 10px 0;
-        border-top: 1px solid #e4e7ed;
-        display: flex;
-        justify-content: center;
+}
+
+.table-body-cell {
+    min-width: 0;
+    position: relative;
+    color: var(--table-body-color);
+    font-weight: 400;
+    word-break: break-word;
+    background-color: var(--table-current-row-bg);
+}
+
+.table-body-cell--scoped {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.table-body-cell__value {
+    display: inline-block;
+    width: 100%;
+}
+
+.table-header-check,
+.table-body-check,
+.table-cell--index {
+    text-align: center;
+}
+
+.table-cell--fixed-left,
+.table-cell--fixed-right {
+    position: sticky;
+    z-index: 4;
+    overflow: visible;
+    background-color: var(--table-current-row-bg, #fff);
+    background-clip: padding-box;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: -1px;
+        width: var(--table-shadow-width);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease;
+        z-index: 2;
     }
+}
+
+.table-header-cell.table-cell--fixed-left,
+.table-header-cell.table-cell--fixed-right {
+    z-index: 10;
+    background-color: #fff;
+}
+
+.table-cell--fixed-left-shadow::after {
+    right: calc(var(--table-shadow-width) * -1);
+    opacity: 1;
+    background: linear-gradient(to right, var(--table-shadow-color), rgba(0, 0, 0, 0));
+}
+
+.table-cell--fixed-right-shadow::after {
+    left: calc(var(--table-shadow-width) * -1);
+    opacity: 1;
+    background: linear-gradient(to left, var(--table-shadow-color), rgba(0, 0, 0, 0));
 }
 </style>

@@ -45,8 +45,7 @@
         "@iconify/vue": "^5.0.0",
         "dayjs": "^1.11.19",
         "lodash-es": "^4.17.22",
-        "nanoid": "^5.1.6",
-        "smooth-scrollbar": "^8.8.4"
+        "nanoid": "^5.1.6"
     },
     "peerDependencies": {
         "vue": ">=3.5.0",

@@ -1,10 +1,13 @@
 ﻿<template>
     <span
         class="link"
-        :class="{
-            'link--underline': underline,
-            'link--disabled': disabled
-        }"
+        :class="[
+            `link--${action}`,
+            {
+                'link--underline': underline,
+                'link--disabled': disabled
+            }
+        ]"
         :style="{
             '--underline-color': `linear-gradient(${color}, ${color})`,
             '--link-color': color
@@ -25,12 +28,13 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MLinkProps>(), {
     underline: false,
-    disabled: false
+    disabled: false,
+    action: "hover"
 });
 
 const handleClick = () => {
     if (props.disabled) return;
-    if (props.external && props.href) {
+    if (props.external) {
         window.open(props.href, "_blank");
     } else if (props.href) {
         router.push(props.href);
@@ -41,22 +45,32 @@ const handleClick = () => {
 <style lang="scss" scoped>
 .link {
     cursor: pointer;
-    width: fit-content;
     color: inherit;
     font-size: inherit;
     transition:
         background-size 0.3s ease-in-out,
         color 0.3s ease;
-    background-position: right bottom;
-    background-size: 0 1px;
-    background-repeat: no-repeat;
-    background-image: var(--underline-color);
-    &:hover {
+    &.link--hover:hover {
         color: var(--link-color);
     }
-    &.link--underline:hover {
-        background-position: left bottom;
-        background-size: 100% 1px;
+    &.link--always {
+        color: var(--link-color);
+    }
+    &.link--underline {
+        background-repeat: no-repeat;
+        background-image: var(--underline-color);
+        &.link--hover {
+            background-position: right bottom;
+            background-size: 0 1px;
+            &:hover {
+                background-position: left bottom;
+                background-size: 100% 1px;
+            }
+        }
+        &.link--always {
+            background-position: center bottom;
+            background-size: 100% 1px;
+        }
     }
     &.link--disabled {
         cursor: not-allowed;

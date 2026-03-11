@@ -24,12 +24,7 @@ import { MCheckBoxGroupContextKey } from "./types";
 defineOptions({
     name: "MCheckBox"
 });
-const props = withDefaults(defineProps<MCheckBoxProps>(), {
-    disabled: false,
-    size: "medium",
-    variant: "default",
-    type: "box"
-});
+const props = defineProps<MCheckBoxProps>();
 const emits = defineEmits<MCheckBoxEmits>();
 
 const inputRef = useTemplateRef<HTMLInputElement>("inputRef");
@@ -42,16 +37,16 @@ const modelValue = defineModel<boolean>("modelValue", {
     default: false
 });
 const disabled = computed(() => {
-    return groupContext?.disabled || props.disabled;
+    return props.disabled || groupContext?.disabled;
 });
 const size = computed(() => {
-    return groupContext?.size || props.size;
+    return props.size || groupContext?.size || "medium";
 });
 const variant = computed(() => {
-    return groupContext?.variant || props.variant;
+    return props.variant || groupContext?.variant || "primary";
 });
 const type = computed(() => {
-    return groupContext?.type || props.type;
+    return props.type || groupContext?.type || "box";
 });
 const isChecked = computed(() => {
     if (groupContext) {
@@ -181,20 +176,12 @@ const onChange = () => {
                 border-color: #e4e7ed;
             }
             &.m-checkbox--checked .m-checkbox__inner {
-                background-color: #f2f6fc;
-                border-color: #dcdfe6;
-                &::after {
-                    border-color: #c0c4cc;
-                }
+                opacity: 0.6;
             }
         }
 
         // 颜色变体
         &.m-checkbox--checked:not(m-.checkbox--disabled) {
-            &.m-checkbox--default .m-checkbox__inner {
-                background-color: #333;
-                border-color: #333;
-            }
             &.m-checkbox--primary .m-checkbox__inner {
                 background-color: #007bff;
                 border-color: #007bff;
@@ -309,9 +296,6 @@ const onChange = () => {
 
         // 颜色变体
         &:not(.m-checkbox--disabled).m-checkbox--checked {
-            &.m-checkbox--default {
-                background-color: #333;
-            }
             &.m-checkbox--primary {
                 background-color: #007bff;
             }

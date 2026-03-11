@@ -13,7 +13,7 @@
                 {{ label }}
             </span>
         </div>
-        <div class="right" v-if="isCollapsed">
+        <div class="right" v-if="context && isCollapsed">
             <MIcon name="ic:sharp-check" :size="18" v-show="isActive"></MIcon>
         </div>
     </div>
@@ -46,7 +46,7 @@ const itemStyle = computed(() => {
 });
 const labelStyle = computed(() => {
     if (!isCollapsed.value) return {};
-    return { marginLeft: !context ? "12px" : "6px" };
+    return { marginLeft: !context ? "12px" : "6px", color: isActive.value ? "#801eff" : "#666" };
 });
 if (context) {
     context.registerState({
@@ -80,7 +80,7 @@ const onClick = () => {
     width: 100%;
     display: inline-flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 12px;
     height: 42px;
     border-radius: 6px;
     overflow: hidden;
@@ -103,13 +103,13 @@ const onClick = () => {
     }
     .left {
         flex: 1;
-    }
-    .label {
-        font-size: 16px;
-        color: rgb(41, 52, 61);
-        white-space: nowrap;
-        margin-left: 12px;
-        transition: all 0.3s ease;
+        .label {
+            font-size: 16px;
+            color: rgb(41, 52, 61);
+            white-space: nowrap;
+            margin-left: 12px;
+            transition: all 0.3s ease;
+        }
     }
     .right {
         width: 18px;

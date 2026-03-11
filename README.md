@@ -4,6 +4,18 @@
 
 MichiruUI 最初的定位只是我个人博客的一个“小零件库”。本来只想够用就好，但是随着博客需求不断膨胀，组件也越写越深、越写越多，最终形成了现在的规模。
 
+## 更新日志
+
+2026-03-11：
+
+> Fix：重构 `MTable` 组件，将原先高度耦合的单一组件拆分为 `MTable` + `MTableCol` 双组件结构
+>
+> Fix：移除`MTable`内置分页逻辑，分页请使用 `MPagination` 组件配合实现
+
+2026-03-10：
+
+> Fix：重构 `MScrollBar` 组件，弃用 `smooth-scrollbar`，改用原生滚动条实现
+
 ## 环境要求
 
 | 工具       | 版本                      |
@@ -176,14 +188,14 @@ import "michiru-ui/style.css";
     "exclude": ["src/**/__tests__/*", "node_modules", "dist", "docs"],
     "compilerOptions": {
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-        "declaration": true, // 允许生成声明文件
-        "emitDeclarationOnly": true, // 只生成声明文件
-        "noEmit": false, // 允许生成编译产物，包括声明文件和 JavaScript 文件
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "noEmit": false,
         "paths": {
             "@/*": ["./src/*"]
-        }, // 路径别名配置
-        "outDir": "./dist", // 输出目录
-        "noUncheckedIndexedAccess": false // 允许访问可能未定义的数组元素
+        },
+        "outDir": "./dist",
+        "noUncheckedIndexedAccess": false
     }
 }
 ```
@@ -212,8 +224,25 @@ npm run generate
 
 ## 预览效果
 
-![1.png](./docs/images/1.png) ![2.png](./docs/images/2.png) ![3.png](./docs/images/3.png) ![4.png](./docs/images/4.png) ![5.png](./docs/images/5.png) ![6.png](./docs/images/6.png)
-![7.png](./docs/images/7.png) ![8.png](./docs/images/8.png) ![9.png](./docs/images/9.png) ![10.png](./docs/images/10.png)
+![1.png](./docs/images/1.png)
+
+![2.png](./docs/images/2.png)
+
+![3.png](./docs/images/3.png)
+
+![4.png](./docs/images/4.png)
+
+![5.png](./docs/images/5.png)
+
+![6.png](./docs/images/6.png)
+
+![7.png](./docs/images/7.png)
+
+![8.png](./docs/images/8.png)
+
+![9.png](./docs/images/9.png)
+
+![10.png](./docs/images/10.png)
 
 ## 后续更新计划
 
@@ -221,6 +250,7 @@ npm run generate
 
 | 组件             | 说明           |
 | ---------------- | -------------- |
+| IconButton       | 图标按钮       |
 | Label            | 标签文本       |
 | Popselect        | 气泡选择       |
 | Popdown          | 气泡下拉       |
@@ -239,12 +269,13 @@ npm run generate
 | Upload                   | 文件列表缩略图根据文件类型动态变化；添加 CRUD 动画 |
 | Tabs                     | 新增 `segmented`、`card` 风格                      |
 | Drawer                   | 支持边框拖动调整尺寸                               |
-| Table                    | 使用 `<col>` 标签重构列宽控制逻辑                  |
 | Breadcrumb               | 路由切换动画                                       |
 | Pagination               | 功能拓展（快速跳转、自定义页码、更多尺寸等）       |
 | Tree                     | 支持节点拖拽、勾选、懒加载、搜索过滤等操作         |
 | Switch                   | 新增切换动画                                       |
 | Tree、Table、Collapse 等 | 对部分组件添加懒加载效果支持                       |
+
+> 后续考虑使用 JSX/TSX 重构所有组件，替换现有的 `.vue` SFC 模板。
 
 ## 支持本项目
 

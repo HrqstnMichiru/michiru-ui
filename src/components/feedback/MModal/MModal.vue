@@ -14,7 +14,7 @@
                 @mousedown.stop="onHeaderMouseDown"
                 :class="{
                     'modal__header--draggable': draggable,
-                    'modal__header--centered': center
+                    'modal__header--centered': contentCenter
                 }"
                 :style="headerStyle">
                 <slot name="header">
@@ -30,7 +30,7 @@
                 :has-scroll-bar="showScrollbar"
                 :style="contentStyle"
                 :class="{
-                    'modal__body--centered': center
+                    'modal__body--centered': contentCenter
                 }">
                 <slot></slot>
             </MScrollBar>
@@ -39,7 +39,7 @@
                 v-else
                 :style="contentStyle"
                 :class="{
-                    'modal__body--centered': center
+                    'modal__body--centered': contentCenter
                 }">
                 <slot></slot>
             </div>
@@ -246,8 +246,9 @@ defineExpose<MModalInstance>({
 
 <style lang="scss" scoped>
 .modal {
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     display: flex;
+    flex-direction: column;
     min-width: 300px;
     position: relative;
     border-radius: 8px;

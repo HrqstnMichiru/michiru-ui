@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="m-card" :class="[`m-card--shadow-${shadow}`]">
         <div
             class="m-card__header"
@@ -9,7 +9,7 @@
             }">
             <template v-if="title">
                 <span class="m-card__header-title">
-                    <MIcon :name="icon" v-if="icon" :color="iconColor || colorMap[iconVariant]"></MIcon>
+                    <MIcon :name="icon" v-if="icon" :color="colorMap[iconVariant]"></MIcon>
                     <span>{{ title }}</span>
                 </span>
                 <span v-if="action" class="m-card__header-action" @click="onActionClick">
@@ -79,10 +79,10 @@ const colorMap: Record<MCardIconVariant, string> = {
     border-radius: 8px;
     border: 1px solid rgb(220, 223, 230);
     &.m-card--shadow-always {
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
+        box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     }
     &.m-card--shadow-hover:hover {
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
+        box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     }
     &.m-card--shadow-never {
         box-shadow: none;

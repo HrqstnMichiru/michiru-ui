@@ -4,7 +4,7 @@
         <MCard title="MButton - 按钮" center>
             <p>不同颜色变体的按钮</p>
             <div class="actions">
-                <MButton variant="default">Default</MButton>
+                <MButton variant="gray">Gray</MButton>
                 <MButton variant="primary">Primary</MButton>
                 <MButton variant="success">Success</MButton>
                 <MButton variant="warning">Warning</MButton>
@@ -16,7 +16,7 @@
             </div>
             <p style="margin-top: 16px">Plain 样式</p>
             <div class="actions">
-                <MButton variant="default" plain>Default</MButton>
+                <MButton variant="gray" plain>Gray</MButton>
                 <MButton variant="primary" plain>Primary</MButton>
                 <MButton variant="success" plain>Success</MButton>
                 <MButton variant="warning" plain>Warning</MButton>
@@ -28,7 +28,7 @@
             </div>
             <p style="margin-top: 16px">Outline 样式</p>
             <div class="actions">
-                <MButton variant="default" outline round>Default</MButton>
+                <MButton variant="gray" outline round>Gray</MButton>
                 <MButton variant="primary" outline round>Primary</MButton>
                 <MButton variant="success" outline>Success</MButton>
                 <MButton variant="warning" outline>Warning</MButton>
@@ -134,11 +134,45 @@
                 </template>
             </MSplit>
         </MCard>
+
+        <!-- MScrollBar -->
+        <MCard title="MScrollBar - 滚动条">
+            <p>always: 滚动条始终显示</p>
+            <MScrollBar :height="160" scrollbar="always" class="scroll-demo">
+                <div class="scroll-list">
+                    <div class="scroll-row" v-for="item in longList" :key="`always-${item}`">Always Item {{ item }}</div>
+                </div>
+            </MScrollBar>
+
+            <p style="margin-top: 16px">always: 默认模式（始终显示）</p>
+            <MScrollBar :height="160" scrollbar="always" class="scroll-demo">
+                <div class="scroll-list">
+                    <div class="scroll-row" v-for="item in longList" :key="`always-b-${item}`">Always Item {{ item }}</div>
+                </div>
+            </MScrollBar>
+
+            <p style="margin-top: 16px">never: 不显示滚动条，但内容仍可滚动</p>
+            <MScrollBar :height="160" scrollbar="never" class="scroll-demo">
+                <div class="scroll-list">
+                    <div class="scroll-row" v-for="item in longList" :key="`never-${item}`">Never Item {{ item }}</div>
+                </div>
+            </MScrollBar>
+
+            <p style="margin-top: 16px">横向滚动示例（always）</p>
+            <MScrollBar :height="72" scrollbar="always" class="scroll-demo scroll-demo--x">
+                <div class="scroll-chips">
+                    <span class="scroll-chip" v-for="item in chipList" :key="`chip-${item}`">Tag {{ item }}</span>
+                </div>
+            </MScrollBar>
+        </MCard>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MSplit } from "@/components";
+import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MScrollBar, MSplit } from "@/components";
+
+const longList = Array.from({ length: 20 }, (_, index) => index + 1);
+const chipList = Array.from({ length: 18 }, (_, index) => index + 1);
 </script>
 
 <style lang="scss" scoped>
@@ -159,6 +193,54 @@ import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MSplit } fro
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+}
+
+.scroll-demo {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.scroll-demo--x {
+    .scroll-chips {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-width: max-content;
+        padding: 12px;
+    }
+
+    .scroll-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: #ede9fe;
+        color: #5b21b6;
+        font-size: 13px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+}
+
+.scroll-list {
+    padding: 8px;
+}
+
+.scroll-row {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 6px;
+    color: #4b5563;
+    font-size: 14px;
+
+    &:nth-child(odd) {
+        background: #f3f4f6;
+    }
 }
 
 .split-pane {

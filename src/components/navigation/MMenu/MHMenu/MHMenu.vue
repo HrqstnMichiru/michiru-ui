@@ -180,8 +180,8 @@ onMounted(() => {
                 color 0.3s var(--ease-in-out);
             .label {
                 font-size: 16px;
-                white-space: nowrap;
                 color: rgb(41, 52, 61);
+                white-space: nowrap;
                 transition: color 0.3s ease;
             }
             .open-icon {

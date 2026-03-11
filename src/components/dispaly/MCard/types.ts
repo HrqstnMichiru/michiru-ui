@@ -9,7 +9,6 @@ export interface MCardProps {
     title?: string; // 卡片标题
     icon?: string; // 卡片标题图标
     iconVariant?: MCardIconVariant; // 卡片标题icon的样式变体
-    iconColor?: string; // 卡片标题icon的颜色
     action?: string; // 卡片标题操作区域内容
 }
 

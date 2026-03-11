@@ -364,13 +364,10 @@ onUnmounted(() => {
         .word-count {
             position: absolute;
             right: 5px;
-            line-height: 1.2;
+            line-height: 1;
             font-size: 12px;
             color: #9ca3af;
             pointer-events: none;
-            background-color: transparent;
-            padding: 2px 4px;
-            border-radius: 3px;
             &.word-count--exceed {
                 color: #ef4444;
             }

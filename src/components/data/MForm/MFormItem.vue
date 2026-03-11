@@ -7,19 +7,15 @@
             '--aligns': customAlign,
             '--space': props.space ? 'space-between' : 'flex-start'
         }">
-        <span
-            class="m-form-item__info"
-            :style="{
-                marginRight: `${gap}px`
-            }"
-            v-if="label || customRequired">
+        <span class="m-form-item__info">
             <span v-if="customRequired" class="required-mark">*</span>
             <label
                 class="m-form-item__label"
                 :class="[`m-form-item__label--${customSize}`]"
                 :style="{
                     textAlign: customAlign,
-                    width: `${customWidth}px`
+                    width: `${customWidth}px`,
+                    '--gap': `${gap}px`
                 }"
                 v-if="label">
                 {{ label }}
@@ -27,11 +23,12 @@
         </span>
         <div
             class="m-form-item__content"
-            ref="contentRef"
             :style="{
                 width: props.block ? '100%' : 'auto'
             }">
-            <slot></slot>
+            <div ref="contentRef">
+                <slot></slot>
+            </div>
             <Transition name="error-shake">
                 <p v-show="errorMessage" class="m-form-item__error" ref="errorRef">
                     {{ errorMessage }}
@@ -96,7 +93,7 @@ const _validate = async (): Promise<void> => {
         if ("required" in rule && rule.required) {
             if (Array.isArray(value) && value.length === 0) {
                 throw new Error(rule.message);
-            } else if (!!value) {
+            } else if (!value) {
                 throw new Error(rule.message);
             }
         } else if ("minLength" in rule || "maxLength" in rule || "length" in rule) {
@@ -156,15 +153,17 @@ provide<MFormItemContext>(MFormItemContextKey, {
     }
 });
 
+const computePosition = () => {
+    if (contentRef.value && errorRef.value) {
+        const height = contentRef.value.offsetHeight;
+        errorRef.value.style.top = `${height}px`;
+    }
+};
+
 let observer: ResizeObserver | null = null;
 onMounted(() => {
     if (contentRef.value) {
-        observer = new ResizeObserver(() => {
-            if (errorRef.value && contentRef.value) {
-                const rect = contentRef.value.getBoundingClientRect();
-                errorRef.value.style.top = `${rect.height}px`;
-            }
-        });
+        observer = new ResizeObserver(computePosition);
         observer.observe(contentRef.value);
     }
 });
@@ -199,6 +198,9 @@ onBeforeUnmount(() => {
                 position: absolute;
                 left: -10px;
             }
+            .m-form-item__label {
+                margin-right: var(--gap);
+            }
         }
     }
     .m-form-item__info {
@@ -231,6 +233,7 @@ onBeforeUnmount(() => {
             position: absolute;
             color: #f56c6c;
             font-size: 12px;
+            line-height: 1;
             left: 5px;
         }
     }

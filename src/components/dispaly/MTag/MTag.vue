@@ -1,14 +1,14 @@
-﻿<template>
+<template>
     <span
         v-if="visible"
         class="tag"
         :class="[
-            `tag--${props.size}`,
-            `tag--${props.variant}`,
-            `tag--${props.shape}`,
+            `tag--${size}`,
+            `tag--${variant}`,
+            `tag--${shape}`,
             {
-                'tag--outlined': props.outlined,
-                'tag--plain': props.plain
+                'tag--outlined': outlined,
+                'tag--plain': plain
             }
         ]">
         <!-- 图标 -->
@@ -34,12 +34,8 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MTagProps>(), {
     size: "medium",
-    variant: "default",
-    shape: "rounded",
-    closable: false,
-    outlined: false,
-    autoClose: false,
-    plain: false
+    variant: "gray",
+    shape: "rounded"
 });
 const slots = useSlots();
 const emits = defineEmits<MTagEmits>();
@@ -75,32 +71,35 @@ const onClose = () => {
     // 大小变体
     &.tag--small {
         height: 20px;
-        padding: 3.2px 6px;
-        font-size: 12px; // 20px/28px
+        padding: 3.7px 6px;
+        font-size: 11px; // 20px/28px
         .tag-content {
-            line-height: 12px;
+            line-height: 11px;
         }
         .tag-close {
-            font-size: 12px !important;
+            font-size: 11px !important;
         }
     }
     &.tag--medium {
         height: 24px;
-        padding: 4.2px 8px;
-        font-size: 14px; // 24px/34px
+        padding: 4.7px 8px;
+        font-size: 13px; // 24px/34px
         .tag-content {
-            line-height: 14px;
+            line-height: 13px;
         }
         .tag-close {
-            font-size: 14px !important;
+            font-size: 13px !important;
         }
     }
     &.tag--large {
         height: 28px;
-        padding: 5.2px 10px;
-        font-size: 16px; // 28px/40px
+        padding: 5.7px 10px;
+        font-size: 15px; // 28px/40px
         .tag-content {
-            line-height: 16px !important;
+            line-height: 15px !important;
+        }
+        .tag-close {
+            font-size: 13px !important;
         }
     }
 
@@ -127,15 +126,6 @@ const onClose = () => {
     }
 
     // 颜色变体
-    &.tag--default {
-        background-color: #6c757d;
-        color: #ffffff;
-        border-color: #6c757d;
-        &:hover {
-            background-color: #5a6268;
-            border-color: #5a6268;
-        }
-    }
     &.tag--primary {
         background-color: #409eff;
         color: #ffffff;
@@ -204,166 +194,136 @@ const onClose = () => {
         color: white;
         border-color: #6b7280;
         &:hover:not(.tag--disabled) {
-            background-color: #9ca3af;
-            border-color: #9ca3af;
+            background-color: #7c8594;
+            border-color: #7c8594;
         }
     }
 
     // 轮廓样式
     &.tag--outlined {
         background-color: transparent;
-        &.tag--default {
-            color: #666;
-            border-color: #e0e0e0;
-            &:hover {
-                background-color: #f5f5f5;
-            }
-        }
         &.tag--primary {
             color: #409eff;
             border-color: #409eff;
             &:hover {
-                background-color: #ecf5ff;
+                background-color: transparent;
             }
         }
         &.tag--success {
             color: #67c23a;
             border-color: #67c23a;
             &:hover {
-                background-color: #f0f9ff;
+                background-color: transparent;
             }
         }
         &.tag--warning {
             color: #e6a23c;
             border-color: #e6a23c;
-            &:hover:not(.tag--disabled) {
-                background-color: #fdf6ec;
+            &:hover {
+                background-color: transparent;
             }
         }
         &.tag--danger {
             color: #f56c6c;
             border-color: #f56c6c;
             &:hover {
-                background-color: #fef0f0;
+                background-color: transparent;
             }
         }
         &.tag--info {
             color: #13c2c2;
             border-color: #13c2c2;
             &:hover {
-                background-color: #e6fffb;
+                background-color: transparent;
             }
         }
         &.tag--purple {
-            color: #5b21b6;
-            border-color: #5b21b6;
+            color: #7c3aed;
+            border-color: #7c3aed;
             &:hover {
-                background-color: #faf5ff;
+                background-color: transparent;
             }
         }
         &.tag--pink {
             color: #db2777;
             border-color: #db2777;
             &:hover {
-                background-color: #fdf2f8;
+                background-color: transparent;
             }
         }
         &.tag--gray {
             color: #6b7280;
             border-color: #6b7280;
             &:hover {
-                background-color: #f9fafb;
+                background-color: transparent;
             }
         }
     }
 
-    // 朴素样式
+    // Plain 样式
     &.tag--plain {
-        &.tag--default {
-            background-color: #f8f9fa;
-            color: #495057;
-            border-color: #dee2e6;
-            &:hover {
-                background-color: #e9ecef;
-                border-color: #adb5bd;
-                color: #212529;
-            }
-        }
         &.tag--primary {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            border-color: #bbdefb;
+            color: #409eff;
+            background-color: #e3f0ff;
+            border-color: #409eff;
             &:hover {
-                background-color: #d1e7ff;
-                border-color: #90caf9;
-                color: #1565c0;
+                background-color: #e3f0ff;
             }
         }
         &.tag--success {
-            background-color: #e8f5e8;
-            color: #2e7d32;
-            border-color: #c8e6c9;
+            color: #67c23a;
+            background-color: #e8f5df;
+            border-color: #67c23a;
             &:hover {
-                background-color: #d4edda;
-                border-color: #a5d6a7;
-                color: #1b5e20;
+                background-color: #e8f5df;
             }
         }
         &.tag--warning {
-            background-color: #fdf6ec;
             color: #e6a23c;
-            border-color: #f5dab1;
+            background-color: #fbefdd;
+            border-color: #e6a23c;
             &:hover {
-                background-color: #faecd8;
-                border-color: #eebe77;
-                color: #cf9236;
+                background-color: #fbefdd;
             }
         }
         &.tag--danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border-color: #f1aeb5;
+            color: #f56c6c;
+            background-color: #fde8e8;
+            border-color: #f56c6c;
             &:hover {
-                background-color: #f1aeb5;
-                border-color: #ea868f;
-                color: #58151c;
+                background-color: #fde8e8;
             }
         }
         &.tag--info {
-            background-color: #e6fffb;
             color: #13c2c2;
-            border-color: #87e8de;
+            background-color: #d8faf4;
+            border-color: #13c2c2;
             &:hover {
-                background-color: #b5f5ec;
-                border-color: #5cdbd3;
+                background-color: #d8faf4;
             }
         }
         &.tag--purple {
-            background-color: #f3e8ff;
             color: #7c3aed;
-            border-color: #d8b4fe;
+            background-color: #ebdcff;
+            border-color: #7c3aed;
             &:hover {
-                background-color: #e9d5ff;
-                border-color: #c4b5fd;
-                color: #6d28d9;
+                background-color: #ebdcff;
             }
         }
         &.tag--pink {
-            background-color: #fdf2f8;
             color: #db2777;
-            border-color: #f9a8d4;
+            background-color: #fbe7f2;
+            border-color: #db2777;
             &:hover {
-                background-color: #fce7f3;
-                border-color: #f472b6;
+                background-color: #fbe7f2;
             }
         }
         &.tag--gray {
-            color: #6b6b6b;
-            border-color: #c0c0c0;
-            background-color: #f0f0f0;
+            color: #6b7280;
+            background-color: #ebedf0;
+            border-color: #6b7280;
             &:hover {
-                background-color: #e6e6e6;
-                border-color: #a8a8a8;
+                background-color: #ebedf0;
             }
         }
     }

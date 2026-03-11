@@ -65,8 +65,8 @@
                     <h4 style="margin: 0 0 8px">动态数值</h4>
                     <MNumberAnimation :value="dynamicValue" :duration="1500" />
                     <div style="margin-top: 8px">
-                        <button @click="randomizeValue" style="padding: 4px 8px; margin-right: 8px">随机数值</button>
-                        <button @click="incrementValue" style="padding: 4px 8px">递增</button>
+                        <MButton @click="randomizeValue" style="margin-right: 8px" size="small" round>随机数值</MButton>
+                        <MButton @click="incrementValue" size="small" round variant="purple">递增</MButton>
                     </div>
                 </div>
 
@@ -100,19 +100,28 @@
             <p>展示统计数据，支持趋势指示、图标、前缀/后缀等</p>
             <MGrid :cols="3" :gap="24">
                 <!-- 用户总数 -->
-                <MStatistic title="注册用户总数" :value="12345" suffix="人" icon="mdi:account-group" variant="primary" trend-type="up" trend-value="12%" trend-prefix="同比" />
+                <MStatistic title="注册用户总数" :value="12345" suffix="人" icon="mdi:account-group" variant="primary" :trend-type="MStatisticTrendType.UP" trend-value="12%" />
 
                 <!-- 销售额 -->
-                <MStatistic title="本月销售额" :value="89765" prefix="¥" :precision="2" icon="mdi:star" variant="success" trend-type="up" trend-value="15.3%" />
+                <MStatistic title="本月销售额" :value="89765" prefix="¥" :precision="2" icon="mdi:star" variant="success" :trend-type="MStatisticTrendType.UP" trend-value="15.3%" />
 
                 <!-- 订单量 -->
-                <MStatistic title="今日订单量" :value="543" suffix="单" icon="mdi:cart" variant="danger" trend-type="down" trend-value="5.2%" />
+                <MStatistic title="今日订单量" :value="543" suffix="单" icon="mdi:cart" variant="danger" :trend-type="MStatisticTrendType.DOWN" trend-value="5.2%" />
 
                 <!-- 访问量 -->
-                <MStatistic title="页面访问量" :value="1234" suffix="次" icon="mdi:eye" variant="info" trend-type="unchanged" />
+                <MStatistic title="页面访问量" :value="1234" suffix="次" icon="mdi:eye" variant="info" :trend-type="MStatisticTrendType.FLAT" />
 
                 <!-- 资金余额 -->
-                <MStatistic title="账户可用余额" :value="9876543.21" prefix="¥" :precision="2" icon="mdi:credit-card" variant="warning" trend-type="up" trend-value="1.2%" trend-prefix="较昨日" />
+                <MStatistic
+                    title="账户可用余额"
+                    :value="9876543.21"
+                    prefix="¥"
+                    :precision="2"
+                    icon="mdi:credit-card"
+                    variant="warning"
+                    :trend-type="MStatisticTrendType.UP"
+                    trend-value="1.2%"
+                    trend-prefix="昨日" />
 
                 <!-- 响应时间 -->
                 <MStatistic
@@ -123,10 +132,152 @@
                     icon="mdi:clock-outline"
                     variant="success"
                     :duration="2000"
-                    trend-type="down"
-                    trend-value="10ms"
-                    trend-prefix="较上周" />
+                    :trend-type="MStatisticTrendType.DOWN"
+                    trend-value="10ms" />
             </MGrid>
+        </MCard>
+
+        <!-- MTable -->
+        <MCard title="MTable - 表格">
+            <p>统一使用 `MTableCol` 列组件式写法，分别演示 `height` 与 `max-height`</p>
+
+            <div style="display: flex; flex-direction: column; gap: 24px">
+                <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
+                    <h4 style="margin: 0 0 16px; font-size: 16px">MTableCol 组件式（height）</h4>
+                    <MTable :data="tableDemoData" row-key="id" striped hoverable :height="tableDemoHeight">
+                        <MTableCol type="selection"  fixed></MTableCol>
+                        <MTableCol type="index" label="#" fixed></MTableCol>
+                        <MTableCol prop="name" label="成员" :width="180" fixed></MTableCol>
+                        <MTableCol prop="department" label="部门" :width="160"></MTableCol>
+                        <MTableCol prop="role" label="角色" :width="160"></MTableCol>
+                        <MTableCol prop="location" label="办公地" :width="160"></MTableCol>
+                        <MTableCol prop="score" label="完成度" :width="120" aligns="center"></MTableCol>
+                        <MTableCol prop="priority" label="优先级" :width="140" aligns="center"></MTableCol>
+                        <MTableCol label="状态" :width="120" aligns="center">
+                            <template #default="{ row }">
+                                <MTag size="small" :variant="getStatusVariant(row.status)">
+                                    {{ row.statusLabel }}
+                                </MTag>
+                            </template>
+                        </MTableCol>
+                        <MTableCol prop="updatedAt" label="最近更新时间" :width="180" aligns="center"></MTableCol>
+                        <MTableCol :width="180" aligns="center" fixed="right">
+                            <template #header>操作栏</template>
+                            <template #default="{ row }">
+                                <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap">
+                                    <MButton size="small" variant="primary">查看 {{ row.id }}</MButton>
+                                    <MButton size="small" variant="success">同步</MButton>
+                                </div>
+                            </template>
+                        </MTableCol>
+                    </MTable>
+                </div>
+
+                <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
+                    <h4 style="margin: 0 0 16px; font-size: 16px">MTableCol 组件式（max-height，含左右固定列）</h4>
+                    <MTable :data="tableDemoData" row-key="id" striped hoverable :max-height="tableDemoMaxHeight" bordered>
+                        <MTableCol type="index" label="#" fixed></MTableCol>
+                        <MTableCol prop="name" label="成员" :width="180" fixed></MTableCol>
+                        <MTableCol prop="department" label="部门" :width="160"></MTableCol>
+                        <MTableCol prop="role" label="角色" :width="160"></MTableCol>
+                        <MTableCol prop="location" label="办公地" :width="160"></MTableCol>
+                        <MTableCol prop="score" label="完成度" :width="120" aligns="center"></MTableCol>
+                        <MTableCol prop="priority" label="优先级" :width="140" aligns="center"></MTableCol>
+                        <MTableCol label="状态" :width="120" aligns="center">
+                            <template #default="{ row }">
+                                <MTag size="small" :variant="getStatusVariant(row.status)">
+                                    {{ row.statusLabel }}
+                                </MTag>
+                            </template>
+                        </MTableCol>
+                        <MTableCol prop="updatedAt" label="最近更新时间" :width="180" aligns="center"></MTableCol>
+                        <MTableCol :width="180" aligns="center" fixed="right">
+                            <template #header>操作栏</template>
+
+                            <template #default="{ row }">
+                                <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap">
+                                    <MButton size="small" variant="primary">编辑 {{ row.id }}</MButton>
+                                    <MButton size="small" variant="warning">提醒</MButton>
+                                </div>
+                            </template>
+                        </MTableCol>
+                    </MTable>
+                </div>
+
+                <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
+                    <h4 style="margin: 0 0 16px; font-size: 16px">不同尺寸（small / medium / large）</h4>
+                    <div style="display: flex; flex-direction: column; gap: 20px">
+                        <div>
+                            <p style="margin-bottom: 12px">small</p>
+                            <MTable :data="tableDemoSizeData" row-key="id" size="small" striped hoverable :height="180">
+                                <MTableCol type="index" label="#"></MTableCol>
+                                <MTableCol prop="name" label="成员" :min-width="180"></MTableCol>
+                                <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
+                                <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
+                                <MTableCol label="状态" :width="120">
+                                    <template #default="{ row }">
+                                        <MTag size="small" :variant="getStatusVariant(row.status)">
+                                            {{ row.statusLabel }}
+                                        </MTag>
+                                    </template>
+                                </MTableCol>
+                            </MTable>
+                        </div>
+
+                        <div>
+                            <p style="margin-bottom: 12px">medium</p>
+                            <MTable :data="tableDemoSizeData" row-key="id" size="medium" striped hoverable :height="200">
+                                <MTableCol type="index" label="#"></MTableCol>
+                                <MTableCol prop="name" label="成员" :min-width="200"></MTableCol>
+                                <MTableCol prop="department" label="部门" :min-width="180"></MTableCol>
+                                <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
+                                <MTableCol label="状态" :width="120">
+                                    <template #default="{ row }">
+                                        <MTag size="small" :variant="getStatusVariant(row.status)">
+                                            {{ row.statusLabel }}
+                                        </MTag>
+                                    </template>
+                                </MTableCol>
+                            </MTable>
+                        </div>
+
+                        <div>
+                            <p style="margin-bottom: 12px">large</p>
+                            <MTable :data="tableDemoSizeData" row-key="id" size="large" striped hoverable :height="220">
+                                <MTableCol type="index" label="#" :width="80"></MTableCol>
+                                <MTableCol prop="name" label="成员" :min-width="220"></MTableCol>
+                                <MTableCol prop="department" label="部门" :min-width="200"></MTableCol>
+                                <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
+                                <MTableCol label="状态" :width="120">
+                                    <template #default="{ row }">
+                                        <MTag size="medium" :variant="getStatusVariant(row.status)">
+                                            {{ row.statusLabel }}
+                                        </MTag>
+                                    </template>
+                                </MTableCol>
+                            </MTable>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
+                    <h4 style="margin: 0 0 16px; font-size: 16px">空数据状态</h4>
+                    <MTable :data="tableDemoEmptyData" row-key="id" striped hoverable :height="500">
+                        <MTableCol type="selection"></MTableCol>
+                        <MTableCol type="index" label="#"></MTableCol>
+                        <MTableCol prop="name" label="成员" :min-width="180"></MTableCol>
+                        <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
+                        <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
+                        <MTableCol label="状态" :width="120">
+                            <template #default="{ row }">
+                                <MTag size="small" :variant="getStatusVariant(row.status)">
+                                    {{ row.statusLabel }}
+                                </MTag>
+                            </template>
+                        </MTableCol>
+                    </MTable>
+                </div>
+            </div>
         </MCard>
 
         <!-- MEmpty -->
@@ -171,6 +322,61 @@
                     </MEmpty>
                 </div>
             </MGrid>
+        </MCard>
+
+        <!-- MTag -->
+        <MCard title="MTag - 标签">
+            <p>标签组件，支持颜色、尺寸、形状、朴素/轮廓与可关闭等模式</p>
+
+            <p style="margin-top: 16px">基础颜色</p>
+            <div class="tag-row">
+                <MTag variant="primary">Primary</MTag>
+                <MTag variant="success">Success</MTag>
+                <MTag variant="warning">Warning</MTag>
+                <MTag variant="danger">Danger</MTag>
+                <MTag variant="info">Info</MTag>
+                <MTag variant="purple">Purple</MTag>
+                <MTag variant="pink">Pink</MTag>
+                <MTag variant="gray">Gray</MTag>
+            </div>
+
+            <p style="margin-top: 16px">Outlined</p>
+            <div class="tag-row">
+                <MTag variant="primary" outlined>Outlined</MTag>
+                <MTag variant="success" outlined>Outlined</MTag>
+                <MTag variant="warning" outlined>Outlined</MTag>
+                <MTag variant="danger" outlined>Outlined</MTag>
+                <MTag variant="info" outlined>Outlined</MTag>
+                <MTag variant="gray" outlined>Outlined</MTag>
+            </div>
+
+            <p style="margin-top: 16px">Plain</p>
+            <div class="tag-row">
+                <MTag variant="primary" plain>Plain</MTag>
+                <MTag variant="success" plain>Plain</MTag>
+                <MTag variant="warning" plain>Plain</MTag>
+                <MTag variant="danger" plain>Plain</MTag>
+                <MTag variant="info" plain>Plain</MTag>
+                <MTag variant="gray" plain>Plain</MTag>
+            </div>
+
+            <p style="margin-top: 16px">不同尺寸与形状</p>
+            <div class="tag-row">
+                <MTag size="small" variant="primary">Small</MTag>
+                <MTag size="medium" variant="primary">Medium</MTag>
+                <MTag size="large" variant="primary">Large</MTag>
+                <MTag shape="square" variant="purple">Square</MTag>
+                <MTag shape="rounded" variant="pink">Rounded</MTag>
+            </div>
+
+            <p style="margin-top: 16px">可关闭与图标</p>
+            <div class="tag-row">
+                <MTag variant="success" closable auto-close @close="closedTagCount += 1">自动关闭</MTag>
+                <MTag variant="warning" closable @close="closedTagCount += 1">仅触发事件</MTag>
+                <MTag variant="info" icon="mdi:bell">通知</MTag>
+                <MTag variant="danger" icon="streamline:warning-octagon-solid">风险</MTag>
+            </div>
+            <p style="margin: 8px 0 0; color: #909399; font-size: 14px">关闭事件触发次数: {{ closedTagCount }}</p>
         </MCard>
 
         <!-- MImage -->
@@ -229,25 +435,25 @@
                 <!-- 翻页切换 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">翻页切换</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumbnail-format="urlFormat" transition="page" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="page" />
                 </div>
 
                 <!-- slide切换 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">slide切换</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumbnail-format="urlFormat" transition="slide" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="slide" />
                 </div>
 
                 <!-- 禁用预览 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">禁用预览</h4>
-                    <MImageGallery :list="editableImages" :width="800" :height="600" :url-format="urlFormat" :thumbnail-format="urlFormat" transition="rotate" preview-disabled />
+                    <MImageGallery :list="editableImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="rotate" preview-disabled />
                 </div>
 
                 <!-- contain 填充 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">contain 填充</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" fit="contain" :url-format="urlFormat" :thumbnail-format="urlFormat" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" fit="contain" :url-format="urlFormat" :thumb-format="urlFormat" />
                 </div>
             </MGrid>
         </MCard>
@@ -255,7 +461,7 @@
         <!-- MWaterFall -->
         <MCard title="MWaterFall - 瀑布流">
             <p>使用 example/results/data.json 作为数据源，演示按页加载与滚动触底加载</p>
-            <MWaterFall :columns="5" :gap="12" :page-size="20" :request="requestWaterfall"  />
+            <MWaterFall :columns="5" :gap="12" :page-size="20" :request="requestWaterfall" style="height: 800px" />
         </MCard>
 
         <!-- MTree -->
@@ -291,11 +497,76 @@
 
 <script lang="ts" setup>
 import type { TreeInstance } from "@/components";
-import { MButton, MCard, MCollapse, MCollapseGroup, MEmpty, MFlex, MGrid, MImage, MImageGallery, MImageGroup, MNumberAnimation, MStatistic, MTree, MWaterFall } from "@/components";
+import {
+    MButton,
+    MCard,
+    MCollapse,
+    MCollapseGroup,
+    MEmpty,
+    MFlex,
+    MGrid,
+    MImage,
+    MImageGallery,
+    MImageGroup,
+    MNumberAnimation,
+    MStatistic,
+    MTag,
+    MTable,
+    MTableCol,
+    MTree,
+    MWaterFall,
+    MStatisticTrendType
+} from "@/components";
 import { ref, useTemplateRef } from "vue";
 import manager from "../scripts/data-manager";
 
 const dynamicValue = ref(12345);
+const closedTagCount = ref(0);
+
+interface TableDemoRow {
+    id: number;
+    name: string;
+    department: string;
+    role: string;
+    location: string;
+    score: string;
+    priority: string;
+    status: "online" | "busy" | "offline";
+    statusLabel: string;
+    updatedAt: string;
+}
+
+const tableDemoHeight = 320;
+const tableDemoMaxHeight = 320;
+const tableDemoBaseData: TableDemoRow[] = [
+    { id: 101, name: "霜月 千夏", department: "前端组", role: "Vue 开发", location: "上海", score: "98%", priority: "P0", status: "online", statusLabel: "在线", updatedAt: "2026-03-11 09:20" },
+    { id: 102, name: "神崎 栞", department: "设计组", role: "交互设计", location: "杭州", score: "92%", priority: "P1", status: "busy", statusLabel: "忙碌", updatedAt: "2026-03-11 09:35" },
+    { id: 103, name: "白石 遥", department: "测试组", role: "测试工程师", location: "深圳", score: "87%", priority: "P2", status: "offline", statusLabel: "离线", updatedAt: "2026-03-10 21:18" },
+    { id: 104, name: "椎名 澪", department: "运营组", role: "活动运营", location: "北京", score: "95%", priority: "P0", status: "online", statusLabel: "在线", updatedAt: "2026-03-11 08:42" },
+    { id: 105, name: "朝仓 凛", department: "数据组", role: "数据分析", location: "成都", score: "89%", priority: "P1", status: "busy", statusLabel: "会议中", updatedAt: "2026-03-11 10:05" }
+];
+const tableDemoData: TableDemoRow[] = Array.from({ length: 18 }, (_, index) => {
+    const template = tableDemoBaseData[index % tableDemoBaseData.length]!;
+    return {
+        ...template,
+        id: template.id + index * 10,
+        name: `${template.name} ${index + 1}`,
+        score: `${Math.max(80, 98 - (index % 7) * 2)}%`,
+        updatedAt: `2026-03-${String((index % 9) + 11).padStart(2, "0")} ${String(8 + (index % 6)).padStart(2, "0")}:${String((index * 7) % 60).padStart(2, "0")}`
+    };
+});
+const tableDemoEmptyData: TableDemoRow[] = [];
+const tableDemoSizeData = tableDemoData.slice(0, 4);
+
+const statusVariantMap = {
+    online: "success",
+    busy: "warning",
+    offline: "gray"
+} as const;
+
+const getStatusVariant = (status: TableDemoRow["status"]) => {
+    return statusVariantMap[status];
+};
 
 // 树形组件实例和展开/折叠控制
 const treeRef = useTemplateRef<TreeInstance>("treeRef");
@@ -389,5 +660,11 @@ const treeSmall = [
         font-size: 16px;
         line-height: 1.6;
     }
+}
+
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 </style>

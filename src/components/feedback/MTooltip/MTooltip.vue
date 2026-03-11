@@ -280,7 +280,7 @@ defineExpose<MTooltipInstance>({
         border-radius: 6px;
         white-space: nowrap;
         border: 1px solid rgb(220, 223, 230);
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
+        box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
         font-size: 13px;
         padding: 8px 12px;
         color: rgb(96, 98, 102);

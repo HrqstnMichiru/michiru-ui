@@ -92,7 +92,7 @@ const iconMap: Record<MNotificationVariant, string> = {
     success: "ooui:success",
     warning: "streamline:warning-octagon-solid",
     danger: "zondicons:close-solid",
-    info: "bi:info-circle-fill",
+    info: "bi:info-circle-fill"
 };
 
 const onAfterLeave = () => {
@@ -141,7 +141,7 @@ defineExpose({
     display: flex;
     transition: all 0.3s ease;
     flex-direction: column;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     user-select: none;
 
     // Primary 样式

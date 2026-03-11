@@ -73,7 +73,7 @@
             <p style="margin-top: 16px">全选/取消全选示例</p>
             <div class="actions">
                 <MButton variant="primary" size="small" @click="selectAll">全选</MButton>
-                <MButton variant="default" size="small" @click="clearAll">清空</MButton>
+                <MButton variant="gray" size="small" @click="clearAll">清空</MButton>
             </div>
             <MCheckBoxGroup v-model="checkboxValues9" ref="checkboxGroup9" variant="primary">
                 <MCheckBox label="前端开发" value="frontend" />
@@ -835,7 +835,7 @@
                     </MFormItem>
                     <MFlex :gap="10">
                         <MButton variant="primary" @click="handleFormBasicSubmit">提交</MButton>
-                        <MButton variant="default" @click="handleFormBasicReset">重置</MButton>
+                        <MButton variant="gray" @click="handleFormBasicReset">重置</MButton>
                     </MFlex>
                 </MFlex>
             </MForm>
@@ -856,7 +856,7 @@
                     </MFormItem>
                     <MFlex :gap="8" justify="center">
                         <MButton variant="primary" @click="handleFormVerticalSubmit">提交</MButton>
-                        <MButton variant="default" @click="handleFormVerticalReset">重置</MButton>
+                        <MButton variant="gray" @click="handleFormVerticalReset">重置</MButton>
                     </MFlex>
                 </MFlex>
             </MForm>

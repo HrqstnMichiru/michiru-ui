@@ -1,3 +1,5 @@
 import MTable from "./MTable.vue";
-export type { MColumns,MTableInstance} from "./types";
-export { MTable };
+import MTableCol from "./MTableCol";
+
+export type { MTableColProps, MTableInstance } from "./types";
+export { MTable, MTableCol };

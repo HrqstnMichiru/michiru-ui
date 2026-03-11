@@ -118,10 +118,10 @@
 
             <p style="margin-top: 16px">高级配置</p>
             <div class="actions">
-                <MButton variant="default" @click="notification.info('10秒后消失', { duration: 10000 })">持续10秒</MButton>
-                <MButton variant="default" @click="notification.warning('永不消失的通知', { duration: 0 })">永不关闭</MButton>
-                <MButton variant="default" @click="notification.success('带自定义标题的通知内容', { title: '自定义标题' })">带自定义标题</MButton>
-                <MButton variant="default" @click="notification.destroyAll()">清除所有</MButton>
+                <MButton variant="gray" @click="notification.info('10秒后消失', { duration: 10000 })">持续10秒</MButton>
+                <MButton variant="gray" @click="notification.warning('永不消失的通知', { duration: 0 })">永不关闭</MButton>
+                <MButton variant="gray" @click="notification.success('带自定义标题的通知内容', { title: '自定义标题' })">带自定义标题</MButton>
+                <MButton variant="gray" @click="notification.destroyAll()">清除所有</MButton>
             </div>
 
             <p style="margin-top: 16px">弹出位置</p>
@@ -221,7 +221,7 @@
                     <MButton variant="primary">Light 主题</MButton>
                 </MTooltip>
                 <MTooltip content="深色主题" theme="dark">
-                    <MButton variant="default">Dark 主题</MButton>
+                    <MButton variant="gray">Dark 主题</MButton>
                 </MTooltip>
             </div>
         </MCard>

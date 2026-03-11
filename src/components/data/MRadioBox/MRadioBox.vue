@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <label
         class="m-radiobox"
         :class="[
@@ -34,7 +34,7 @@ const size = computed(() => {
     return props.size || groupContext?.size || "medium";
 });
 const variant = computed(() => {
-    return props.variant || groupContext?.variant || "default";
+    return props.variant || groupContext?.variant || "primary";
 });
 const isChecked = computed(() => {
     if (groupContext) {
@@ -154,10 +154,6 @@ const handleChange = () => {
 
         // 颜色变体
         &.m-radiobox--checked:not(.m-radiobox--disabled) {
-            &.m-radiobox--default .m-radiobox__inner {
-                background-color: #333;
-                border-color: #333;
-            }
             &.m-radiobox--primary .m-radiobox__inner {
                 background-color: #007bff;
                 border-color: #007bff;
@@ -272,9 +268,6 @@ const handleChange = () => {
 
         // 颜色变体 - 选中状态
         &.m-radiobox--checked:not(.m-radiobox--disabled) {
-            &.m-radiobox--default {
-                background-color: #333;
-            }
             &.m-radiobox--primary {
                 background-color: #007bff;
             }

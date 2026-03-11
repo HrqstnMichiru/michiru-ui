@@ -1,6 +1,6 @@
 import type { InjectionKey } from "vue";
 
-export interface MTabProps {
+export interface MTabsProps {
     variant?: "line" | "card" | "box" | "segmented" | "bar"; // 选项卡样式风格
     position?: "top" | "bottom" | "left" | "right"; // 选项卡位置
     router?: boolean; // 是否启用路由模式
@@ -11,9 +11,10 @@ export interface MTabProps {
     gap?: number; // 导航栏与内容之间的间距
     width?: number | string; // 选项卡导航栏宽度, 仅 position 为 left 或 right 时有效
     gutter?: number | string; // 选项卡面板之间的间距
+    empty?: boolean; // 是否无内容
 }
 
-export interface MTabEmits {
+export interface MTabsEmits {
     (e: "change"): void; // 选项卡切换时触发
 }
 
@@ -25,15 +26,15 @@ export interface MTabPanelProps {
     fixed?: boolean;
 }
 
-export interface MTabContext {
+export interface MTabsContext {
     register: (item: MTabPanelProps) => void;
     isActive: (name: string | number) => boolean;
     switchDirection: "left" | "right";
     router: boolean;
 }
-export const MTabContextKey: InjectionKey<MTabContext> = Symbol("MTabContextKey");
+export const MTabContextKey: InjectionKey<MTabsContext> = Symbol("MTabsContextKey");
 
-export interface MTabInstance {
+export interface MTabsInstance {
     addTab: (item: MTabPanelProps) => void;
     switchDirection: "left" | "right";
 }

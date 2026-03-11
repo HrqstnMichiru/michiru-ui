@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="statistic" :class="[variant ? `statistic--${variant}` : '']">
         <div class="statistic__main">
             <span class="statistic__title">
@@ -11,9 +11,9 @@
                     <span v-if="suffix" class="statistic__suffix">{{ suffix }}</span>
                 </div>
                 <div class="statistic__trend" :class="`statistic__trend--${trendType}`">
-                    <MIcon :name="trendIcon"></MIcon>
+                    <MIcon :name="trendIconMap[trendType]"></MIcon>
                     <span class="statistic__trend-text">
-                        {{ trendText }}
+                        {{ trendTextMap[trendType] }}
                     </span>
                 </div>
             </div>
@@ -26,8 +26,8 @@
 
 <script lang="ts" setup>
 import { MIcon, MNumberAnimation } from "@/components";
-import { computed } from "vue";
 import type { MStatisticEmits, MStatisticProps } from "./types";
+import { MStatisticTrendType } from "./types";
 
 defineOptions({
     name: "MStatistic"
@@ -41,31 +41,16 @@ const props = withDefaults(defineProps<MStatisticProps>(), {
 const { variant } = props;
 const emits = defineEmits<MStatisticEmits>();
 
-const trendIcon = computed(() => {
-    switch (props.trendType) {
-        case "up":
-            return "material-symbols:arrow-upward";
-        case "down":
-            return "material-symbols:arrow-downward";
-        case "unchanged":
-            return "minus";
-        default:
-            return "minus";
-    }
-});
-
-const trendText = computed(() => {
-    switch (props.trendType) {
-        case "up":
-            return `较${props.trendPrefix}增长${props.trendValue}`;
-        case "down":
-            return `较${props.trendPrefix}下降${props.trendValue}`;
-        case "unchanged":
-            return `较${props.trendPrefix}无变化`;
-        default:
-            return "";
-    }
-});
+const trendIconMap: Record<MStatisticTrendType, string> = {
+    [MStatisticTrendType.UP]: "material-symbols:arrow-upward",
+    [MStatisticTrendType.DOWN]: "material-symbols:arrow-downward",
+    [MStatisticTrendType.FLAT]: "ic:baseline-minus"
+};
+const trendTextMap: Record<MStatisticTrendType, string> = {
+    [MStatisticTrendType.UP]: `较${props.trendPrefix}增长${props.trendValue}`,
+    [MStatisticTrendType.DOWN]: `较${props.trendPrefix}下降${props.trendValue}`,
+    [MStatisticTrendType.FLAT]: `较${props.trendPrefix}无变化`
+};
 
 const handleAnimationEnd = () => {
     emits("animation-end");
@@ -75,11 +60,12 @@ const handleAnimationEnd = () => {
 <style lang="scss" scoped>
 .statistic {
     position: relative;
-    border-radius: 8px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-    padding: 20px 24px;
+    border-radius: 12px;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
+    padding: 32px 24px;
     display: flex;
     align-items: center;
+    border: 1px solid rgb(220, 223, 230);
     justify-content: space-between;
     background: linear-gradient(135deg, #faf5ff 0%, #fef3f2 50%, #f0f9ff 100%);
     .statistic__icon {
@@ -154,13 +140,13 @@ const handleAnimationEnd = () => {
                 align-items: center;
                 font-size: 13px;
                 line-height: 1;
-                &.statistic__trend--up {
+                &.statistic__trend--0 {
                     color: #10b981;
                 }
-                &.statistic__trend--down {
+                &.statistic__trend--1 {
                     color: #ef4444;
                 }
-                &.statistic__trend--unchanged {
+                &.statistic__trend--2 {
                     color: #6b7280;
                 }
             }

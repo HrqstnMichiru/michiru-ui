@@ -18,9 +18,9 @@
             @blur="handleBlur"
             @clear="handleClear">
             <template v-if="multiple" #prefix>
-                <MTag v-for="([value, label], index) in displayLabels" :key="value" :text="label" variant="gray" plain closable :size="customSize" @close="onClose(value, index)"></MTag>
+                <MTag v-for="([value, label], index) in displayLabels" :key="value" :text="label" variant="gray" closable :size="customSize" @close="onClose(value, index)" plain></MTag>
                 <MTooltip transition="none" theme="light" :z-index="2000">
-                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle" plain></MTag>
+                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle"></MTag>
                     <template #content>
                         <div
                             class="m-select__popper"

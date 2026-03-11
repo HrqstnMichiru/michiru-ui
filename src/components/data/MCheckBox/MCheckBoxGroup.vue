@@ -25,9 +25,7 @@ defineOptions({
     name: "MCheckBoxGroup"
 });
 const props = withDefaults(defineProps<MCheckBoxGroupProps>(), {
-    disabled: false,
-    variant: "default",
-    vertical: false,
+    variant: "primary",
     type: "box"
 });
 const emits = defineEmits<MCheckBoxGroupEmits>();

@@ -105,7 +105,7 @@ defineExpose<MPopconfirmInstance>({
     background-color: #fff;
     border-radius: 6px;
     border: 1px solid rgb(220, 223, 230);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     padding: 8px 12px;
     &.popconfirm--primary .popconfirm__header :deep(.m-icon) {
         color: #1d4ed8;

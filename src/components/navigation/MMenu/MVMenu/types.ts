@@ -18,9 +18,13 @@ export interface MVMenuContext {
     isExpanded: (name: string | number) => boolean; // 判断子菜单是否展开
     registerState: (state: { active: boolean; name: string | number }) => void; // 注册菜单项状态
 }
+export interface MVMenuEmits {
+    (e: "change", data: MVMenuItemProps): void; // 菜单项选择事件
+}
 export interface MVMenuInstance {
     toggleCollapse: () => void;
     currentPath: Array<MVMenuItemProps>;
+    isCollapsed: boolean;
 }
 export const MVMenuContextKey: InjectionKey<MVMenuContext> = Symbol("MVMenuContext");
 

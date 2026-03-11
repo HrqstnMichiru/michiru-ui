@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div
         class="m-tabs"
         :class="[`m-tabs--${position}`]"
@@ -35,7 +35,7 @@
                 <slot name="action"></slot>
             </div>
         </div>
-        <div class="m-tabs__content">
+        <div :class="{ 'm-tabs__content': !empty }">
             <slot></slot>
         </div>
     </div>
@@ -45,7 +45,7 @@
 import { MIcon } from "@/components";
 import { computed, nextTick, onMounted, provide, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { MTabContext, MTabEmits, MTabInstance, MTabPanelProps, MTabProps } from "./types";
+import type { MTabPanelProps, MTabsContext, MTabsEmits, MTabsInstance, MTabsProps } from "./types";
 import { MTabContextKey } from "./types";
 
 const _router = useRouter();
@@ -54,7 +54,7 @@ const route = useRoute();
 defineOptions({
     name: "MTabs"
 });
-const props = withDefaults(defineProps<MTabProps>(), {
+const props = withDefaults(defineProps<MTabsProps>(), {
     direction: "horizontal",
     variant: "card",
     position: "top",
@@ -65,15 +65,15 @@ const props = withDefaults(defineProps<MTabProps>(), {
     gap: 0,
     width: 200
 });
-const emits = defineEmits<MTabEmits>();
+const emits = defineEmits<MTabsEmits>();
 
 const isReady = ref<boolean>(false);
-const activeTab = ref<number | string>(props.defaultActive);
-const currentIndex = ref<number>(0);
+const activeTab = ref<number | string>(props.defaultActive); // 当前激活的标签页
+const currentIndex = ref<number>(0); // 当前激活标签页的索引
 const switchDirection = ref<"left" | "right">("right");
 const tabItemList = reactive<MTabPanelProps[]>([]);
 const itemRefs = new Map<string | number, HTMLElement>();
-const isAnimating = ref(false); 
+const isAnimating = ref(false);
 const direction = computed(() => {
     if (props.position === "top" || props.position === "bottom") {
         return "horizontal";
@@ -162,10 +162,14 @@ const register = (item: MTabPanelProps) => {
 
 const addTab = (item: MTabPanelProps) => {
     if (!props.addable) return;
-    if (itemRefs.has(item.name)) return;
-    tabItemList.push(item);
-    activeTab.value = item.name;
-    currentIndex.value = tabItemList.length - 1;
+    const index = tabItemList.findIndex(tab => tab.name === item.name);
+    if (index !== -1) {
+        setActiveTab(item, index);
+    } else {
+        tabItemList.push(item);
+        const targetIndex = tabItemList.length - 1;
+        setActiveTab(item, targetIndex);
+    }
 };
 
 const closeTab = (index: number) => {
@@ -180,8 +184,12 @@ const closeTab = (index: number) => {
             switchDirection.value = "right";
         }
         if (newIndex >= 0 && newIndex < tabItemList.length) {
-            activeTab.value = tabItemList[newIndex]!.name;
+            const nextActiveName = tabItemList[newIndex]!.name;
+            activeTab.value = nextActiveName;
             currentIndex.value = index === tabItemList.length - 1 ? newIndex : index;
+            if (props.router) {
+                _router.push(nextActiveName.toString());
+            }
         }
     } else if (index < currentIndex.value) {
         currentIndex.value -= 1;
@@ -190,7 +198,7 @@ const closeTab = (index: number) => {
     itemRefs.delete(targetTab.name);
 };
 
-provide<MTabContext>(MTabContextKey, {
+provide<MTabsContext>(MTabContextKey, {
     register,
     isActive,
     get switchDirection() {
@@ -199,7 +207,7 @@ provide<MTabContext>(MTabContextKey, {
     router: props.router
 });
 
-defineExpose<MTabInstance>({
+defineExpose<MTabsInstance>({
     addTab,
     get switchDirection() {
         return switchDirection.value;
@@ -228,7 +236,7 @@ onMounted(() => nextTick(updateBar));
             top: 0;
             opacity: 1;
             &.m-tabs__active-bar--ready {
-                transition: all 400ms var(--ease-in-out);
+                transition: all 500ms var(--ease-in-out);
             }
         }
         .m-tabs__nav-list {
@@ -244,7 +252,7 @@ onMounted(() => nextTick(updateBar));
                 line-height: 24px;
                 font-weight: 500;
                 user-select: none;
-                transition: all 400ms ease;
+                transition: all 500ms ease;
                 font-size: 16px;
                 gap: 5px;
                 color: #404040;

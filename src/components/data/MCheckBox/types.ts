@@ -1,6 +1,6 @@
 import type { InjectionKey } from "vue";
 
-export type MCheckBoxVariant = "default" | "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray";
+export type MCheckBoxVariant = "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray";
 type MCheckBoxSize = "small" | "medium" | "large";
 
 export interface MCheckBoxProps {

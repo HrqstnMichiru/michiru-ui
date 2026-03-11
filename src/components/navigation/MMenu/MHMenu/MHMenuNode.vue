@@ -103,7 +103,7 @@ if (props.children) {
     .right {
         display: inline-flex;
         align-items: center;
-        color: #666;
+        color: rgb(107, 107, 107);
         height: 36px;
         font-size: 16px;
         transition: color 0.2s ease;

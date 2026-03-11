@@ -46,7 +46,6 @@ const props = withDefaults(defineProps<MDropdownProps>(), {
     offset: 8,
     timer: 100,
     showArrow: true,
-    width: 150
 });
 const emits = defineEmits<MDropdownEmits>();
 const context = inject<MDropdownContext | null>(MDropdownContextKey, null);

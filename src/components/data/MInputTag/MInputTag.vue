@@ -14,16 +14,16 @@
         @blur="onBlur"
         @focus="onFocus">
         <template #prefix v-if="tags.length > 0">
-            <MTag variant="gray" plain closable v-for="(tag, index) in displayTags" :key="index" :text="tag" @close="onClose(index)" :size="customSize"></MTag>
+            <MTag variant="gray" closable v-for="(tag, index) in displayTags" :key="index" :text="tag" @close="onClose(index)" :size="customSize" plain></MTag>
             <MTooltip transition="none" theme="light" :z-index="2000">
-                <MTag :text="`+${hiddenTags.length}`" v-if="hiddenTags.length > 0" :size="customSize" variant="gray" shape="circle" plain></MTag>
+                <MTag :text="`+${hiddenTags.length}`" v-if="hiddenTags.length > 0" :size="customSize" variant="gray" shape="circle"></MTag>
                 <template #content>
                     <div
                         class="m-input-tag__popper"
                         :style="{
                             maxWidth: `${tooltipWidth}px`
                         }">
-                        <MTag variant="gray" plain closable v-for="(tag, index) in hiddenTags" :key="index" :text="tag" @close="onClose(index + maxCount)" :size="customSize"></MTag>
+                        <MTag variant="gray" closable v-for="(tag, index) in hiddenTags" :key="index" :text="tag" @close="onClose(index + maxCount)" :size="customSize" plain></MTag>
                     </div>
                 </template>
             </MTooltip>

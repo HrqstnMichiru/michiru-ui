@@ -62,6 +62,7 @@ const unlockBodyScroll = () => {
 };
 // 内层窗口关闭后回调
 const onInnerAfterClose = () => {
+    console.log("Inner content has fully closed");
     wrapperVisible.value = false;
     emits("after-close");
 };

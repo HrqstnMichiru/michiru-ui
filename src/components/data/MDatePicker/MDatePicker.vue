@@ -17,16 +17,16 @@
             @blur="handleBlur"
             @clear="handleClear">
             <template v-if="multiple" #prefix>
-                <MTag v-for="(date, index) in displayDates" :key="date" :text="date" variant="gray" plain closable :size="customSize" @close="onClose(index)"></MTag>
+                <MTag v-for="(date, index) in displayDates" :key="date" :text="date" variant="gray" closable :size="customSize" @close="onClose(index)" plain></MTag>
                 <MTooltip transition="none" theme="light" :z-index="2000">
-                    <MTag :text="`+${hiddenDates.length}`" v-if="hiddenDates.length > 0" :size="customSize" variant="gray" shape="circle" plain></MTag>
+                    <MTag :text="`+${hiddenDates.length}`" v-if="hiddenDates.length > 0" :size="customSize" variant="gray" shape="circle"></MTag>
                     <template #content>
                         <div
                             class="m-date-picker__popper"
                             :style="{
                                 maxWidth: `${tooltipWidth}px`
                             }">
-                            <MTag variant="gray" plain closable v-for="(tag, index) in hiddenDates" :key="index" :text="tag" @close="onClose(index + maxCount)" :size="customSize"></MTag>
+                            <MTag variant="gray" closable v-for="(tag, index) in hiddenDates" :key="index" :text="tag" @close="onClose(index + maxCount)" :size="customSize" plain></MTag>
                         </div>
                     </template>
                 </MTooltip>

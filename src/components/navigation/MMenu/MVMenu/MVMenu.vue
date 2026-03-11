@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, provide, ref, shallowReactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { MVMenuContext, MVMenuInstance, MVMenuItemModel, MVMenuItemProps, MVMenuProps } from "./types";
+import type { MVMenuContext, MVMenuEmits, MVMenuInstance, MVMenuItemModel, MVMenuItemProps, MVMenuProps } from "./types";
 import { MVMenuContextKey } from "./types";
 
 const sleep = async (ms: number) => await new Promise(resolve => setTimeout(resolve, ms));
@@ -28,10 +28,11 @@ const props = withDefaults(defineProps<MVMenuProps>(), {
     width: 240,
     defaultExpand: (): Array<number | string> => []
 });
+const emits = defineEmits<MVMenuEmits>();
 const route = useRoute();
 const _router = useRouter();
 
-const COLLAPSED_WIDTH = 50;
+const COLLAPSED_WIDTH = 64; // 折叠时的固定宽度
 const collapsed = ref<boolean>(props.collapsed); // 是否处于折叠状态
 const customWidth = ref<number>(props.collapsed ? COLLAPSED_WIDTH : props.width); // 当前宽度
 const activeKey = ref<string | number>(props.router ? route.path : props.defaultActive || ""); // 当前激活菜单项
@@ -66,7 +67,10 @@ const setCurrent = async (name: string | number, initial: boolean = false) => {
     }
     if (item.isLeaf) {
         activeKey.value = name;
-        if (props.router && !initial) {
+        if (!initial) {
+            emits("change", item.data);
+        }
+        if (props.router) {
             _router.push(name.toString());
         }
     } else {
@@ -147,6 +151,9 @@ defineExpose<MVMenuInstance>({
     toggleCollapse,
     get currentPath() {
         return currentPath.value;
+    },
+    get isCollapsed() {
+        return collapsed.value;
     }
 });
 
@@ -162,7 +169,7 @@ onMounted(() => {
 .v-menu {
     display: flex;
     flex-direction: column;
-    padding: 3px;
+    padding: 10px;
     transition: width var(--menu-speed) var(--ease-in-out);
 }
 </style>

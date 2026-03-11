@@ -7,7 +7,6 @@
                 width: `${width}px`
             }"
             @click.stop>
-
             <div class="dialog__header" :class="{ 'dialog__header--center': contentCenter }">
                 <div class="dialog-icon">
                     <MIcon :name="iconMap[variant]" :size="24"></MIcon>
@@ -106,7 +105,7 @@ onMounted(() => {
 .dialog {
     background: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     padding: 16px 20px;
     position: relative;
     display: flex;

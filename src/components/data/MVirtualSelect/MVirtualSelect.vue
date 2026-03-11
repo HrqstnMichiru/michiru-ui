@@ -18,9 +18,9 @@
             @blur="handleBlur"
             @clear="handleClear">
             <template v-if="multiple" #prefix>
-                <MTag v-for="([value, label], index) in displayLabels" :key="value" :text="label" variant="gray" plain closable :size="customSize" @close="onClose(value, index)"></MTag>
+                <MTag v-for="([value, label], index) in displayLabels" :key="value" :text="label" variant="gray" closable :size="customSize" @close="onClose(value, index)"></MTag>
                 <MTooltip transition="none" theme="light" :z-index="2000">
-                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle" plain></MTag>
+                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle"></MTag>
                     <template #content>
                         <div
                             class="m-virtual-select__popper"
@@ -87,10 +87,10 @@
 <script lang="ts" setup>
 import type { MInputInstance, MTooltipInstance } from "@/components";
 import { MCheckBox, MIcon, MInput, MTag, MTooltip, MVirtualList } from "@/components";
-import { computed, inject, onMounted, ref, shallowReactive, useTemplateRef } from "vue";
 import type { MFormContext, MFormItemContext } from "@/components/data/MForm/types";
 import { MFormContextKey, MFormItemContextKey } from "@/components/data/MForm/types";
 import type { MSelectEmits } from "@/components/data/MSelect/types";
+import { computed, inject, onMounted, ref, shallowReactive, useTemplateRef } from "vue";
 import type { MVirtualSelectProps } from "./types";
 
 defineOptions({

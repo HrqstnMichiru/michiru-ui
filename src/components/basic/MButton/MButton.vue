@@ -51,7 +51,7 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MButtonProps>(), {
     size: "medium",
-    variant: "default",
+    variant: "primary",
     shape: "default",
     plain: false,
     disabled: false,
@@ -218,13 +218,14 @@ const onClick = () => {
 
     // 禁用状态
     &.m-btn--disabled {
-        cursor: not-allowed;
+        cursor: not-allowed !important;
+        box-shadow: none;
         opacity: 0.6;
 
         &:hover,
         &:active {
-            transform: none !important;
-            box-shadow: none !important;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
     }
 
@@ -314,21 +315,6 @@ const onClick = () => {
     }
 
     // 颜色变体 - 实心样式
-    &.m-btn--default {
-        background-color: #333;
-        color: white;
-        border-color: #333;
-        &:hover {
-            background-color: #4d4d4d;
-            border-color: #4d4d4d;
-            color: white;
-        }
-        &:active {
-            background-color: #1a1a1a;
-            border-color: #1a1a1a;
-            color: white;
-        }
-    }
     &.m-btn--primary {
         background-color: #007bff;
         color: white;
@@ -452,19 +438,6 @@ const onClick = () => {
 
     // 颜色变体 - 朴素样式
     &.m-btn--plain {
-        &.m-btn--default {
-            color: #333;
-            border-color: #333;
-            background-color: #f5f5f5;
-            &:hover {
-                background-color: #e8e8e8;
-                border-color: #4d4d4d;
-            }
-            &:active {
-                background-color: #d9d9d9;
-                border-color: #1a1a1a;
-            }
-        }
         &.m-btn--primary {
             color: #007bff;
             border-color: #007bff;
@@ -573,16 +546,6 @@ const onClick = () => {
     &.m-btn--outline {
         background-color: #fff;
         transition: none;
-        &.m-btn--default {
-            color: #333;
-            border-color: #333;
-            &:hover {
-                background-color: rgba(51, 51, 51, 0.05);
-            }
-            &:active {
-                background-color: rgba(51, 51, 51, 0.1);
-            }
-        }
         &.m-btn--primary {
             color: #007bff;
             border-color: #007bff;

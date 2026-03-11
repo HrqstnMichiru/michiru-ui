@@ -1,7 +1,7 @@
 import type { InjectionKey } from "vue";
 
 type MButtonSize = "small" | "medium" | "large";
-type MButtonVariant = "default" | "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray";
+type MButtonVariant = "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink" | "gray";
 
 export interface MButtonProps {
     text?: string; // 按钮文本

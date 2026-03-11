@@ -6,14 +6,14 @@
 
 <script lang="ts" setup>
 import { computed, inject } from "vue";
-import type { MTabContext, MTabPanelProps } from "./types";
+import type { MTabPanelProps, MTabsContext } from "./types";
 import { MTabContextKey } from "./types";
 
 defineOptions({
     name: "MTabPane"
 });
 const props = defineProps<MTabPanelProps>();
-const tabContext = inject<MTabContext>(MTabContextKey);
+const tabContext = inject<MTabsContext>(MTabContextKey);
 if (tabContext) {
     tabContext.register({ ...props });
 }
@@ -28,7 +28,7 @@ const transitionName = computed(() => {
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-    transition: all 400ms var(--ease-in-out);
+    transition: all 500ms var(--ease-in-out);
 }
 
 // 离开的元素脱离文档流，进入的元素正常占据空间

@@ -26,9 +26,7 @@ defineOptions({
 });
 
 const props = withDefaults(defineProps<MRadioBoxGroupProps>(), {
-    disabled: false,
-    variant: "default",
-    direction: "horizontal",
+    variant: "primary",
     type: "box"
 });
 const emits = defineEmits<MRadioBoxGroupEmits>();
