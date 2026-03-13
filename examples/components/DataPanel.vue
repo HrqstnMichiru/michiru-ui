@@ -979,7 +979,7 @@ const radioValue10 = ref("large1");
 const radioValue11 = ref("frontend");
 
 // MSelect状态
-const selectValue1 = ref<string | number>("");
+const selectValue1 = ref<number>(1);
 const selectValue2 = ref<string>("");
 const selectValue3 = ref<string>("");
 const selectValue4 = ref<string>("disabled");

@@ -21,7 +21,7 @@
                                 {{ column.label || "#" }}
                             </template>
                             <template v-else>
-                                <RenderSlot v-if="column.slots?.header" :render="column.slots?.header" :scope="{ column }"></RenderSlot>
+                                <RenderHeaderSlot v-if="column.slots?.header" :render="column.slots?.header" :scope="{ column }"></RenderHeaderSlot>
                                 <template v-else>
                                     {{ column.label }}
                                 </template>
@@ -59,7 +59,7 @@
                             </template>
                             <template v-else-if="column.slots?.default">
                                 <div class="table-body-cell--scoped" :style="{ justifyContent: alignMap[column.aligns || 'center'] }">
-                                    <RenderSlot :render="column.slots?.default" :scope="{ row, index: rowIndex, column }"></RenderSlot>
+                                    <RenderCellSlot :render="column.slots?.default" :scope="{ row, index: rowIndex, column }"></RenderCellSlot>
                                 </div>
                             </template>
                             <template v-else-if="column.prop">
@@ -90,7 +90,7 @@
 import { MCheckBox, MEllipsis, MEmpty } from "@/components";
 import vLoading from "@/directives/loading";
 import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, shallowReactive, useTemplateRef, watch, type CSSProperties, type PropType } from "vue";
-import type { MRenderColumn, MResolvedColumn, MTableEmits, MTableFixed, MTableInstance, MTableProps } from "./types";
+import type { MRenderColumn, MResolvedColumn, MTableDefaultSlotScope, MTableEmits, MTableHeaderSlotScope, MTableFixed, MTableInstance, MTableProps } from "./types";
 import { MTableContextKey } from "./types";
 
 const DEFAULT_FIXED_COLUMN_WIDTH = "160px";
@@ -119,15 +119,32 @@ const showRightShadow = ref(false);
 let isSyncingScroll = false;
 let bodyResizeObserver: ResizeObserver | null = null;
 
-const RenderSlot = defineComponent({
-    name: "MTableRenderSlot",
+const RenderHeaderSlot = defineComponent({
+    name: "MTableRenderHeaderSlot",
     props: {
         render: {
-            type: Function as PropType<(scope: Record<string, any>) => any>,
+            type: Function as PropType<(scope: MTableHeaderSlotScope) => any>,
             required: true
         },
         scope: {
-            type: Object as PropType<Record<string, any>>,
+            type: Object as PropType<MTableHeaderSlotScope>,
+            required: true
+        }
+    },
+    setup(renderProps) {
+        return () => renderProps.render(renderProps.scope);
+    }
+});
+
+const RenderCellSlot = defineComponent({
+    name: "MTableRenderCellSlot",
+    props: {
+        render: {
+            type: Function as PropType<(scope: MTableDefaultSlotScope<T>) => any>,
+            required: true
+        },
+        scope: {
+            type: Object as PropType<MTableDefaultSlotScope<T>>,
             required: true
         }
     },

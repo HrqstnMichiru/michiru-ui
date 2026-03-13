@@ -1,11 +1,12 @@
 import type { MPlacement } from "@/components/feedback/MTooltip/types";
-import type { PropType } from "vue";
+import type { PropType, SlotsType } from "vue";
 import { defineComponent, inject, onBeforeUnmount, onMounted, useSlots, watch } from "vue";
-import type { MTableAlign, MTableColType, MTableColumnConfig, MTableColumnSlots, MTableContext, MTableFixed } from "./types";
+import type { MTableAlign, MTableColProps, MTableColSlots, MTableColType, MTableColumnConfig, MTableColumnSlots, MTableContext, MTableFixed } from "./types";
 import { MTableContextKey } from "./types";
 
 const MTableCol = defineComponent({
     name: "MTableCol",
+    slots: Object as SlotsType<MTableColSlots>,
     props: {
         prop: String,
         label: String,
@@ -55,4 +56,11 @@ const MTableCol = defineComponent({
     }
 });
 
-export default MTableCol;
+type MTableColComponent = typeof MTableCol & {
+    new <T extends Record<string, any> = Record<string, any>>(): {
+        $props: MTableColProps;
+        $slots: MTableColSlots<T>;
+    };
+};
+
+export default MTableCol as MTableColComponent;

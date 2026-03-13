@@ -61,7 +61,7 @@ const props = withDefaults(defineProps<MPaginationProps>(), {
 const emits = defineEmits<MPaginationEmits>();
 
 const currentPage = ref<number>(1);
-const pageSize = ref<number>(props.defaultPageSize || props.pageSizeOptions[0]!);
+const pageSize = ref<number>(props.defaultPageSize || props.pageSizeOptions[0]);
 const totalPages = computed(() => Math.ceil(props.totalCount / pageSize.value));
 const totalText = computed(() => {
     const start = (currentPage.value - 1) * pageSize.value + 1;

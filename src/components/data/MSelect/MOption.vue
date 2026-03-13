@@ -32,10 +32,6 @@ const onClick = () => {
 
 if (selectContext) {
     selectContext.register(props.label, props.value);
-    if (selectContext.isSelected(props.value)) {
-        // 初始化时如果已选中则设置值
-        selectContext.setModelValue(props.label, props.value, true);
-    }
 }
 </script>
 

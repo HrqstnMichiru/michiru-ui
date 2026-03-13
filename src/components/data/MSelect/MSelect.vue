@@ -82,7 +82,7 @@ import type { MInputInstance, MTooltipInstance } from "@/components";
 import { MCheckBox, MIcon, MInput, MScrollBar, MTag, MTooltip } from "@/components";
 import type { MFormContext, MFormItemContext } from "@/components/data/MForm/types";
 import { MFormContextKey, MFormItemContextKey } from "@/components/data/MForm/types";
-import { computed, inject, provide, ref, shallowReactive, useTemplateRef } from "vue";
+import { computed, inject, onMounted, provide, ref, shallowReactive, useTemplateRef } from "vue";
 import type { MSelectContext, MSelectEmits, MSelectProps } from "./types";
 import { MSelectContextKey } from "./types";
 
@@ -267,7 +267,7 @@ provide<MSelectContext>(MSelectContextKey, {
     register
 });
 
-(() => {
+onMounted(() => {
     selectValueMap.clear();
     if (props.multiple) {
         if (Array.isArray(modelValue.value)) {
@@ -287,7 +287,7 @@ provide<MSelectContext>(MSelectContextKey, {
             formItemContext?.resetValidate();
         });
     }
-})();
+})
 </script>
 
 <style lang="scss" scoped>

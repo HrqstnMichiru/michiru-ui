@@ -19,9 +19,24 @@ export interface MTableColProps {
     placement?: MPlacement;
 }
 
+export interface MTableHeaderSlotScope {
+    column: MTableColumnConfig;
+}
+
+export interface MTableDefaultSlotScope<T extends Record<string, any> = Record<string, any>> {
+    row: T;
+    index: number;
+    column: MTableColumnConfig;
+}
+
+export interface MTableColSlots<T extends Record<string, any> = Record<string, any>> {
+    default?: (props: MTableDefaultSlotScope<T>) => any;
+    header?: (props: MTableHeaderSlotScope) => any;
+}
+
 export interface MTableColumnSlots {
-    default?: Slot;
-    header?: Slot;
+    default?: Slot<MTableDefaultSlotScope>;
+    header?: Slot<MTableHeaderSlotScope>;
 }
 
 export interface MTableColumnConfig extends MTableColProps {
