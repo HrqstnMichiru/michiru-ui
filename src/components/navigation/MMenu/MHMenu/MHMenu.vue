@@ -1,44 +1,46 @@
-﻿<template>
-    <div class="h-menu" ref="containerRef">
-        <slot></slot>
-        <div class="active-bar" :class="{ 'active-bar--ready': isReady }" :style="barStyle"></div>
-        <div v-for="(item, index) in stateList" :key="item.data.name" ref="itemRefs" class="wrapper">
-            <template v-if="item.children">
-                <MenuNode v-bind="item">
-                    <template #default="{ active, data }">
-                        <div
-                            class="menu-item"
-                            :class="{
-                                'menu-item--active': activeIndex === index,
-                                'menu-item--disabled': data.disabled
-                            }">
-                            <MIcon :name="data.icon" :size="20" v-if="data.icon"></MIcon>
-                            <span class="label">{{ data.label }}</span>
-                            <MIcon
-                                name="material-symbols:arrow-forward-ios"
-                                class="open-icon"
-                                :size="16"
+<template>
+    <MTooltipProvider>
+        <div class="h-menu" ref="containerRef">
+            <slot></slot>
+            <div class="active-bar" :class="{ 'active-bar--ready': isReady }" :style="barStyle"></div>
+            <div v-for="(item, index) in stateList" :key="item.data.name" ref="itemRefs" class="wrapper">
+                <template v-if="item.children">
+                    <MenuNode v-bind="item">
+                        <template #default="{ active, data }">
+                            <div
+                                class="menu-item"
                                 :class="{
-                                    'open-icon--active': active
-                                }"></MIcon>
-                        </div>
-                    </template>
-                </MenuNode>
-            </template>
-            <template v-else>
-                <div
-                    @click="setCurrent(item.data.name)"
-                    class="menu-item"
-                    :class="{
-                        'menu-item--active': activeIndex === index,
-                        'menu-item--disabled': item.data.disabled
-                    }">
-                    <MIcon :name="item.data.icon" :size="20" v-if="item.data.icon"></MIcon>
-                    <span class="label">{{ item.data.label }}</span>
-                </div>
-            </template>
+                                    'menu-item--active': activeIndex === index,
+                                    'menu-item--disabled': data.disabled
+                                }">
+                                <MIcon :name="data.icon" :size="20" v-if="data.icon"></MIcon>
+                                <span class="label">{{ data.label }}</span>
+                                <MIcon
+                                    name="material-symbols:arrow-forward-ios"
+                                    class="open-icon"
+                                    :size="16"
+                                    :class="{
+                                        'open-icon--active': active
+                                    }"></MIcon>
+                            </div>
+                        </template>
+                    </MenuNode>
+                </template>
+                <template v-else>
+                    <div
+                        @click="setCurrent(item.data.name)"
+                        class="menu-item"
+                        :class="{
+                            'menu-item--active': activeIndex === index,
+                            'menu-item--disabled': item.data.disabled
+                        }">
+                        <MIcon :name="item.data.icon" :size="20" v-if="item.data.icon"></MIcon>
+                        <span class="label">{{ item.data.label }}</span>
+                    </div>
+                </template>
+            </div>
         </div>
-    </div>
+    </MTooltipProvider>
 </template>
 
 <script lang="ts" setup>
@@ -48,6 +50,7 @@ import { useRoute, useRouter } from "vue-router";
 import MenuNode from "./MHMenuNode.vue";
 import type { MHMenuContext, MHMenuInstance, MHMenuItemModel, MHMenuItemProps, MHMenuProps } from "./types";
 import { MHMenuContextKey } from "./types";
+import { MTooltipProvider } from "@/components";
 
 defineOptions({
     name: "MHMenu"

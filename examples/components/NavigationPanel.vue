@@ -124,28 +124,30 @@
             </div>
             <p style="margin-top: 16px">右键触发菜单</p>
             <div class="actions">
-                <MDropdown trigger="click" placement="top-start">
-                    <MButton variant="info">右键菜单</MButton>
-                    <template #menu>
-                        <MDropdownItem label="编辑" icon="mdi:pencil" />
-                        <MDropdownItem label="查看" icon="mdi:eye" />
-                        <MDropdownItem label="删除" icon="mdi:delete-outline" />
-                        <MDropdown label="更多" icon="mdi:alert-circle" trigger="click">
-                            <template #menu>
-                                <MDropdownItem label="复制" icon="mdi:content-copy" />
-                                <MDropdownItem label="粘贴" icon="mdi:content-paste" />
-                                <MDropdownItem label="删除" icon="mdi:delete" />
-                                <MDropdown label="嵌套更多" icon="mdi:alert-circle">
-                                    <template #menu>
-                                        <MDropdownItem label="复制" icon="mdi:content-copy" />
-                                        <MDropdownItem label="粘贴" icon="mdi:content-paste" />
-                                        <MDropdownItem label="删除" icon="mdi:delete" />
-                                    </template>
-                                </MDropdown>
-                            </template>
-                        </MDropdown>
-                    </template>
-                </MDropdown>
+                <MTooltipProvider>
+                    <MDropdown placement="top-start">
+                        <MButton variant="info">右键菜单</MButton>
+                        <template #menu>
+                            <MDropdownItem label="编辑" icon="mdi:pencil" />
+                            <MDropdownItem label="查看" icon="mdi:eye" />
+                            <MDropdownItem label="删除" icon="mdi:delete-outline" />
+                            <MDropdown label="更多" icon="mdi:alert-circle">
+                                <template #menu>
+                                    <MDropdownItem label="复制" icon="mdi:content-copy" />
+                                    <MDropdownItem label="粘贴" icon="mdi:content-paste" />
+                                    <MDropdownItem label="删除" icon="mdi:delete" />
+                                    <MDropdown label="嵌套更多" icon="mdi:alert-circle">
+                                        <template #menu>
+                                            <MDropdownItem label="复制" icon="mdi:content-copy" />
+                                            <MDropdownItem label="粘贴" icon="mdi:content-paste" />
+                                            <MDropdownItem label="删除" icon="mdi:delete" />
+                                        </template>
+                                    </MDropdown>
+                                </template>
+                            </MDropdown>
+                        </template>
+                    </MDropdown>
+                </MTooltipProvider>
             </div>
             <p style="margin-top: 16px">切换动画</p>
             <div class="actions">
@@ -157,8 +159,8 @@
                         <MDropdownItem label="选项三" />
                     </template>
                 </MDropdown>
-                <MDropdown :width="200" transition="unfold" placement="top-start">
-                    <MButton variant="pink">Unfold 动画</MButton>
+                <MDropdown :width="200" transition="translate" placement="top-start">
+                    <MButton variant="pink">Translate 动画</MButton>
                     <template #menu>
                         <MDropdownItem label="选项一" />
                         <MDropdownItem label="选项二" />
@@ -199,7 +201,7 @@
 
 <script lang="ts" setup>
 import type { VMenuInstance } from "@/components";
-import { MButton, MCard, MDropdown, MDropdownItem, MFlex, MHMenu, MHMenuItem, MHSubMenu, MMessage, MPagination, MVMenu, MVMenuItem, MVSubMenu } from "@/components";
+import { MButton, MCard, MDropdown, MDropdownItem, MFlex, MHMenu, MHMenuItem, MHSubMenu, MMessage, MPagination, MVMenu, MVMenuItem, MVSubMenu, MTooltipProvider } from "@/components";
 import { ref } from "vue";
 
 // MVMenu

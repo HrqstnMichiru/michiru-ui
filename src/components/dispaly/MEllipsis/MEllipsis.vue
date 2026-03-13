@@ -1,7 +1,8 @@
 <template>
     <MTooltip
         v-bind="{
-            placement: 'top',
+            placement,
+            syncWidth: true,
             disabled: !(tooltip && isOverflowing)
         }">
         <p

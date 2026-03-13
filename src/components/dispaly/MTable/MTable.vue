@@ -21,7 +21,7 @@
                                 {{ column.label || "#" }}
                             </template>
                             <template v-else>
-                                <RenderSlot v-if="getColumnSlot(column, 'header')" :render="getColumnSlot(column, 'header')" :scope="{ column }"></RenderSlot>
+                                <RenderSlot v-if="column.slots?.header" :render="column.slots?.header" :scope="{ column }"></RenderSlot>
                                 <template v-else>
                                     {{ column.label }}
                                 </template>
@@ -40,7 +40,7 @@
                 height: `${height}px`,
                 maxHeight: `${maxHeight}px`
             }"
-            v-loading="loading">
+            v-loading="props.loading">
             <div class="table-content">
                 <div class="table-body">
                     <div
@@ -57,13 +57,18 @@
                             <template v-else-if="column.type === 'index'">
                                 {{ rowIndex + 1 }}
                             </template>
-                            <template v-else-if="getColumnSlot(column, 'default')">
+                            <template v-else-if="column.slots?.default">
                                 <div class="table-body-cell--scoped" :style="{ justifyContent: alignMap[column.aligns || 'center'] }">
-                                    <RenderSlot :render="getColumnSlot(column, 'default')" :scope="{ row, index: rowIndex, column }"></RenderSlot>
+                                    <RenderSlot :render="column.slots?.default" :scope="{ row, index: rowIndex, column }"></RenderSlot>
                                 </div>
                             </template>
                             <template v-else-if="column.prop">
-                                <span class="table-body-cell__value">{{ row[column.prop] }}</span>
+                                <span class="table-body-cell__value">
+                                    <template v-if="column.tooltip">
+                                        <MEllipsis :tooltip="column.tooltip" :placement="column.placement || 'top'" :max-lines="column.maxLines">{{ row[column.prop] }}</MEllipsis>
+                                    </template>
+                                    <template v-else>{{ row[column.prop] }}</template>
+                                </span>
                             </template>
                         </div>
                     </div>
@@ -82,7 +87,7 @@
 </template>
 
 <script lang="ts" setup generic="T extends Record<string, any>">
-import { MCheckBox, MEmpty } from "@/components";
+import { MCheckBox, MEllipsis, MEmpty } from "@/components";
 import vLoading from "@/directives/loading";
 import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, shallowReactive, useTemplateRef, watch, type CSSProperties, type PropType } from "vue";
 import type { MRenderColumn, MResolvedColumn, MTableEmits, MTableFixed, MTableInstance, MTableProps } from "./types";
@@ -91,20 +96,20 @@ import { MTableContextKey } from "./types";
 const DEFAULT_FIXED_COLUMN_WIDTH = "160px";
 const SELECTION_COLUMN_WIDTH = "44px";
 const INDEX_COLUMN_WIDTH = "72px";
-const NATIVE_SCROLLBAR_COMPENSATION = 6;
+const NATIVE_SCROLLBAR_COMPENSATION = 5.5;
 
 defineOptions({
     name: "MTable"
 });
 
 const props = withDefaults(defineProps<MTableProps<T>>(), {
-    size: "medium"
+    size: "medium",
+    loading: false
 });
 const emits = defineEmits<MTableEmits<T>>();
 
 const headerScrollbarRef = useTemplateRef<HTMLDivElement>("headerScrollbarRef");
 const bodyScrollbarRef = useTemplateRef<HTMLDivElement>("bodyScrollbarRef");
-const loading = ref(false);
 const slotColumns = reactive<MResolvedColumn[]>([]);
 const selectedRows = shallowReactive<Map<keyof T, T>>(new Map());
 const hasVerticalScrollbar = ref(false);
@@ -117,14 +122,17 @@ let bodyResizeObserver: ResizeObserver | null = null;
 const RenderSlot = defineComponent({
     name: "MTableRenderSlot",
     props: {
-        render: Function as PropType<((scope: Record<string, any>) => unknown) | undefined>,
+        render: {
+            type: Function as PropType<(scope: Record<string, any>) => any>,
+            required: true
+        },
         scope: {
             type: Object as PropType<Record<string, any>>,
-            default: () => ({})
+            required: true
         }
     },
     setup(renderProps) {
-        return () => renderProps.render?.(renderProps.scope) ?? null;
+        return () => renderProps.render(renderProps.scope);
     }
 });
 
@@ -195,11 +203,6 @@ const headerGridStyle = computed<CSSProperties>(() => ({
     gridTemplateColumns: compensateTracks(renderColumns.value.map(column => column.trackWidth)).join(" ") || "minmax(0, 1fr)"
 }));
 
-const wrapperClass = computed(() => ({
-    [`table--${props.size}`]: true,
-    "table--bordered": props.bordered
-}));
-
 const updateScrollState = () => {
     const bodyEl = bodyScrollbarRef.value;
     if (!bodyEl) return;
@@ -224,10 +227,6 @@ const syncScrollPosition = (source: "header" | "body") => {
     });
 };
 
-const handleHeaderScroll = () => {
-    syncScrollPosition("header");
-    updateScrollState();
-};
 const handleBodyScroll = () => {
     syncScrollPosition("body");
     updateScrollState();
@@ -253,8 +252,6 @@ const getCellClass = (column: MRenderColumn, isHeader: boolean) => ({
     "table-cell--fixed-left-shadow": column.key === lastLeftFixedKey.value && showLeftShadow.value,
     "table-cell--fixed-right-shadow": column.key === firstRightFixedKey.value && showRightShadow.value
 });
-
-const getColumnSlot = (column: MResolvedColumn, slotName: "default" | "header") => column.slots?.[slotName];
 
 const hasSelectionColumn = computed(() => renderColumns.value.some(column => column.type === "selection"));
 const checkAll = computed(() => hasSelectionColumn.value && props.data.length > 0 && selectedRows.size === props.data.length);
@@ -330,9 +327,7 @@ watch(
 );
 
 onMounted(() => {
-    const headerEl = headerScrollbarRef.value;
     const bodyEl = bodyScrollbarRef.value;
-    headerEl?.addEventListener("scroll", handleHeaderScroll, { passive: true });
     bodyEl?.addEventListener("scroll", handleBodyScroll, { passive: true });
     if (bodyEl) {
         bodyResizeObserver = new ResizeObserver(updateScrollState);
@@ -345,9 +340,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    const headerEl = headerScrollbarRef.value;
     const bodyEl = bodyScrollbarRef.value;
-    headerEl?.removeEventListener("scroll", handleHeaderScroll);
     bodyEl?.removeEventListener("scroll", handleBodyScroll);
     bodyResizeObserver?.disconnect();
     bodyResizeObserver = null;
@@ -368,7 +361,7 @@ defineExpose<MTableInstance<T>>({
     --table-cell-padding-y: 8px;
     --table-cell-padding-x: 12px;
     --table-font-size: 14px;
-    --table-line-height: 23px;
+    --table-line-height: 21px;
     --table-header-color: #909399;
     --table-body-color: #606266;
     --table-row-bg: #fff;
@@ -379,7 +372,6 @@ defineExpose<MTableInstance<T>>({
     --table-shadow-color: rgba(0, 0, 0, 0.12);
     width: 100%;
     background: #fff;
-    border-radius: 4px;
 
     &.table--small {
         --table-cell-padding-y: 6px;
@@ -503,7 +495,7 @@ defineExpose<MTableInstance<T>>({
         }
     }
 
-    &:not(:last-child) .table-body-cell {
+    .table-body-cell {
         border-bottom: 1px solid var(--table-border-color);
     }
 }

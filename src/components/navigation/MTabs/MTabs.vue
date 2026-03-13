@@ -140,7 +140,7 @@ const isActive = (name: string | number) => {
 };
 
 const register = (item: MTabPanelProps) => {
-    if (itemRefs.has(item.name)) return;
+    if (tabItemList.some(tab => tab.name === item.name)) return;
     tabItemList.push(item);
     if (props.router && item.name === route.path) {
         activeTab.value = item.name;

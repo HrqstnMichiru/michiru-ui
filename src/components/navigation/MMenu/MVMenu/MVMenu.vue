@@ -1,15 +1,18 @@
 ﻿<template>
-    <div
-        class="v-menu"
-        :style="{
-            width: `${customWidth}px`,
-            '--menu-speed': `${duration}ms`
-        }">
-        <slot></slot>
-    </div>
+    <MTooltipProvider>
+        <div
+            class="v-menu"
+            :style="{
+                width: `${customWidth}px`,
+                '--menu-speed': `${duration}ms`
+            }">
+            <slot></slot>
+        </div>
+    </MTooltipProvider>
 </template>
 
 <script lang="ts" setup>
+import { MTooltipProvider } from "@/components";
 import { computed, onMounted, provide, ref, shallowReactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { MVMenuContext, MVMenuEmits, MVMenuInstance, MVMenuItemModel, MVMenuItemProps, MVMenuProps } from "./types";

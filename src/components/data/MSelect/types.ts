@@ -1,4 +1,4 @@
-import type { MPlacement } from "@/components/feedback";
+import type { MPlacement } from "@/components/feedback/MTooltip/types";
 import type { InjectionKey } from "vue";
 
 export interface MOptionProps {

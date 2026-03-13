@@ -145,9 +145,9 @@
                 <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 16px">MTableCol 组件式（height）</h4>
                     <MTable :data="tableDemoData" row-key="id" striped hoverable :height="tableDemoHeight">
-                        <MTableCol type="selection"  fixed></MTableCol>
-                        <MTableCol type="index" label="#" fixed></MTableCol>
-                        <MTableCol prop="name" label="成员" :width="180" fixed></MTableCol>
+                        <MTableCol type="selection" fixed></MTableCol>
+                        <MTableCol type="index" fixed></MTableCol>
+                        <MTableCol prop="name" label="成员" :width="180" fixed tooltip :max-lines="2"></MTableCol>
                         <MTableCol prop="department" label="部门" :width="160"></MTableCol>
                         <MTableCol prop="role" label="角色" :width="160"></MTableCol>
                         <MTableCol prop="location" label="办公地" :width="160"></MTableCol>
@@ -228,7 +228,7 @@
                             <p style="margin-bottom: 12px">medium</p>
                             <MTable :data="tableDemoSizeData" row-key="id" size="medium" striped hoverable :height="200">
                                 <MTableCol type="index" label="#"></MTableCol>
-                                <MTableCol prop="name" label="成员" :min-width="200"></MTableCol>
+                                <MTableCol prop="name" label="成员" :width="300"></MTableCol>
                                 <MTableCol prop="department" label="部门" :min-width="180"></MTableCol>
                                 <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
                                 <MTableCol label="状态" :width="120">
@@ -245,7 +245,7 @@
                             <p style="margin-bottom: 12px">large</p>
                             <MTable :data="tableDemoSizeData" row-key="id" size="large" striped hoverable :height="220">
                                 <MTableCol type="index" label="#" :width="80"></MTableCol>
-                                <MTableCol prop="name" label="成员" :min-width="220"></MTableCol>
+                                <MTableCol prop="name" label="成员" :width="300"></MTableCol>
                                 <MTableCol prop="department" label="部门" :min-width="200"></MTableCol>
                                 <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
                                 <MTableCol label="状态" :width="120">
@@ -269,6 +269,27 @@
                         <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
                         <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
                         <MTableCol label="状态" :width="120">
+                            <template #default="{ row }">
+                                <MTag size="small" :variant="getStatusVariant(row.status)">
+                                    {{ row.statusLabel }}
+                                </MTag>
+                            </template>
+                        </MTableCol>
+                    </MTable>
+                </div>
+                <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px">
+                        <h4 style="margin: 0; font-size: 16px">Loading 状态</h4>
+                        <MButton size="small" @click="tableDemoLoading = !tableDemoLoading">
+                            {{ tableDemoLoading ? "关闭 Loading" : "打开 Loading" }}
+                        </MButton>
+                    </div>
+                    <MTable :data="tableDemoData.slice(0, 6)" :loading="tableDemoLoading" row-key="id" striped hoverable :height="260">
+                        <MTableCol type="index" label="#"></MTableCol>
+                        <MTableCol prop="name" label="成员" :width="180"></MTableCol>
+                        <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
+                        <MTableCol prop="score" label="完成度" :min-width="120" aligns="center"></MTableCol>
+                        <MTableCol label="状态" :width="120" aligns="center">
                             <template #default="{ row }">
                                 <MTag size="small" :variant="getStatusVariant(row.status)">
                                     {{ row.statusLabel }}
@@ -522,6 +543,7 @@ import manager from "../scripts/data-manager";
 
 const dynamicValue = ref(12345);
 const closedTagCount = ref(0);
+const tableDemoLoading = ref(true);
 
 interface TableDemoRow {
     id: number;
@@ -547,10 +569,17 @@ const tableDemoBaseData: TableDemoRow[] = [
 ];
 const tableDemoData: TableDemoRow[] = Array.from({ length: 18 }, (_, index) => {
     const template = tableDemoBaseData[index % tableDemoBaseData.length]!;
+    const withLongName = index % 5 === 1;
+    const withLongDepartment = index % 6 === 2;
+    const withLongRole = index % 4 === 3;
+    const withLongLocation = index % 7 === 4;
     return {
         ...template,
         id: template.id + index * 10,
-        name: `${template.name} ${index + 1}`,
+        name: withLongName ? `${template.name} ${index + 1} · 负责多端组件库规范维护与复杂交互设计联调` : `${template.name} ${index + 1}`,
+        department: withLongDepartment ? `${template.department} / 体验优化与设计系统协同小组` : template.department,
+        role: withLongRole ? `${template.role} / 负责高频场景压测、回归验证与问题归档跟进` : template.role,
+        location: withLongLocation ? `${template.location} · 远程协作办公区 / 国际项目支持组` : template.location,
         score: `${Math.max(80, 98 - (index % 7) * 2)}%`,
         updatedAt: `2026-03-${String((index % 9) + 11).padStart(2, "0")} ${String(8 + (index % 6)).padStart(2, "0")}:${String((index * 7) % 60).padStart(2, "0")}`
     };

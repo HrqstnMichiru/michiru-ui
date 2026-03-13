@@ -1,4 +1,4 @@
-import type { MPlacement } from "@/components";
+import type { MPlacement } from "@/components/feedback/MTooltip/types";
 import type { InjectionKey } from "vue";
 
 export interface MDropdownItemProps {
@@ -14,7 +14,7 @@ export interface MDropdownProps {
     hideAfterClick?: boolean; // 点击菜单项后是否隐藏
     trigger?: "hover" | "click" | "manual"; // 触发方式
     placement?: MPlacement; // 位置
-    transition?: "fade" | "unfold" | "none" | "translate";
+    transition?: "fade" | "none" | "translate";
     block?: boolean; // 是否为块级元素
     disabled?: boolean; // 是否禁用
     width?: number; // 下拉菜单宽度

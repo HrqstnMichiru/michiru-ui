@@ -1,4 +1,4 @@
 import MDatePicker from "./MDatePicker.vue";
-import MDatePickerPanel from "./MDatePickerPanel.vue";
+import MDatePickerPane from "./MDatePickerPane.vue";
 export type { MDatePickerPanelInstance } from "./types";
-export { MDatePicker, MDatePickerPanel };
+export { MDatePicker, MDatePickerPane };

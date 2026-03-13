@@ -69,6 +69,9 @@ const handleClick = () => {
             user-select: none;
         }
     }
+    .right {
+        margin-left: 20px;
+    }
     &:hover {
         background-color: rgba(0, 0, 0, 0.08);
         .left,

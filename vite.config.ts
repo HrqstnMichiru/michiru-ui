@@ -14,7 +14,7 @@ export default defineConfig({
     // 开发服务器配置
     server: {
         hmr: true,
-        port: 6753
+        port: 6754
     },
     // 库模式打包配置
     build: {

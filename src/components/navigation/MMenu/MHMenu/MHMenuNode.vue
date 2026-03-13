@@ -9,8 +9,7 @@
             :placement="!parentName ? 'bottom' : 'right'"
             :disabled="data.disabled"
             :offset="8"
-            @visible-change="onVisibleChange"
-            :trigger-align="parentName ? 'start' : 'center'">
+            @visible-change="onVisibleChange">
             <slot :active="visible" :data="data">
                 <div
                     class="menu-node"

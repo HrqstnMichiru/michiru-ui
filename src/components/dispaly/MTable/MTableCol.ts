@@ -1,6 +1,7 @@
+import type { MPlacement } from "@/components/feedback/MTooltip/types";
 import type { PropType } from "vue";
 import { defineComponent, inject, onBeforeUnmount, onMounted, useSlots, watch } from "vue";
-import type { MTableAlign, MTableColType, MTableColumnConfig, MTableContext, MTableFixed } from "./types";
+import type { MTableAlign, MTableColType, MTableColumnConfig, MTableColumnSlots, MTableContext, MTableFixed } from "./types";
 import { MTableContextKey } from "./types";
 
 const MTableCol = defineComponent({
@@ -12,7 +13,10 @@ const MTableCol = defineComponent({
         minWidth: Number,
         aligns: String as PropType<MTableAlign>,
         fixed: [Boolean, String] as PropType<MTableFixed>,
-        type: String as PropType<MTableColType>
+        type: String as PropType<MTableColType>,
+        tooltip: Boolean,
+        placement: String as PropType<MPlacement>,
+        maxLines: Number
     },
     setup(props) {
         const tableContext = inject<MTableContext>(MTableContextKey);
@@ -21,7 +25,10 @@ const MTableCol = defineComponent({
 
         const createColumn = (): MTableColumnConfig => ({
             ...props,
-            slots
+            slots: {
+                default: slots.default,
+                header: slots.header
+            } as MTableColumnSlots
         });
 
         onMounted(() => {

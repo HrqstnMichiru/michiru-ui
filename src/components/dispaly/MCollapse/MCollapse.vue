@@ -5,7 +5,7 @@
             '--collapse-speed': `${context?.duration || duration}ms`
         }">
         <div class="m-collapse__trigger" @click="toggleCollapse">
-            <span class="collapse__trigger-title">
+            <span class="m-collapse__trigger-title">
                 <MIcon :name="prefixIcon" v-if="prefixIcon" :color="colorMap[props.iconVariant]"></MIcon>
                 <span>{{ title }}</span>
             </span>

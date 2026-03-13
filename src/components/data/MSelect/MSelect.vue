@@ -1,5 +1,15 @@
 <template>
-    <MTooltip ref="tooltipRef" @visible-change="onVisibleChange" trigger="click" transition="unfold" :show-arrow="false" :placement="placement" :disabled="disabled" :block="customBlock" theme="light">
+    <MTooltip
+        ref="tooltipRef"
+        @visible-change="onVisibleChange"
+        trigger="click"
+        transition="translate"
+        :show-arrow="false"
+        sync-width
+        :placement="placement"
+        :disabled="disabled"
+        :block="customBlock"
+        theme="light">
         <MInput
             ref="inputRef"
             type="text"
@@ -50,7 +60,7 @@
             </template>
         </MInput>
         <template #content>
-            <div class="m-select-options" ref="optionsRef">
+            <div class="m-select-options">
                 <slot name="header" v-if="toggleValueMap.size > 0">
                     <div class="m-select-header" v-if="multiple && hasSelectAll">
                         <MCheckBox variant="primary" @update:model-value="toggleSelectAll" :model-value="selectAll"></MCheckBox>
@@ -72,7 +82,7 @@ import type { MInputInstance, MTooltipInstance } from "@/components";
 import { MCheckBox, MIcon, MInput, MScrollBar, MTag, MTooltip } from "@/components";
 import type { MFormContext, MFormItemContext } from "@/components/data/MForm/types";
 import { MFormContextKey, MFormItemContextKey } from "@/components/data/MForm/types";
-import { computed, inject, onMounted, provide, ref, shallowReactive, useTemplateRef } from "vue";
+import { computed, inject, provide, ref, shallowReactive, useTemplateRef } from "vue";
 import type { MSelectContext, MSelectEmits, MSelectProps } from "./types";
 import { MSelectContextKey } from "./types";
 
@@ -93,7 +103,6 @@ const emits = defineEmits<MSelectEmits>();
 
 const tooltipRef = useTemplateRef<MTooltipInstance>("tooltipRef");
 const inputRef = useTemplateRef<MInputInstance>("inputRef");
-const optionsRef = useTemplateRef<HTMLDivElement>("optionsRef");
 const isActive = ref<boolean>(false);
 const modelValue = defineModel<string | number | Array<string | number>>("modelValue");
 const selectValueMap = shallowReactive<Map<string | number, string>>(new Map());
@@ -279,12 +288,6 @@ provide<MSelectContext>(MSelectContextKey, {
         });
     }
 })();
-
-onMounted(() => {
-    if (inputRef.value && optionsRef.value) {
-        optionsRef.value.style.width = `${inputRef.value.ref.offsetWidth}px`;
-    }
-});
 </script>
 
 <style lang="scss" scoped>

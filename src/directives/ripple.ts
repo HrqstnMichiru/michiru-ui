@@ -45,18 +45,14 @@ const ripple = {
 
             el.addEventListener("mousedown", e => {
                 rippleEl = createRipple(e, el);
-                console.log("Ripple created at", { x: e.clientX, y: e.clientY });
-                console.log("Ripple element:", rippleEl);
                 isMouseUp = false;
                 isAnimationEnded = false;
 
                 // 监听动画结束
                 rippleEl?.addEventListener("animationend", () => {
-                    console.log("Ripple animation ended");
                     isAnimationEnded = true;
                     // 如果鼠标已经抬起且动画结束，则移除
                     if (isMouseUp) {
-                        console.log("Removing ripple element");
                         rippleEl?.remove();
                         rippleEl = null;
                     }

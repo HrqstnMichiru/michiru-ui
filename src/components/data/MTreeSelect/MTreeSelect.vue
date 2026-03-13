@@ -1,5 +1,15 @@
 ﻿<template>
-    <MTooltip ref="tooltipRef" @visible-change="visibleChange" trigger="click" transition="unfold" :show-arrow="false" :placement="placement" :disabled="disabled" :block="customBlock" theme="light">
+    <MTooltip
+        ref="tooltipRef"
+        @visible-change="visibleChange"
+        trigger="click"
+        sync-width
+        transition="translate"
+        :show-arrow="false"
+        :placement="placement"
+        :disabled="disabled"
+        :block="customBlock"
+        theme="light">
         <MInput
             type="text"
             readonly
@@ -58,7 +68,7 @@
             </template>
         </MInput>
         <template #content>
-            <div class="m-tree-select-options" ref="optionsRef">
+            <div class="m-tree-select-options">
                 <template v-if="data.length > 0">
                     <slot name="header">
                         <div class="m-tree-select-header" v-if="multiple && hasSelectAll">
@@ -271,12 +281,6 @@ if (formItemContext && formItemContext.prop) {
         formItemContext?.resetValidate();
     });
 }
-
-onMounted(() => {
-    if (inputRef.value && optionsRef.value) {
-        optionsRef.value.style.width = `${inputRef.value.ref.offsetWidth}px`;
-    }
-});
 </script>
 
 <style lang="scss" scoped>

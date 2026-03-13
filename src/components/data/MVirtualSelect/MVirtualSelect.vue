@@ -1,5 +1,15 @@
 <template>
-    <MTooltip ref="tooltipRef" @visible-change="visibleChange" trigger="click" transition="unfold" :show-arrow="false" :placement="placement" :disabled="disabled" :block="customBlock" theme="light">
+    <MTooltip
+        ref="tooltipRef"
+        @visible-change="visibleChange"
+        trigger="click"
+        sync-width
+        transition="translate"
+        :show-arrow="false"
+        :placement="placement"
+        :disabled="disabled"
+        :block="customBlock"
+        theme="light">
         <MInput
             type="text"
             readonly
@@ -50,7 +60,7 @@
             </template>
         </MInput>
         <template #content>
-            <div class="m-virtual-select-options" ref="optionsRef">
+            <div class="m-virtual-select-options">
                 <template v-if="dataSource.length > 0">
                     <slot name="header">
                         <div class="m-virtual-select-header" v-if="multiple && hasSelectAll">
@@ -112,7 +122,6 @@ const props = withDefaults(defineProps<MVirtualSelectProps>(), {
 const emits = defineEmits<MSelectEmits>();
 
 const tooltipRef = useTemplateRef<MTooltipInstance>("tooltipRef");
-const optionsRef = useTemplateRef<HTMLDivElement>("optionsRef");
 const inputRef = useTemplateRef<MInputInstance>("inputRef");
 const isActive = ref<boolean>(false);
 const modelValue = defineModel<string | number | Array<string | number>>("modelValue");
@@ -283,12 +292,6 @@ const onClose = (value: string | number, index: number) => {
         });
     }
 })();
-
-onMounted(() => {
-    if (inputRef.value && optionsRef.value) {
-        optionsRef.value.style.width = `${inputRef.value.ref.offsetWidth}px`;
-    }
-});
 </script>
 
 <style lang="scss" scoped>

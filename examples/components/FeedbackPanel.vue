@@ -203,8 +203,8 @@
                 <MTooltip content="渐入渐出效果" transition="fade">
                     <MButton variant="info">Fade</MButton>
                 </MTooltip>
-                <MTooltip content="展开收起" transition="unfold">
-                    <MButton variant="purple">Unfold</MButton>
+                <MTooltip content="展开收起" transition="translate" placement="top">
+                    <MButton variant="purple">Translate</MButton>
                 </MTooltip>
                 <MTooltip content="向下滑动" transition="translate" placement="right" theme="light">
                     <MButton variant="pink">Translate</MButton>

@@ -90,6 +90,19 @@
             </div>
         </MCard>
 
+        <MCard title="MIconButton - 图标按钮">
+            <p>默认仅显示图标，悬停时显示浅灰背景，支持圆形和 tooltip</p>
+            <div class="actions">
+                <MIconButton icon="mdi:dots-horizontal" tooltip="更多" />
+                <MIconButton icon="mdi:pencil-outline" size="small" tooltip="编辑" />
+                <MIconButton icon="mdi:delete-outline" size="medium" tooltip="删除" />
+                <MIconButton icon="mdi:cog-outline" size="large" tooltip="设置" />
+                <MIconButton icon="mdi:heart-outline" color="#f56c6c" circle tooltip="收藏" />
+                <MIconButton icon="mdi:information-outline" circle tooltip="提示信息" placement="bottom" />
+                <MIconButton icon="mdi:lock-outline" disabled tooltip="已禁用" />
+            </div>
+        </MCard>
+
         <!-- MSplit -->
         <MCard title="MSplit - 分割面板">
             <p>水平分割（左右）</p>
@@ -169,7 +182,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MScrollBar, MSplit } from "@/components";
+import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MIconButton, MScrollBar, MSplit } from "@/components";
 
 const longList = Array.from({ length: 20 }, (_, index) => index + 1);
 const chipList = Array.from({ length: 18 }, (_, index) => index + 1);

@@ -1,5 +1,14 @@
-﻿<template>
-    <MTooltip ref="tooltipRef" @visible-change="onVisibleChange" trigger="click" transition="unfold" theme="light" :show-arrow="false" :placement="placement" :disabled="disabled" :block="customBlock">
+<template>
+    <MTooltip
+        ref="tooltipRef"
+        @visible-change="onVisibleChange"
+        trigger="click"
+        transition="translate"
+        theme="light"
+        :show-arrow="false"
+        :placement="placement"
+        :disabled="disabled"
+        :block="customBlock">
         <MInput
             type="text"
             readonly
@@ -41,7 +50,7 @@
             </template>
         </MInput>
         <template #content>
-            <DatePickerPanel ref="panelRef" v-model="modelValue" :format="format" :multiple="multiple" @change="onChange" @click="onClick"></DatePickerPanel>
+            <MDatePickerPane ref="panelRef" v-model="modelValue" :format="format" :multiple="multiple" @change="onChange" @click="onClick"></MDatePickerPane>
         </template>
     </MTooltip>
 </template>
@@ -52,7 +61,7 @@ import { MIcon, MInput, MTag, MTooltip } from "@/components";
 import type { MFormContext, MFormItemContext } from "@/components/data/MForm/types";
 import { MFormContextKey, MFormItemContextKey } from "@/components/data/MForm/types";
 import { computed, inject, ref, useTemplateRef } from "vue";
-import DatePickerPanel from "./MDatePickerPanel.vue";
+import MDatePickerPane from "./MDatePickerPane.vue";
 import type { MDatePickerEmits, MDatePickerPanelInstance, MDatePickerProps } from "./types";
 
 defineOptions({

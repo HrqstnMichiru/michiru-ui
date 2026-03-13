@@ -1,4 +1,4 @@
-import type { MPlacement } from "@/components";
+import type { MPlacement } from "@/components/feedback/MTooltip/types";
 
 export interface MDatePickerProps {
     disabled?: boolean;
