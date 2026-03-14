@@ -33,12 +33,12 @@
                     :key="node[nodeKey]"
                     :text="node[nodeLabel]"
                     variant="gray"
-                    plain
+                    outlined
                     closable
                     :size="customSize"
                     @close="onClose(node[nodeKey], index)"></MTag>
                 <MTooltip transition="none" theme="light" :z-index="2000">
-                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle"></MTag>
+                    <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle" outlined></MTag>
                     <template #content>
                         <div
                             class="m-tree-select__popper"
@@ -47,7 +47,7 @@
                             }">
                             <MTag
                                 variant="gray"
-                                plain
+                                outlined
                                 closable
                                 v-for="(node, index) in hiddenLabels"
                                 :key="node[nodeKey]"
