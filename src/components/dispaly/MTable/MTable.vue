@@ -90,7 +90,7 @@
 import { MCheckBox, MEllipsis, MEmpty } from "@/components";
 import vLoading from "@/directives/loading";
 import { computed, defineComponent, nextTick, onBeforeUnmount, onMounted, provide, reactive, ref, shallowReactive, useTemplateRef, watch, type CSSProperties, type PropType } from "vue";
-import type { MRenderColumn, MResolvedColumn, MTableDefaultSlotScope, MTableEmits, MTableHeaderSlotScope, MTableFixed, MTableInstance, MTableProps } from "./types";
+import type { MRenderColumn, MResolvedColumn, MTableDefaultSlotScope, MTableEmits, MTableFixed, MTableHeaderSlotScope, MTableInstance, MTableProps } from "./types";
 import { MTableContextKey } from "./types";
 
 const DEFAULT_FIXED_COLUMN_WIDTH = "160px";
@@ -118,6 +118,7 @@ const showRightShadow = ref(false);
 
 let isSyncingScroll = false;
 let bodyResizeObserver: ResizeObserver | null = null;
+let bodyScrollTarget: HTMLDivElement | null = null;
 
 const RenderHeaderSlot = defineComponent({
     name: "MTableRenderHeaderSlot",
@@ -249,6 +250,39 @@ const handleBodyScroll = () => {
     updateScrollState();
 };
 
+const handleHeaderScroll = () => {
+    syncScrollPosition("header");
+    updateScrollState();
+};
+
+const cleanupBodyScrollTarget = () => {
+    bodyScrollTarget?.removeEventListener("scroll", handleBodyScroll);
+    bodyResizeObserver?.disconnect();
+    bodyResizeObserver = null;
+    bodyScrollTarget = null;
+    hasVerticalScrollbar.value = false;
+    showLeftShadow.value = false;
+    showRightShadow.value = false;
+};
+
+const setupBodyScrollTarget = () => {
+    const bodyEl = bodyScrollbarRef.value;
+    if (bodyEl === bodyScrollTarget) return;
+
+    cleanupBodyScrollTarget();
+    if (!bodyEl) return;
+
+    bodyScrollTarget = bodyEl;
+    bodyScrollTarget.addEventListener("scroll", handleBodyScroll, { passive: true });
+    bodyResizeObserver = new ResizeObserver(updateScrollState);
+    bodyResizeObserver.observe(bodyScrollTarget);
+
+    nextTick(() => {
+        updateScrollState();
+        handleBodyScroll();
+    });
+};
+
 const getCellStyle = (column: MRenderColumn, isHeader: boolean): CSSProperties => {
     const style: CSSProperties = {
         textAlign: column.aligns || "center"
@@ -327,7 +361,18 @@ watch(
     () => props.data,
     () => {
         selectedRows.clear();
-        nextTick(updateScrollState);
+        nextTick(() => {
+            setupBodyScrollTarget();
+            updateScrollState();
+        });
+    }
+);
+
+// 监听滚动容器变化，重新设置滚动事件和滚动状态
+watch(
+    () => bodyScrollbarRef.value,
+    () => {
+        nextTick(setupBodyScrollTarget);
     }
 );
 
@@ -344,23 +389,15 @@ watch(
 );
 
 onMounted(() => {
-    const bodyEl = bodyScrollbarRef.value;
-    bodyEl?.addEventListener("scroll", handleBodyScroll, { passive: true });
-    if (bodyEl) {
-        bodyResizeObserver = new ResizeObserver(updateScrollState);
-        bodyResizeObserver.observe(bodyEl);
-    }
-    nextTick(() => {
-        updateScrollState();
-        handleBodyScroll();
-    });
+    const headerEl = headerScrollbarRef.value;
+    headerEl?.addEventListener("scroll", handleHeaderScroll, true);
+    nextTick(setupBodyScrollTarget);
 });
 
 onBeforeUnmount(() => {
-    const bodyEl = bodyScrollbarRef.value;
-    bodyEl?.removeEventListener("scroll", handleBodyScroll);
-    bodyResizeObserver?.disconnect();
-    bodyResizeObserver = null;
+    const headerEl = headerScrollbarRef.value;
+    headerEl?.removeEventListener("scroll", handleHeaderScroll, true);
+    cleanupBodyScrollTarget();
 });
 
 defineExpose<MTableInstance<T>>({

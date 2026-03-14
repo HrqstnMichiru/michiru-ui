@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <component
         :is="isCollapsed ? MTooltip : 'div'"
         v-bind="isCollapsed ? { theme: 'light', block: true, transition: 'translate', offset: 8, disabled, placement: 'right', showArrow: !context, ref: 'tooltipRef' } : {}">
@@ -62,7 +62,7 @@ const menuStyle = computed(() => {
 });
 const labelStyle = computed(() => {
     if (!isCollapsed.value) return {};
-    return { marginLeft: !context ? "12px" : "6px", color: isActive.value ? "#801eff" : "#666" };
+    return { marginLeft: !context ? "12px" : "6px" };
 });
 const menuClasses = computed(() => {
     if (isCollapsed.value) {
@@ -159,33 +159,37 @@ onMounted(() => {
         width: 100%;
         display: inline-flex;
         align-items: center;
-        border-radius: 6px;
         padding: 0 12px;
         height: 42px;
+        cursor: pointer;
+        border-radius: 6px;
         overflow: hidden;
-        white-space: nowrap;
-        color: rgb(107, 107, 107);
         transition:
             background-color 0.2s var(--ease-in-out),
             color 0.2s var(--ease-in-out);
-        .left {
-            flex: 1;
+        .left,
+        .right {
             display: inline-flex;
             align-items: center;
+            font-size: 16px;
+            font-weight: 500;
+            color: rgb(107, 107, 107);
+            transition: color 0.2s ease;
+        }
+        .left {
+            flex: 1;
             .label {
-                font-size: 16px;
-                line-height: 42px;
-                height: 42px;
                 margin-left: 12px;
                 color: rgb(41, 52, 61);
                 white-space: nowrap;
-                transition: all 0.3s ease;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                transition: color 0.2s ease;
             }
         }
         .right {
+            flex-shrink: 0;
             margin-left: 30px;
-            display: inline-flex;
-            align-items: center;
             transition: transform var(--menu-speed) ease;
         }
         &:hover {
@@ -194,17 +198,26 @@ onMounted(() => {
         &.sub-menu--active {
             background-color: rgba(240, 218, 255, 1);
             color: #801eff;
-            .label {
+            .left {
                 color: #801eff;
+                .label {
+                    color: #801eff;
+                }
             }
-            &:hover {
-                background-color: rgba(240, 218, 255, 1);
+            .right {
+                color: #801eff;
             }
         }
         &.sub-menu--disabled {
             color: #a8abb2;
             cursor: not-allowed;
-            .label {
+            .left {
+                color: #a8abb2;
+                .label {
+                    color: #a8abb2;
+                }
+            }
+            .right {
                 color: #a8abb2;
             }
             &:hover {

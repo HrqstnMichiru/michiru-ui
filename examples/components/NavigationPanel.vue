@@ -173,26 +173,21 @@
         <!-- MPagination -->
         <MCard title="MPagination - 分页">
             <p>基础用法</p>
-            <div class="pagination-demo">
-                <MPagination :total-count="180" @page-change="handlePageChange" />
-            </div>
+            <MPagination :total-count="180" @page-change="handlePageChange" />
 
             <p style="margin-top: 16px">显示总数/可修改每页条数</p>
-            <div class="pagination-demo">
-                <MPagination
-                    :total-count="320"
-                    :show-total="true"
-                    :show-page-size-change="true"
-                    :page-size-options="[10, 20, 50, 100]"
-                    :default-page-size="20"
-                    @page-change="handlePageChange"
-                    @page-size-change="handlePageSizeChange" />
-            </div>
+            <MPagination
+                :total-count="320"
+                show-total
+                show-page-size
+                :page-size-options="[10, 20, 50, 100]"
+                :page-size="20"
+                :page-count="5"
+                @page-change="handlePageChange"
+                @page-size-change="handlePageSizeChange" />
 
             <p style="margin-top: 16px">小尺寸 + 减少按钮数/自定义每页按钮数</p>
-            <div class="pagination-demo">
-                <MPagination :total-count="88" size="small" :page-button-count="5" @page-change="handlePageChange" />
-            </div>
+            <MPagination :total-count="88" size="small" :page-count="5" @page-change="handlePageChange" show-total position="right" />
 
             <p style="margin-top: 16px">当前操作：{{ paginationLog }}</p>
         </MCard>
@@ -270,11 +265,5 @@ const handlePageSizeChange = (page: number, pageSize: number) => {
     background: #f5f5f5;
     height: 60px;
     border-radius: 8px;
-}
-
-.pagination-demo {
-    display: flex;
-    justify-content: center;
-    padding: 8px 0;
 }
 </style>

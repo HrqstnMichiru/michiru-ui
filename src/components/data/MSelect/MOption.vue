@@ -54,7 +54,7 @@ if (selectContext) {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        transition: all 0.2s ease;
+        transition: color 0.2s ease;
     }
     .check {
         flex-shrink: 0;

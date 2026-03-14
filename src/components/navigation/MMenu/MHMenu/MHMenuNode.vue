@@ -88,45 +88,53 @@ if (props.children) {
 
 <style lang="scss" scoped>
 .menu-node {
-    display: flex;
+    width: 100%;
+    display: inline-flex;
     align-items: center;
     cursor: pointer;
-    white-space: nowrap;
     padding: 0 8px;
     border-radius: 6px;
-    transition: background-color 0.2s ease;
-    position: relative;
-    width: 100%;
-    justify-content: space-between;
+    overflow: hidden;
+    height: 36px;
+    transition:
+        background-color 0.2s var(--ease-in-out),
+        color 0.2s var(--ease-in-out);
     .left,
     .right {
         display: inline-flex;
         align-items: center;
         color: rgb(107, 107, 107);
-        height: 36px;
         font-size: 16px;
+        font-weight: 500;
         transition: color 0.2s ease;
     }
     .left {
         gap: 8px;
         flex: 1;
         .label {
-            transition: color 0.2s ease;
-            flex: 1;
+            color: rgb(41, 52, 61);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            user-select: none;
+            transition: color 0.2s ease;
         }
     }
     .right {
-        width: 18px;
+        flex-shrink: 0;
         margin-left: 30px;
     }
     &:hover {
-        background-color: rgba(0, 0, 0, 0.08);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    &.is-active {
+        background-color: rgba(240, 218, 255, 1);
         color: #801eff;
-        .left,
+        .left {
+            color: #801eff;
+            .label {
+                color: #801eff;
+            }
+        }
         .right {
             color: #801eff;
         }
@@ -134,24 +142,17 @@ if (props.children) {
     &.is-disabled {
         color: #a8abb2;
         cursor: not-allowed;
-        .left,
+        .left {
+            color: #a8abb2;
+            .label {
+                color: #a8abb2;
+            }
+        }
         .right {
             color: #a8abb2;
         }
         &:hover {
-            background: none;
-            .left,
-            .right {
-                color: #a8abb2;
-            }
-        }
-    }
-    &.is-active {
-        background-color: rgba(240, 218, 255, 1);
-        color: #801eff;
-        .left,
-        .right {
-            color: #801eff;
+            background-color: transparent;
         }
     }
 }

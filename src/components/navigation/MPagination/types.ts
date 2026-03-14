@@ -1,12 +1,12 @@
 export interface MPaginationProps {
     totalCount: number; // 总数据量
     pageSizeOptions?: number[]; // 每页显示条数选择器的选项
-    showPageSizeChange?: boolean; // 是否显示每页显示条数选择器
+    showPageSize?: boolean; // 是否显示每页显示条数选择器
     showTotal?: boolean; // 是否显示总数信息
-    pageButtonCount?: number; // 页码按钮数量（奇数）
-    pageSizeSelectPosition?: "bottom" | "top"; // select的位置
-    size?: "small" | "large"; // 尺寸
-    defaultPageSize?: number; // 默认每页显示条数
+    pageCount?: number; // 最多显示的数字页按钮数量（不含省略号，最小按 7 处理）
+    size?: "small" | "medium"; // 尺寸
+    pageSize?: number; // 默认每页显示条数
+    position?: "left" | "center" | "right"; // 分页组件的位置
 }
 
 export interface MPaginationEmits {

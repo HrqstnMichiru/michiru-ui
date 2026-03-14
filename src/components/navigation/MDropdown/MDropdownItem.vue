@@ -40,7 +40,6 @@ const handleClick = () => {
 .m-dropdown-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     cursor: pointer;
     white-space: nowrap;
     padding: 0 8px;
@@ -55,6 +54,7 @@ const handleClick = () => {
         color: #666;
         height: 36px;
         font-size: 16px;
+        font-weight: 500;
         transition: color 0.2s ease;
     }
     .left {

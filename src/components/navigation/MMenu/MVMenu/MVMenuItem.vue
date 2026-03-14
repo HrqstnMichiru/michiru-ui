@@ -46,7 +46,7 @@ const itemStyle = computed(() => {
 });
 const labelStyle = computed(() => {
     if (!isCollapsed.value) return {};
-    return { marginLeft: !context ? "12px" : "6px", color: isActive.value ? "#801eff" : "#666" };
+    return { marginLeft: !context ? "12px" : "6px" };
 });
 if (context) {
     context.registerState({
@@ -84,11 +84,7 @@ const onClick = () => {
     height: 42px;
     border-radius: 6px;
     overflow: hidden;
-    height: 42px;
     cursor: pointer;
-    white-space: nowrap;
-    font-weight: 500;
-    color: rgb(107, 107, 107);
     transition:
         background-color 0.2s var(--ease-in-out),
         color 0.2s var(--ease-in-out);
@@ -96,23 +92,24 @@ const onClick = () => {
     .right {
         display: inline-flex;
         align-items: center;
-        color: #666;
-        height: 36px;
         font-size: 16px;
+        font-weight: 500;
+        color: rgb(107, 107, 107);
         transition: color 0.2s ease;
     }
     .left {
         flex: 1;
         .label {
-            font-size: 16px;
             color: rgb(41, 52, 61);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s ease;
             margin-left: 12px;
-            transition: all 0.3s ease;
         }
     }
     .right {
-        width: 18px;
+        flex-shrink: 0;
         margin-left: 30px;
     }
     &:hover {

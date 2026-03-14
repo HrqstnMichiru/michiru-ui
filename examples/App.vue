@@ -62,7 +62,7 @@ import NavigationPanel from "./components/NavigationPanel.vue";
 <style lang="scss">
 body,
 html {
-    font-family: "Noto Serif SC";
+    font-family: "霞鹜文楷", "Noto Serif SC";
     background-color: rgb(244, 244, 244);
 }
 
