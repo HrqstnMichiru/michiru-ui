@@ -1,5 +1,10 @@
 ﻿<template>
-    <div class="m-segmented" :class="[`m-segmented--${customSize}`, `m-segmented--${variant}`, { 'm-segmented--block': customBlock, 'm-segmented--disabled': disabled }]">
+    <div
+        class="m-segmented"
+        :class="[`m-segmented--${customSize}`, `m-segmented--${type}`, `m-segmented--${variant}`, { 'm-segmented--block': customBlock, 'm-segmented--disabled': disabled }]"
+        :style="{
+            gap: type !== 'default' ? `${gap}px` : undefined
+        }">
         <!-- 滑块 -->
         <div class="m-segmented__thumb" :style="thumbStyle"></div>
         <!-- 选项 -->
@@ -30,10 +35,12 @@ defineOptions({
     name: "MSegmented"
 });
 const props = withDefaults(defineProps<MSegmentedProps>(), {
+    type: "default",
     variant: "default",
     disabled: false,
     block: false,
-    iconOnly: false
+    iconOnly: false,
+    gap: 0
 });
 const emits = defineEmits<MSegmentedEmits>();
 const modelValue = defineModel<string | number>("modelValue");
@@ -91,10 +98,16 @@ watch(
     () => modelValue.value,
     () => nextTick(updateThumb)
 );
+watch(
+    () => [props.type, props.gap, customSize.value, customBlock.value, props.iconOnly, props.options.length],
+    () => nextTick(updateThumb)
+);
 </script>
 
 <style lang="scss" scoped>
 .m-segmented {
+    --m-segmented-line-color: #801eff;
+    --m-segmented-line-hover-color: #8b5cf6;
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -103,7 +116,7 @@ watch(
     padding: 3px;
     gap: 0;
     user-select: none;
-    &.m-egmented--block {
+    &.m-segmented--block {
         display: flex;
         width: 100%;
         .m-segmented__item {
@@ -192,37 +205,130 @@ watch(
         }
     }
 
+    // 线条风格
+    &.m-segmented--line,
+    &.m-segmented--bar {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        .m-segmented__thumb {
+            top: auto;
+            height: 0;
+            width: 0;
+            border-radius: 0;
+            background: transparent;
+            border-bottom: 2px solid var(--m-segmented-line-color);
+            box-shadow: none;
+        }
+        .m-segmented__item {
+            border-radius: 0;
+            color: #606266;
+            font-weight: 500;
+            &.is-active {
+                color: var(--m-segmented-line-color);
+            }
+            &:not(.is-disabled):not(.is-active):hover {
+                color: var(--m-segmented-line-hover-color);
+            }
+        }
+    }
+
+    &.m-segmented--line {
+        border-bottom: 1px solid #e4e7ed;
+        .m-segmented__thumb {
+            bottom: -1px;
+        }
+    }
+
+    &.m-segmented--bar {
+        .m-segmented__thumb {
+            bottom: 0;
+        }
+    }
+
+    &.m-segmented--line.m-segmented--disabled,
+    &.m-segmented--bar.m-segmented--disabled {
+        opacity: 1;
+        --m-segmented-line-color: #c0c4cc;
+        --m-segmented-line-hover-color: #c0c4cc;
+        .m-segmented__thumb {
+            background: transparent;
+            border-bottom-color: #c0c4cc;
+        }
+        .m-segmented__item {
+            color: #a8abb2;
+            &.is-active {
+                color: #a8abb2;
+            }
+            &:not(.is-disabled):not(.is-active):hover {
+                color: #a8abb2;
+            }
+        }
+    }
+    &.m-segmented--line.m-segmented--disabled {
+        border-bottom-color: #e4e7ed;
+    }
+
     // 颜色变体 - 滑块颜色 & 激活文字色
-    @mixin variant-style($color, $text: #fff) {
+    @mixin variant-style($color) {
         .m-segmented__thumb {
             background: $color;
             box-shadow: 0 1px 6px rgba($color, 0.35);
         }
         .m-segmented__item.is-active {
-            color: $text;
+            color: #fff;
         }
     }
 
-    &.m-segmented--primary {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--primary {
         @include variant-style(#007bff);
     }
-    &.m-segmented--success {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--success {
         @include variant-style(#5eb85e);
     }
-    &.m-segmented--warning {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--warning {
         @include variant-style(#e6a23c);
     }
-    &.m-segmented--danger {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--danger {
         @include variant-style(#d64545);
     }
-    &.m-segmented--info {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--info {
         @include variant-style(#36b5b5);
     }
-    &.m-segmented--purple {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--purple {
         @include variant-style(#801eff);
     }
-    &.m-segmented--pink {
+    &:not(.m-segmented--line):not(.m-segmented--bar).m-segmented--pink {
         @include variant-style(#ff69b4);
+    }
+
+    &.m-segmented--primary {
+        --m-segmented-line-color: #007bff;
+        --m-segmented-line-hover-color: #0d6efd;
+    }
+    &.m-segmented--success {
+        --m-segmented-line-color: #5eb85e;
+        --m-segmented-line-hover-color: #70c670;
+    }
+    &.m-segmented--warning {
+        --m-segmented-line-color: #e6a23c;
+        --m-segmented-line-hover-color: #ebb563;
+    }
+    &.m-segmented--danger {
+        --m-segmented-line-color: #d64545;
+        --m-segmented-line-hover-color: #e25656;
+    }
+    &.m-segmented--info {
+        --m-segmented-line-color: #36b5b5;
+        --m-segmented-line-hover-color: #47c3c3;
+    }
+    &.m-segmented--purple {
+        --m-segmented-line-color: #801eff;
+        --m-segmented-line-hover-color: #8f5eff;
+    }
+    &.m-segmented--pink {
+        --m-segmented-line-color: #ff69b4;
+        --m-segmented-line-hover-color: #ff85c7;
     }
 }
 </style>

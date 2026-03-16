@@ -1015,6 +1015,53 @@
                 <MSegmented v-model="segValue3" :options="segOpts1" variant="pink" />
             </div>
 
+            <p style="margin-top: 16px">Line 风格</p>
+            <div class="actions">
+                <MSegmented v-model="segValue1" :options="segOpts1" type="line" :gap="20"/>
+            </div>
+            <p style="margin-top: 12px">Line 风格 - 不同尺寸</p>
+            <div class="actions" style="flex-direction: column; align-items: flex-start">
+                <MSegmented v-model="segValue2" :options="segOpts1" type="line" size="small" />
+                <MSegmented v-model="segValue2" :options="segOpts1" type="line" size="medium" />
+                <MSegmented v-model="segValue2" :options="segOpts1" type="line" size="large" />
+            </div>
+            <p style="margin-top: 12px">Line 风格 - 多种颜色</p>
+            <div class="actions" style="flex-direction: column; align-items: flex-start">
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="primary" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="success" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="warning" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="danger" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="purple" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="line" variant="pink" />
+            </div>
+            <p style="margin-top: 12px">Line 风格 - 图标与仅图标</p>
+            <div class="actions">
+                <MSegmented v-model="segValue4" :options="segOptsIcon" type="line" variant="primary" />
+                <MSegmented v-model="segValue4" :options="segOptsIcon" type="line" variant="primary" icon-only />
+            </div>
+            <p style="margin-top: 12px">Line 风格 - 块级与禁用</p>
+            <MSegmented v-model="segValue5" :options="segOpts1" type="line" block variant="info" />
+            <div class="actions" style="margin-top: 8px">
+                <MSegmented v-model="segValue1" :options="segOpts1" type="line" disabled />
+            </div>
+
+            <p style="margin-top: 12px">Bar 风格（仅滑块）</p>
+            <div class="actions">
+                <MSegmented v-model="segValue1" :options="segOpts1" type="bar" />
+            </div>
+            <p style="margin-top: 12px">Bar 风格 - 多种颜色</p>
+            <div class="actions" style="flex-direction: column; align-items: flex-start">
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="primary" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="success" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="warning" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="danger" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="purple" />
+                <MSegmented v-model="segValue3" :options="segOpts1" type="bar" variant="pink" />
+            </div>
+            <div class="actions" style="margin-top: 8px">
+                <MSegmented v-model="segValue1" :options="segOpts1" type="bar" disabled />
+            </div>
+
             <p style="margin-top: 16px">带图标</p>
             <div class="actions">
                 <MSegmented v-model="segValue4" :options="segOptsIcon" variant="primary" />
