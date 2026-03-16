@@ -12,6 +12,7 @@ const MTableCol = defineComponent({
         label: String,
         width: Number,
         minWidth: Number,
+        maxWidth: Number,
         aligns: String as PropType<MTableAlign>,
         fixed: [Boolean, String] as PropType<MTableFixed>,
         type: String as PropType<MTableColType>,
@@ -38,7 +39,7 @@ const MTableCol = defineComponent({
         });
 
         watch(
-            () => [props.prop, props.label, props.width, props.minWidth, props.aligns, props.fixed, props.type],
+            () => [props.prop, props.label, props.width, props.minWidth, props.maxWidth, props.aligns, props.fixed, props.type],
             () => {
                 if (!tableContext || !columnId) return;
                 tableContext.updateColumn(columnId, createColumn());

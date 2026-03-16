@@ -4,14 +4,15 @@
         :class="[
             `m-radiobox--${size}`,
             `m-radiobox--${variant}`,
-            `m-radiobox--${groupContext?.type}`,
+            `m-radiobox--${radioType}`,
             {
                 'm-radiobox--disabled': disabled,
-                'm-radiobox--checked': isChecked
+                'm-radiobox--checked': isChecked,
+                'm-radiobox--bordered': bordered
             }
         ]">
         <input type="radio" class="m-radiobox__input" :checked="isChecked" :disabled="disabled" :value="value" @change="handleChange" />
-        <span class="m-radiobox__inner" v-if="groupContext?.type === 'box'"></span>
+        <span class="m-radiobox__inner" v-if="radioType === 'box'"></span>
         <span class="m-radiobox__label">{{ label }}</span>
     </label>
 </template>
@@ -27,25 +28,29 @@ defineOptions({
 
 const props = defineProps<MRadioBoxProps>();
 const groupContext = inject<MRadioBoxGroupContext>(MRadioBoxGroupContextKey);
+const radioType = computed(() => {
+    return groupContext?.type || "box";
+});
 const disabled = computed(() => {
     return props.disabled || groupContext?.disabled || false;
 });
 const size = computed(() => {
     return props.size || groupContext?.size || "medium";
 });
+const bordered = computed(() => {
+    if (radioType.value !== "box") return false;
+    return props.bordered || groupContext?.bordered || false;
+});
 const variant = computed(() => {
     return props.variant || groupContext?.variant || "primary";
 });
 const isChecked = computed(() => {
-    if (groupContext) {
-        return groupContext.isChecked(props.value!);
-    }
-    return true;
+    return groupContext?.isChecked(props.value) || false;
 });
 const handleChange = () => {
     if (disabled.value) return;
     if (groupContext) {
-        groupContext.toggleChecked(props.value!);
+        groupContext.toggleChecked(props.value);
     }
 };
 </script>
@@ -83,8 +88,50 @@ const handleChange = () => {
             }
         }
         .m-radiobox__label {
-            margin-left: 8px;
+            margin-left: 4px;
             color: #61666d;
+        }
+
+        &.m-radiobox--bordered {
+            border: 1px solid #dcdfe6;
+            background: #fff;
+            transition: all 0.2s var(--ease-in-out);
+
+            &.m-radiobox--small {
+                height: 28px;
+                padding: 5.2px 8px;
+                border-radius: 4px;
+            }
+            &.m-radiobox--medium {
+                height: 34px;
+                padding: 7.2px 10px;
+                border-radius: 6px;
+            }
+            &.m-radiobox--large {
+                height: 40px;
+                padding: 9.2px 12px;
+                border-radius: 8px;
+            }
+
+            &:not(.m-radiobox--disabled) {
+                border-color: var(--m-radiobox-bordered-weak, #dcdfe6);
+                &:hover {
+                    border-color: var(--m-radiobox-bordered-color, #007bff);
+                }
+            }
+
+            &.m-radiobox--checked:not(.m-radiobox--disabled) {
+                border-color: var(--m-radiobox-bordered-color, #007bff);
+                background-color: var(--m-radiobox-bordered-bg, rgba(0, 123, 255, 0.1));
+                .m-radiobox__label {
+                    color: var(--m-radiobox-bordered-color, #007bff);
+                }
+            }
+
+            &.m-radiobox--disabled {
+                border-color: #e4e7ed;
+                background-color: #f5f7fa;
+            }
         }
 
         // 尺寸变体
@@ -99,6 +146,7 @@ const handleChange = () => {
             }
             .m-radiobox__label {
                 font-size: 14px;
+                line-height: 16px;
             }
         }
         &.m-radiobox--medium {
@@ -112,6 +160,7 @@ const handleChange = () => {
             }
             .m-radiobox__label {
                 font-size: 16px;
+                line-height: 18px;
             }
         }
         &.m-radiobox--large {
@@ -125,6 +174,7 @@ const handleChange = () => {
             }
             .m-radiobox__label {
                 font-size: 18px;
+                line-height: 20px;
             }
         }
 
@@ -185,6 +235,49 @@ const handleChange = () => {
             &.m-radiobox--gray .m-radiobox__inner {
                 background-color: #6b6b6b;
                 border-color: #6b6b6b;
+            }
+        }
+
+        &.m-radiobox--bordered:not(.m-radiobox--disabled) {
+            &.m-radiobox--primary {
+                --m-radiobox-bordered-color: #007bff;
+                --m-radiobox-bordered-weak: rgba(0, 123, 255, 0.45);
+                --m-radiobox-bordered-bg: rgba(0, 123, 255, 0.1);
+            }
+            &.m-radiobox--success {
+                --m-radiobox-bordered-color: #28a745;
+                --m-radiobox-bordered-weak: rgba(40, 167, 69, 0.45);
+                --m-radiobox-bordered-bg: rgba(40, 167, 69, 0.1);
+            }
+            &.m-radiobox--warning {
+                --m-radiobox-bordered-color: #e6a23c;
+                --m-radiobox-bordered-weak: rgba(230, 162, 60, 0.45);
+                --m-radiobox-bordered-bg: rgba(230, 162, 60, 0.12);
+            }
+            &.m-radiobox--danger {
+                --m-radiobox-bordered-color: #dc3545;
+                --m-radiobox-bordered-weak: rgba(220, 53, 69, 0.45);
+                --m-radiobox-bordered-bg: rgba(220, 53, 69, 0.1);
+            }
+            &.m-radiobox--info {
+                --m-radiobox-bordered-color: #36b5b5;
+                --m-radiobox-bordered-weak: rgba(54, 181, 181, 0.45);
+                --m-radiobox-bordered-bg: rgba(54, 181, 181, 0.1);
+            }
+            &.m-radiobox--purple {
+                --m-radiobox-bordered-color: #801eff;
+                --m-radiobox-bordered-weak: rgba(128, 30, 255, 0.45);
+                --m-radiobox-bordered-bg: rgba(128, 30, 255, 0.1);
+            }
+            &.m-radiobox--pink {
+                --m-radiobox-bordered-color: #ff69b4;
+                --m-radiobox-bordered-weak: rgba(255, 105, 180, 0.45);
+                --m-radiobox-bordered-bg: rgba(255, 105, 180, 0.1);
+            }
+            &.m-radiobox--gray {
+                --m-radiobox-bordered-color: #6b6b6b;
+                --m-radiobox-bordered-weak: rgba(107, 107, 107, 0.45);
+                --m-radiobox-bordered-bg: rgba(107, 107, 107, 0.1);
             }
         }
     }

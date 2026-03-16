@@ -1,7 +1,7 @@
 <template>
     <div class="tab-content">
         <!-- MCheckBox -->
-        <MCard title="MCheckBox - 多选框" action="新增" icon="bi:info-circle-fill" icon-variant="primary">
+        <MCard title="MCheckBox - 多选框" action="新增" icon="bi:info-circle-fill" icon-variant="primary" shadow="none">
             <p>基础用法</p>
             <div class="actions">
                 <MCheckBox label="选项1" />
@@ -16,6 +16,102 @@
                 <MCheckBox label="橙子" value="orange" />
             </MCheckBoxGroup>
             <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选择: {{ checkboxValues1.join(", ") || "无" }}</p>
+
+            <p style="margin-top: 16px">三态状态（未选择 / 选中 / 部分选择）</p>
+            <div class="actions">
+                <MCheckBox v-model="checkboxTriState" label="任务状态" variant="primary" bordered />
+                <MButton @click="checkboxTriState = false">设为未选择</MButton>
+                <MButton variant="success" @click="checkboxTriState = true">设为选中</MButton>
+                <MButton variant="warning" @click="checkboxTriState = 'indeterminate'">设为部分选择</MButton>
+            </div>
+            <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前状态: {{ checkboxTriState }}</p>
+
+            <p style="margin-top: 16px">Box 边框风格（bordered）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MCheckBoxGroup v-model="checkboxValues10" variant="primary" bordered>
+                    <MCheckBox label="需求分析" value="analysis" />
+                    <MCheckBox label="接口联调" value="api" />
+                    <MCheckBox label="上线发布" value="release" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues11" variant="success" bordered>
+                    <MCheckBox label="可编辑" value="editable" />
+                    <MCheckBox label="可删除" value="deletable" />
+                    <MCheckBox label="可分享" value="shareable" />
+                </MCheckBoxGroup>
+            </div>
+            <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选择: {{ checkboxValues10.join(", ") || "无" }} / {{ checkboxValues11.join(", ") || "无" }}</p>
+
+            <p style="margin-top: 16px">Box 边框风格 - 全部变体</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MCheckBoxGroup v-model="checkboxValues12" variant="primary" bordered>
+                    <MCheckBox label="Primary" value="primary" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues13" variant="success" bordered>
+                    <MCheckBox label="Success" value="success" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues14" variant="warning" bordered>
+                    <MCheckBox label="Warning" value="warning" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues15" variant="danger" bordered>
+                    <MCheckBox label="Danger" value="danger" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues16" variant="info" bordered>
+                    <MCheckBox label="Info" value="info" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues17" variant="purple" bordered>
+                    <MCheckBox label="Purple" value="purple" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues18" variant="pink" bordered>
+                    <MCheckBox label="Pink" value="pink" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues19" variant="gray" bordered>
+                    <MCheckBox label="Gray" value="gray" />
+                </MCheckBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 不同尺寸（small / medium / large）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MCheckBoxGroup v-model="checkboxValues20" variant="primary" bordered size="small">
+                    <MCheckBox label="Small A" value="small-a" />
+                    <MCheckBox label="Small B" value="small-b" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues21" variant="primary" bordered size="medium">
+                    <MCheckBox label="Medium A" value="medium-a" />
+                    <MCheckBox label="Medium B" value="medium-b" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues22" variant="primary" bordered size="large">
+                    <MCheckBox label="Large A" value="large-a" />
+                    <MCheckBox label="Large B" value="large-b" />
+                </MCheckBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 禁用场景</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MCheckBoxGroup v-model="checkboxValues23" variant="warning" bordered>
+                    <MCheckBox label="可选项" value="enabled" />
+                    <MCheckBox label="禁用未选" value="disabled-a" disabled />
+                    <MCheckBox label="禁用已选" value="disabled-b" disabled />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues24" variant="info" bordered disabled>
+                    <MCheckBox label="整组禁用 A" value="group-a" />
+                    <MCheckBox label="整组禁用 B" value="group-b" />
+                </MCheckBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 垂直排列</p>
+            <MCheckBoxGroup v-model="checkboxValues25" variant="purple" bordered vertical>
+                <MCheckBox label="竖排选项1" value="vertical-1" />
+                <MCheckBox label="竖排选项2" value="vertical-2" />
+                <MCheckBox label="竖排选项3" value="vertical-3" />
+            </MCheckBoxGroup>
+
+            <p style="margin-top: 16px">Button 类型传入 bordered（应无额外边框效果）</p>
+            <MCheckBoxGroup v-model="checkboxValues26" type="button" variant="primary" bordered>
+                <MCheckBox label="按钮A" value="button-a" />
+                <MCheckBox label="按钮B" value="button-b" />
+                <MCheckBox label="按钮C" value="button-c" />
+            </MCheckBoxGroup>
+
             <p style="margin-top: 16px">按钮类型</p>
             <MCheckBoxGroup v-model="checkboxValues2" type="button" variant="primary">
                 <MCheckBox label="周一" value="monday" />
@@ -97,6 +193,102 @@
                 <MRadioBox label="选项3" value="option3" />
             </MRadioBoxGroup>
             <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前选中: {{ radioValue1 }}</p>
+
+            <p style="margin-top: 16px">Box 边框风格（bordered）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MRadioBoxGroup v-model="radioValue16" type="box" variant="primary" bordered>
+                    <MRadioBox label="开发中" value="developing" />
+                    <MRadioBox label="测试中" value="testing" />
+                    <MRadioBox label="已发布" value="released" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue17" type="box" variant="success" bordered>
+                    <MRadioBox label="启用" value="enabled" />
+                    <MRadioBox label="停用" value="disabled" />
+                </MRadioBoxGroup>
+            </div>
+            <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前选中: {{ radioValue16 }} / {{ radioValue17 }}</p>
+
+            <p style="margin-top: 16px">Box 边框风格 - 全部变体</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MRadioBoxGroup v-model="radioValue18" type="box" variant="primary" bordered>
+                    <MRadioBox label="Primary A" value="primary-a" />
+                    <MRadioBox label="Primary B" value="primary-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue19" type="box" variant="success" bordered>
+                    <MRadioBox label="Success A" value="success-a" />
+                    <MRadioBox label="Success B" value="success-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue20" type="box" variant="warning" bordered>
+                    <MRadioBox label="Warning A" value="warning-a" />
+                    <MRadioBox label="Warning B" value="warning-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue21" type="box" variant="danger" bordered>
+                    <MRadioBox label="Danger A" value="danger-a" />
+                    <MRadioBox label="Danger B" value="danger-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue22" type="box" variant="info" bordered>
+                    <MRadioBox label="Info A" value="info-a" />
+                    <MRadioBox label="Info B" value="info-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue23" type="box" variant="purple" bordered>
+                    <MRadioBox label="Purple A" value="purple-a" />
+                    <MRadioBox label="Purple B" value="purple-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue24" type="box" variant="pink" bordered>
+                    <MRadioBox label="Pink A" value="pink-a" />
+                    <MRadioBox label="Pink B" value="pink-b" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue25" type="box" variant="gray" bordered>
+                    <MRadioBox label="Gray A" value="gray-a" />
+                    <MRadioBox label="Gray B" value="gray-b" />
+                </MRadioBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 不同尺寸（small / medium / large）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MRadioBoxGroup v-model="radioValue26" type="box" variant="primary" bordered size="small">
+                    <MRadioBox label="Small-1" value="small-1" />
+                    <MRadioBox label="Small-2" value="small-2" />
+                    <MRadioBox label="Small-3" value="small-3" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue27" type="box" variant="primary" bordered size="medium">
+                    <MRadioBox label="Medium-1" value="medium-1" />
+                    <MRadioBox label="Medium-2" value="medium-2" />
+                    <MRadioBox label="Medium-3" value="medium-3" />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue28" type="box" variant="primary" bordered size="large">
+                    <MRadioBox label="Large-1" value="large-1" />
+                    <MRadioBox label="Large-2" value="large-2" />
+                    <MRadioBox label="Large-3" value="large-3" />
+                </MRadioBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 禁用场景</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MRadioBoxGroup v-model="radioValue29" type="box" variant="warning" bordered>
+                    <MRadioBox label="可选项" value="enabled" />
+                    <MRadioBox label="禁用未选" value="disabled-a" disabled />
+                    <MRadioBox label="禁用已选" value="disabled-b" disabled />
+                </MRadioBoxGroup>
+                <MRadioBoxGroup v-model="radioValue30" type="box" variant="info" bordered disabled>
+                    <MRadioBox label="整组禁用 A" value="group-a" />
+                    <MRadioBox label="整组禁用 B" value="group-b" />
+                </MRadioBoxGroup>
+            </div>
+
+            <p style="margin-top: 16px">Box 边框风格 - 垂直排列</p>
+            <MRadioBoxGroup v-model="radioValue31" type="box" variant="purple" bordered vertical>
+                <MRadioBox label="竖排选项1" value="vertical-1" />
+                <MRadioBox label="竖排选项2" value="vertical-2" />
+                <MRadioBox label="竖排选项3" value="vertical-3" />
+            </MRadioBoxGroup>
+
+            <p style="margin-top: 16px">Button 类型传入 bordered（应无额外边框效果）</p>
+            <MRadioBoxGroup v-model="radioValue32" type="button" variant="primary" bordered>
+                <MRadioBox label="按钮A" value="button-a" />
+                <MRadioBox label="按钮B" value="button-b" />
+                <MRadioBox label="按钮C" value="button-c" />
+            </MRadioBoxGroup>
 
             <!-- 禁用状态 -->
             <p style="margin-top: 16px">禁用状态</p>
@@ -369,6 +561,37 @@
                     <MOption label="选项二" value="2" />
                     <MOption label="选项三" value="3" />
                 </MSelect>
+            </div>
+        </MCard>
+
+        <!-- MSelection -->
+        <MCard title="MSelection - 选择容器（开发中预览）">
+            <p>当前仅补充示例用于查看已有渲染与插槽数据效果，组件逻辑仍在开发中。</p>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">单选模式（`item-key=&quot;id&quot;`）</h4>
+                <MSelection v-model="selectionSingleValue" item-key="id">
+                    <MSelectionItem v-for="item in selectionItems" :key="`selection-single-${item.id}`" :data="item" v-slot="{ active, data, toggle }">
+                        <div class="selection-preview-item" :class="{ 'selection-preview-item--active': active }" @click="toggle">
+                            <div class="selection-preview-item__title">{{ data.label }}</div>
+                            <div class="selection-preview-item__meta">id: {{ data.id }} | active: {{ active ? "true" : "false" }}</div>
+                        </div>
+                    </MSelectionItem>
+                </MSelection>
+                <p style="margin: 8px 0 0; color: #909399; font-size: 14px">v-model: {{ selectionSingleValue ?? "null" }}</p>
+            </div>
+
+            <div>
+                <h4 style="margin: 0 0 16px">多选模式（`multiple`）</h4>
+                <MSelection v-model="selectionMultiValue" item-key="id" multiple>
+                    <MSelectionItem v-for="item in selectionItems" :key="`selection-multiple-${item.id}`" :data="item" v-slot="{ active, data, toggle }">
+                        <div class="selection-preview-item" :class="{ 'selection-preview-item--active': active }" @click="toggle">
+                            <div class="selection-preview-item__title">{{ data.label }}</div>
+                            <div class="selection-preview-item__meta">id: {{ data.id }} | active: {{ active ? "true" : "false" }}</div>
+                        </div>
+                    </MSelectionItem>
+                </MSelection>
+                <p style="margin: 8px 0 0; color: #909399; font-size: 14px">v-model: {{ selectionMultiValue.length ? selectionMultiValue.join(", ") : "[]" }}</p>
             </div>
         </MCard>
 
@@ -952,6 +1175,8 @@ import {
     MUpload,
     MVirtualSelect
 } from "@/components";
+import MSelection from "@/components/data/MSelection/MSelection.vue";
+import MSelectionItem from "@/components/data/MSelection/MSelectionItem.vue";
 import { ref, useTemplateRef } from "vue";
 // 多选框状态变量
 const checkboxGroup9 = useTemplateRef<MCheckBoxGroupInstance>("checkboxGroup9");
@@ -964,6 +1189,24 @@ const checkboxValues6 = ref<Array<string | number>>(["option1", "disabled2"]);
 const checkboxValues7 = ref<Array<string | number>>(["warn1"]);
 const checkboxValues8 = ref<Array<string | number>>([]);
 const checkboxValues9 = ref<Array<string | number>>(["frontend", "backend"]);
+const checkboxValues10 = ref<Array<string | number>>(["analysis"]);
+const checkboxValues11 = ref<Array<string | number>>(["editable", "shareable"]);
+const checkboxValues12 = ref<Array<string | number>>(["primary"]);
+const checkboxValues13 = ref<Array<string | number>>(["success"]);
+const checkboxValues14 = ref<Array<string | number>>(["warning"]);
+const checkboxValues15 = ref<Array<string | number>>(["danger"]);
+const checkboxValues16 = ref<Array<string | number>>(["info"]);
+const checkboxValues17 = ref<Array<string | number>>(["purple"]);
+const checkboxValues18 = ref<Array<string | number>>(["pink"]);
+const checkboxValues19 = ref<Array<string | number>>(["gray"]);
+const checkboxValues20 = ref<Array<string | number>>(["small-a"]);
+const checkboxValues21 = ref<Array<string | number>>(["medium-a"]);
+const checkboxValues22 = ref<Array<string | number>>(["large-a"]);
+const checkboxValues23 = ref<Array<string | number>>(["enabled", "disabled-b"]);
+const checkboxValues24 = ref<Array<string | number>>(["group-a"]);
+const checkboxValues25 = ref<Array<string | number>>(["vertical-1", "vertical-3"]);
+const checkboxValues26 = ref<Array<string | number>>(["button-a", "button-c"]);
+const checkboxTriState = ref<boolean | "indeterminate">("indeterminate");
 
 // RadioBox状态
 const radioValue1 = ref("option1");
@@ -977,6 +1220,23 @@ const radioValue8 = ref("small1");
 const radioValue9 = ref("medium2");
 const radioValue10 = ref("large1");
 const radioValue11 = ref("frontend");
+const radioValue16 = ref("testing");
+const radioValue17 = ref("enabled");
+const radioValue18 = ref("primary-a");
+const radioValue19 = ref("success-a");
+const radioValue20 = ref("warning-a");
+const radioValue21 = ref("danger-a");
+const radioValue22 = ref("info-a");
+const radioValue23 = ref("purple-a");
+const radioValue24 = ref("pink-a");
+const radioValue25 = ref("gray-a");
+const radioValue26 = ref("small-2");
+const radioValue27 = ref("medium-2");
+const radioValue28 = ref("large-2");
+const radioValue29 = ref("enabled");
+const radioValue30 = ref("group-a");
+const radioValue31 = ref("vertical-2");
+const radioValue32 = ref("button-b");
 
 // MSelect状态
 const selectValue1 = ref<number>(1);
@@ -991,6 +1251,15 @@ const radioValue12 = ref("purple2");
 const radioValue13 = ref("pink1");
 const radioValue14 = ref("gray2");
 const radioValue15 = ref("optionA");
+
+// MSelection 状态
+const selectionSingleValue = ref<string | number>("task-02");
+const selectionMultiValue = ref<Array<string | number>>(["task-01", "task-03"]);
+const selectionItems = [
+    { id: "task-01", label: "需求评审" },
+    { id: "task-02", label: "接口联调" },
+    { id: "task-03", label: "联调验收" }
+];
 
 // Rating评分状态
 const ratingValue1 = ref<number>(6);
@@ -1229,5 +1498,33 @@ const segOptsDisabled = [
     gap: 12px;
     flex-wrap: wrap;
     width: 100%;
+}
+
+.selection-preview-item {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+.selection-preview-item--active {
+    border-color: #93c5fd;
+    background: #eff6ff;
+}
+
+.selection-preview-item__title {
+    color: #303133;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.selection-preview-item__meta {
+    color: #909399;
+    font-size: 12px;
+    line-height: 1.4;
 }
 </style>

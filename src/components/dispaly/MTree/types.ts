@@ -17,6 +17,7 @@ export interface MTreeNodeProps<T extends MTreeData = any> {
     showCheck: boolean; // 是否展示选择框
     expanded: boolean; // 是否展开
     checked: boolean; // 是否选中
+    indeterminate: boolean; // 是否为部分选择状态
     data: T; // 节点数据
 }
 
@@ -50,6 +51,8 @@ export interface MTreeInstance<T extends MTreeData = any> {
     toggleExpand: (nodeKey: string | number) => void; // 切换指定节点展开/收起状态
     toggleSelect: (nodeKey: string | number) => void; // 切换指定节点的选中状态
     selectAll: boolean; // 全选状态
+    selectedSize: number; // 当前已选数量（可选节点维度）
+    selectableSize: number; // 可选节点总数
 }
 
 export interface MTreeContext<T extends MTreeData = any> {

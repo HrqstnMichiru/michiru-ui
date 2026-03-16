@@ -51,6 +51,27 @@
                 <MButton variant="purple" icon="ooui:success">图标</MButton>
                 <MButton variant="pink" icon="success" plain loading>图标</MButton>
             </div>
+            <p style="margin-top: 16px">禁用状态</p>
+            <div class="actions">
+                <MButton variant="primary" disabled>Primary</MButton>
+                <MButton variant="success" disabled>Success</MButton>
+                <MButton variant="warning" disabled>Warning</MButton>
+                <MButton variant="danger" disabled>Danger</MButton>
+                <MButton variant="info" disabled>Info</MButton>
+                <MButton variant="purple" disabled>Purple</MButton>
+                <MButton variant="pink" disabled>Pink</MButton>
+                <MButton variant="gray" disabled>Gray</MButton>
+            </div>
+            <p style="margin-top: 16px">禁用状态（Plain / Outline / 尺寸）</p>
+            <div class="actions">
+                <MButton variant="primary" plain disabled>Plain</MButton>
+                <MButton variant="warning" plain disabled>Plain</MButton>
+                <MButton variant="info" outline disabled>Outline</MButton>
+                <MButton variant="gray" outline disabled>Outline</MButton>
+                <MButton variant="primary" size="small" disabled>Small</MButton>
+                <MButton variant="primary" size="medium" disabled>Medium</MButton>
+                <MButton variant="primary" size="large" disabled>Large</MButton>
+            </div>
             <p style="margin-top: 16px">按钮组</p>
             <MButtonGroup variant="success">
                 <MButton>按钮1</MButton>
@@ -59,6 +80,12 @@
             </MButtonGroup>
             <p style="margin-top: 16px">Plain按钮组</p>
             <MButtonGroup variant="info" plain vertical>
+                <MButton>按钮1</MButton>
+                <MButton>按钮2</MButton>
+                <MButton>按钮3</MButton>
+            </MButtonGroup>
+            <p style="margin-top: 16px">禁用按钮组</p>
+            <MButtonGroup variant="danger" disabled>
                 <MButton>按钮1</MButton>
                 <MButton>按钮2</MButton>
                 <MButton>按钮3</MButton>
@@ -90,17 +117,71 @@
             </div>
         </MCard>
 
-        <MCard title="MIconButton - 图标按钮">
-            <p>默认仅显示图标，悬停时显示浅灰背景，支持圆形和 tooltip</p>
-            <div class="actions">
-                <MIconButton icon="mdi:dots-horizontal" tooltip="更多" />
-                <MIconButton icon="mdi:pencil-outline" size="small" tooltip="编辑" />
-                <MIconButton icon="mdi:delete-outline" size="medium" tooltip="删除" />
-                <MIconButton icon="mdi:cog-outline" size="large" tooltip="设置" />
-                <MIconButton icon="mdi:heart-outline" color="#f56c6c" circle tooltip="收藏" />
-                <MIconButton icon="mdi:information-outline" circle tooltip="提示信息" placement="bottom" />
-                <MIconButton icon="mdi:lock-outline" disabled tooltip="已禁用" />
-            </div>
+        <MCard title="MAction - 轻交互按钮">
+            <p>text / icon 两种模式，支持 size、round、circle、disabled</p>
+            <p style="margin-top: 12px">文本模式</p>
+            <MFlex aligns="center">
+                <MAction type="text" action="查看" />
+                <MAction type="text" action="编辑" size="small" />
+                <MAction type="text" action="删除" size="medium" />
+                <MAction type="text" action="更多操作" size="large" />
+            </MFlex>
+            <p style="margin-top: 12px">文本模式 - round / disabled</p>
+            <MFlex aligns="center">
+                <MAction type="text" action="圆角按钮" round />
+                <MAction type="text" action="禁用按钮" disabled />
+                <MAction type="text" action="禁用圆角" round disabled />
+            </MFlex>
+            <p style="margin-top: 12px">图标模式</p>
+            <MFlex aligns="center">
+                <MAction type="icon" action="mdi:dots-horizontal" />
+                <MAction type="icon" action="mdi:pencil-outline" size="small" />
+                <MAction type="icon" action="mdi:delete-outline" size="medium" />
+                <MAction type="icon" action="mdi:cog-outline" size="large" />
+            </MFlex>
+            <p style="margin-top: 12px">图标模式 - circle / disabled</p>
+            <MFlex aligns="center">
+                <MAction type="icon" action="mdi:information-outline" circle />
+                <MAction type="icon" action="mdi:heart-outline" circle size="small" />
+                <MAction type="icon" action="mdi:lock-outline" disabled />
+                <MAction type="icon" action="mdi:lock-outline" circle disabled />
+            </MFlex>
+            <p style="margin-top: 12px">文本模式 - color</p>
+            <MFlex aligns="center">
+                <MAction type="text" action="主色" color="#007bff" />
+                <MAction type="text" action="成功色" color="#67c23a" />
+                <MAction type="text" action="警告色" color="#e6a23c" />
+                <MAction type="text" action="危险色" color="#f56c6c" />
+                <MAction type="text" action="紫色" color="#8b5cf6" round />
+            </MFlex>
+            <p style="margin-top: 12px">图标模式 - color</p>
+            <MFlex aligns="center">
+                <MAction type="icon" action="mdi:thumb-up-outline" color="#007bff" />
+                <MAction type="icon" action="mdi:check-circle-outline" color="#67c23a" />
+                <MAction type="icon" action="mdi:alert-circle-outline" color="#e6a23c" />
+                <MAction type="icon" action="mdi:close-circle-outline" color="#f56c6c" />
+                <MAction type="icon" action="mdi:heart-outline" color="#ec4899" circle />
+            </MFlex>
+            <p style="margin-top: 12px">文本模式 - variant</p>
+            <MFlex aligns="center">
+                <MAction type="text" action="Primary" variant="primary" />
+                <MAction type="text" action="Success" variant="success" />
+                <MAction type="text" action="Warning" variant="warning" />
+                <MAction type="text" action="Danger" variant="danger" />
+                <MAction type="text" action="Info" variant="info" />
+                <MAction type="text" action="Purple" variant="purple" />
+                <MAction type="text" action="Pink" variant="pink" />
+            </MFlex>
+            <p style="margin-top: 12px">图标模式 - variant</p>
+            <MFlex aligns="center">
+                <MAction type="icon" action="mdi:star-outline" variant="primary" />
+                <MAction type="icon" action="mdi:check-outline" variant="success" />
+                <MAction type="icon" action="mdi:alert-outline" variant="warning" />
+                <MAction type="icon" action="mdi:close-outline" variant="danger" />
+                <MAction type="icon" action="mdi:information-outline" variant="info" />
+                <MAction type="icon" action="mdi:flash-outline" variant="purple" />
+                <MAction type="icon" action="mdi:heart-outline" variant="pink" />
+            </MFlex>
         </MCard>
 
         <!-- MSplit -->
@@ -182,7 +263,7 @@
 </template>
 
 <script lang="ts" setup>
-import { MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MIconButton, MScrollBar, MSplit } from "@/components";
+import { MAction, MButton, MButtonGroup, MCard, MEllipsis, MGradient, MIcon, MScrollBar, MSplit, MFlex } from "@/components";
 
 const longList = Array.from({ length: 20 }, (_, index) => index + 1);
 const chipList = Array.from({ length: 18 }, (_, index) => index + 1);

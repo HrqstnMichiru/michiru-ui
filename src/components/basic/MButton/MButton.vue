@@ -4,7 +4,6 @@
             'm-btn',
             `m-btn--${size}`,
             `m-btn--${variant}`,
-            ,
             {
                 'm-btn--round': round,
                 'm-btn--circle': circle,
@@ -220,13 +219,7 @@ const onClick = () => {
     &.m-btn--disabled {
         cursor: not-allowed !important;
         box-shadow: none;
-        opacity: 0.6;
-
-        &:hover,
-        &:active {
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        pointer-events: none;
     }
 
     // 水平按钮组
@@ -625,6 +618,22 @@ const onClick = () => {
             &:active {
                 background-color: rgba(51, 51, 51, 0.1);
             }
+        }
+    }
+
+    // 禁用配色（统一收敛到灰阶，不使用透明度）
+    &.m-btn--disabled {
+        &.m-btn--plain,
+        &.m-btn--outline {
+            background-color: #f5f7fa;
+            border-color: #e4e7ed;
+            color: #c0c4cc;
+        }
+
+        &:not(.m-btn--plain):not(.m-btn--outline) {
+            background-color: #c0c4cc;
+            border-color: #c0c4cc;
+            color: #ffffff;
         }
     }
 }

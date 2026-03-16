@@ -5,19 +5,18 @@
         :style="{
             width: props.block ? '100%' : 'auto',
             '--aligns': customAlign,
-            '--space': props.space ? 'space-between' : 'flex-start'
+            '--space': props.space ? 'space-between' : 'flex-start',
+            '--gap': `${gap}px`
         }">
-        <span class="m-form-item__info">
-            <span v-if="customRequired" class="required-mark">*</span>
+        <span class="m-form-item__info" v-if="label">
+            <span v-if="customRequired && !hideRequiredAsterisk" class="required-mark">*</span>
             <label
                 class="m-form-item__label"
                 :class="[`m-form-item__label--${customSize}`]"
                 :style="{
                     textAlign: customAlign,
-                    width: `${customWidth}px`,
-                    '--gap': `${gap}px`
-                }"
-                v-if="label">
+                    width: `${customWidth}px`
+                }">
                 {{ label }}
             </label>
         </span>
@@ -184,32 +183,21 @@ onBeforeUnmount(() => {
             margin-bottom: 5px;
             width: 100%;
             text-align: left !important;
-            .required-mark {
-                margin-right: 2px;
-            }
         }
     }
     &.m-form-item--left {
         align-items: var(--aligns);
         justify-content: var(--space);
-        .m-form-item__info {
-            position: relative;
-            .required-mark {
-                position: absolute;
-                left: -10px;
-            }
-            .m-form-item__label {
-                margin-right: var(--gap);
-            }
-        }
+        gap: var(--gap);
     }
     .m-form-item__info {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         position: relative;
         flex-shrink: 0; // 防止标签过长时挤压内容
         .required-mark {
             color: #f56c6c;
+            margin-right: 2px;
         }
         .m-form-item__label {
             font-size: inherit;
@@ -229,6 +217,7 @@ onBeforeUnmount(() => {
     }
     .m-form-item__content {
         position: relative;
+        flex: 1; // 让内容区域占满剩余空间
         .m-form-item__error {
             position: absolute;
             color: #f56c6c;

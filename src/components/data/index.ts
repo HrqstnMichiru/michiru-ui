@@ -7,6 +7,7 @@ export * from "./MNumberInput";
 export * from "./MRadioBox";
 export * from "./MRating";
 export * from "./MSegmented";
+export * from "./MSelection";
 export * from "./MSelect";
 export * from "./MSwitch";
 export * from "./MTimeSelect";

@@ -64,7 +64,7 @@
                 <template v-if="dataSource.length > 0">
                     <slot name="header">
                         <div class="m-virtual-select-header" v-if="multiple && hasSelectAll">
-                            <MCheckBox variant="primary" @update:model-value="() => toggleSelectAll()" :model-value="selectAll"></MCheckBox>
+                            <MCheckBox variant="primary" @update:model-value="() => toggleSelectAll()" :model-value="selectAllState"></MCheckBox>
                             <span>全选</span>
                         </div>
                     </slot>
@@ -173,6 +173,14 @@ const isEmpty = computed(() => {
 
 const selectAll = computed(() => {
     return props.dataSource.length > 0 && selectValueMap.size === props.dataSource.length;
+});
+const isPartiallySelected = computed(() => {
+    return selectValueMap.size > 0 && selectValueMap.size < props.dataSource.length;
+});
+const selectAllState = computed<boolean | "indeterminate">(() => {
+    if (selectAll.value) return true;
+    if (isPartiallySelected.value) return "indeterminate";
+    return false;
 });
 const toggleSelectAll = () => {
     if (selectAll.value) {

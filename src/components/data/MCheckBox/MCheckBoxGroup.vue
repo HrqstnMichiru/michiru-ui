@@ -26,7 +26,8 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MCheckBoxGroupProps>(), {
     variant: "primary",
-    type: "box"
+    type: "box",
+    bordered: false
 });
 const emits = defineEmits<MCheckBoxGroupEmits>();
 
@@ -71,10 +72,11 @@ const isChecked = (value: string | number) => {
 };
 
 provide<MCheckBoxGroupContext>(MCheckBoxGroupContextKey, {
-    disabled: props.disabled,
+    disabled: !!props.disabled,
     size: customSize.value,
     variant: props.variant,
     type: props.type || "box",
+    bordered: (props.type || "box") === "box" && !!props.bordered,
     toggle,
     isChecked,
     register

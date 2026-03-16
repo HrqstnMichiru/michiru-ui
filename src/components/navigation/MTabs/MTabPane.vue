@@ -36,9 +36,9 @@ const transitionName = computed(() => {
 .slide-right-leave-active {
     position: absolute;
     top: 0;
-    left: 16px;
-    width: calc(100% - 32px);
-    height: calc(100% - 16px);
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 // 向左切换：元素从右侧进入，初始位于右侧100%处，不可见

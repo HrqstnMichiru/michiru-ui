@@ -72,7 +72,7 @@
                 <template v-if="data.length > 0">
                     <slot name="header">
                         <div class="m-tree-select-header" v-if="multiple && hasSelectAll">
-                            <MCheckBox variant="primary" @update:model-value="() => toggleSelectAll()" :model-value="selectAll"></MCheckBox>
+                            <MCheckBox variant="primary" @update:model-value="() => toggleSelectAll()" :model-value="selectAllState"></MCheckBox>
                             <span>全选</span>
                         </div>
                     </slot>
@@ -96,7 +96,7 @@
                                 <div
                                     class="m-tree-select-option"
                                     :class="{
-                                        'is-checked': node.checked || modelValue === node.nodeKey,
+                                        'is-checked': node.checked || node.indeterminate || modelValue === node.nodeKey,
                                         'is-disabled': node.disabled
                                     }">
                                     <span class="label">{{ node.label }}</span>
@@ -200,7 +200,21 @@ const isEmpty = computed(() => {
 });
 
 const selectAll = computed(() => {
-    return treeRef.value?.selectAll;
+    return treeRef.value?.selectAll || false;
+});
+const selectedSize = computed(() => {
+    return treeRef.value?.selectedSize || 0;
+});
+const selectableSize = computed(() => {
+    return treeRef.value?.selectableSize || 0;
+});
+const isPartiallySelected = computed(() => {
+    return selectedSize.value > 0 && selectedSize.value < selectableSize.value;
+});
+const selectAllState = computed<boolean | "indeterminate">(() => {
+    if (selectAll.value) return true;
+    if (isPartiallySelected.value) return "indeterminate";
+    return false;
 });
 const toggleSelectAll = () => {
     treeRef.value?.toggleSelectAll();

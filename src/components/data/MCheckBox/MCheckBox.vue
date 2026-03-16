@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <label
         class="m-checkbox"
         :class="[
@@ -7,7 +7,9 @@
             `m-checkbox--${type}`,
             {
                 'm-checkbox--disabled': disabled,
-                'm-checkbox--checked': isChecked
+                'm-checkbox--checked': isChecked,
+                'm-checkbox--indeterminate': isIndeterminate,
+                'm-checkbox--bordered': bordered
             }
         ]">
         <input type="checkbox" class="m-checkbox__input" :checked="isChecked" :disabled="disabled" :value="value" @change="onChange" ref="inputRef" />
@@ -17,8 +19,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, useTemplateRef } from "vue";
-import type { MCheckBoxEmits, MCheckBoxGroupContext, MCheckBoxProps } from "./types";
+import { computed, inject, useTemplateRef, watch } from "vue";
+import type { MCheckBoxEmits, MCheckBoxGroupContext, MCheckBoxProps, MCheckBoxState } from "./types";
 import { MCheckBoxGroupContextKey } from "./types";
 
 defineOptions({
@@ -33,7 +35,7 @@ if (groupContext) {
     groupContext.register(props.value!);
 }
 
-const modelValue = defineModel<boolean>("modelValue", {
+const modelValue = defineModel<MCheckBoxState>("modelValue", {
     default: false
 });
 const disabled = computed(() => {
@@ -48,20 +50,48 @@ const variant = computed(() => {
 const type = computed(() => {
     return props.type || groupContext?.type || "box";
 });
+const bordered = computed(() => {
+    if (type.value !== "box") return false;
+    return props.bordered || groupContext?.bordered || false;
+});
+// 部分选择状态
+const isIndeterminate = computed(() => {
+    if (groupContext) return false;
+    return modelValue.value === "indeterminate";
+});
+// 选中状态
 const isChecked = computed(() => {
     if (groupContext) {
         return groupContext.isChecked(props.value!);
     }
-    return modelValue.value;
+    return modelValue.value === true;
+});
+
+// 同步部分选择状态
+watch(isIndeterminate, value => {
+    if (inputRef.value) {
+        inputRef.value.indeterminate = value;
+    }
 });
 
 const onChange = () => {
+    // 禁用状态不响应点击事件
     if (disabled.value) return;
+    // 如果在组中，调用组的toggle方法切换选中状态
     if (groupContext) {
         groupContext.toggle(props.value!);
         emits("change");
         return;
     }
+
+    // 如果当前状态是部分选择，点击后变为选中状态
+    if (isIndeterminate.value) {
+        modelValue.value = true;
+        emits("change");
+        return;
+    }
+
+    // 否则就是普通的选中/取消选中状态，直接取反即可
     const checked = !!inputRef.value?.checked;
     modelValue.value = checked;
     emits("change");
@@ -102,9 +132,52 @@ const onChange = () => {
             }
         }
         .m-checkbox__label {
-            margin-left: 8px;
+            margin-left: 4px;
             font-size: 16px;
             color: #61666d;
+        }
+
+        &.m-checkbox--bordered {
+            border: 1px solid #dcdfe6;
+            background: #fff;
+            transition: all 0.2s var(--ease-in-out);
+
+            &.m-checkbox--small {
+                height: 28px;
+                padding: 5.2px 8px;
+                border-radius: 4px;
+            }
+            &.m-checkbox--medium {
+                height: 34px;
+                padding: 7.2px 10px;
+                border-radius: 6px;
+            }
+            &.m-checkbox--large {
+                height: 40px;
+                padding: 9.2px 12px;
+                border-radius: 8px;
+            }
+
+            &:not(.m-checkbox--disabled) {
+                border-color: var(--m-checkbox-bordered-weak, #dcdfe6);
+                &:hover {
+                    border-color: var(--m-checkbox-bordered-color, #007bff);
+                }
+            }
+
+            &.m-checkbox--checked:not(.m-checkbox--disabled),
+            &.m-checkbox--indeterminate:not(.m-checkbox--disabled) {
+                border-color: var(--m-checkbox-bordered-color, #007bff);
+                background-color: var(--m-checkbox-bordered-bg, rgba(0, 123, 255, 0.1));
+                .m-checkbox__label {
+                    color: var(--m-checkbox-bordered-color, #007bff);
+                }
+            }
+
+            &.m-checkbox--disabled {
+                border-color: #e4e7ed;
+                background-color: #f5f7fa;
+            }
         }
 
         // 尺寸变体
@@ -165,23 +238,58 @@ const onChange = () => {
             transform: rotate(45deg) scale(1);
         }
 
+        // 部分选择状态
+        &.m-checkbox--indeterminate .m-checkbox__inner::after {
+            border: 0;
+            height: 2px;
+            border-radius: 1px;
+            transform: translate(-50%, -50%) scale(1);
+            top: 50%;
+            left: 50%;
+            background: #ffffff;
+        }
+
+        &.m-checkbox--small.m-checkbox--indeterminate .m-checkbox__inner::after {
+            width: 6px;
+        }
+        &.m-checkbox--medium.m-checkbox--indeterminate .m-checkbox__inner::after {
+            width: 8px;
+        }
+        &.m-checkbox--large.m-checkbox--indeterminate .m-checkbox__inner::after {
+            width: 10px;
+        }
+
         // 禁用状态
         &.m-checkbox--disabled {
             cursor: not-allowed;
-            .m-checkbox__label {
-                color: #c0c4cc;
-            }
             .m-checkbox__inner {
                 background-color: #f5f7fa;
                 border-color: #e4e7ed;
             }
+            .m-checkbox__label {
+                color: #c0c4cc;
+            }
             &.m-checkbox--checked .m-checkbox__inner {
-                opacity: 0.6;
+                background-color: #f2f6fc;
+                border-color: #dcdfe6;
+                &::after {
+                    border-color: #c0c4cc;
+                    background-color: transparent;
+                }
+            }
+            &.m-checkbox--indeterminate .m-checkbox__inner {
+                background-color: #f2f6fc;
+                border-color: #dcdfe6;
+                &::after {
+                    border: 0;
+                    background-color: #c0c4cc;
+                }
             }
         }
 
         // 颜色变体
-        &.m-checkbox--checked:not(m-.checkbox--disabled) {
+        &.m-checkbox--checked:not(.m-checkbox--disabled),
+        &.m-checkbox--indeterminate:not(.m-checkbox--disabled) {
             &.m-checkbox--primary .m-checkbox__inner {
                 background-color: #007bff;
                 border-color: #007bff;
@@ -213,6 +321,49 @@ const onChange = () => {
             &.m-checkbox--gray .m-checkbox__inner {
                 background-color: #6b6b6b;
                 border-color: #6b6b6b;
+            }
+        }
+
+        &.m-checkbox--bordered:not(.m-checkbox--disabled) {
+            &.m-checkbox--primary {
+                --m-checkbox-bordered-color: #007bff;
+                --m-checkbox-bordered-weak: rgba(0, 123, 255, 0.45);
+                --m-checkbox-bordered-bg: rgba(0, 123, 255, 0.1);
+            }
+            &.m-checkbox--success {
+                --m-checkbox-bordered-color: #28a745;
+                --m-checkbox-bordered-weak: rgba(40, 167, 69, 0.45);
+                --m-checkbox-bordered-bg: rgba(40, 167, 69, 0.1);
+            }
+            &.m-checkbox--warning {
+                --m-checkbox-bordered-color: #e6a23c;
+                --m-checkbox-bordered-weak: rgba(230, 162, 60, 0.45);
+                --m-checkbox-bordered-bg: rgba(230, 162, 60, 0.12);
+            }
+            &.m-checkbox--danger {
+                --m-checkbox-bordered-color: #dc3545;
+                --m-checkbox-bordered-weak: rgba(220, 53, 69, 0.45);
+                --m-checkbox-bordered-bg: rgba(220, 53, 69, 0.1);
+            }
+            &.m-checkbox--info {
+                --m-checkbox-bordered-color: #36b5b5;
+                --m-checkbox-bordered-weak: rgba(54, 181, 181, 0.45);
+                --m-checkbox-bordered-bg: rgba(54, 181, 181, 0.1);
+            }
+            &.m-checkbox--purple {
+                --m-checkbox-bordered-color: #801eff;
+                --m-checkbox-bordered-weak: rgba(128, 30, 255, 0.45);
+                --m-checkbox-bordered-bg: rgba(128, 30, 255, 0.1);
+            }
+            &.m-checkbox--pink {
+                --m-checkbox-bordered-color: #ff69b4;
+                --m-checkbox-bordered-weak: rgba(255, 105, 180, 0.45);
+                --m-checkbox-bordered-bg: rgba(255, 105, 180, 0.1);
+            }
+            &.m-checkbox--gray {
+                --m-checkbox-bordered-color: #6b6b6b;
+                --m-checkbox-bordered-weak: rgba(107, 107, 107, 0.45);
+                --m-checkbox-bordered-bg: rgba(107, 107, 107, 0.1);
             }
         }
     }
@@ -282,7 +433,8 @@ const onChange = () => {
         }
 
         // 选中状态
-        &.m-checkbox--checked {
+        &.m-checkbox--checked,
+        &.m-checkbox--indeterminate {
             color: #fff;
         }
 
@@ -295,7 +447,8 @@ const onChange = () => {
         }
 
         // 颜色变体
-        &:not(.m-checkbox--disabled).m-checkbox--checked {
+        &:not(.m-checkbox--disabled).m-checkbox--checked,
+        &:not(.m-checkbox--disabled).m-checkbox--indeterminate {
             &.m-checkbox--primary {
                 background-color: #007bff;
             }

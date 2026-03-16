@@ -11,6 +11,7 @@ export interface MTableColProps {
     label?: string;
     width?: number;
     minWidth?: number;
+    maxWidth?: number;
     aligns?: MTableAlign;
     fixed?: MTableFixed;
     type?: MTableColType;

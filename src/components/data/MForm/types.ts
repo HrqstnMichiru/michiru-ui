@@ -52,6 +52,7 @@ export interface MFormItemProps {
     block?: boolean; // 是否为块级元素
     required?: boolean; // 是否必填
     errorMessage?: string; // 错误提示信息
+    hideRequiredAsterisk?: boolean; // 是否隐藏必填项的红色星号
     gap?: number; // 标签与内容的间距
     aligns?: "flex-start" | "center" | "flex-end"; // 水平模式下标签与内容的对齐方式
     space?: boolean; // 是否在标签与内容之间使用空间分隔

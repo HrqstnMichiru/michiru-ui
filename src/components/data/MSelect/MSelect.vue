@@ -63,7 +63,7 @@
             <div class="m-select-options">
                 <slot name="header" v-if="toggleValueMap.size > 0">
                     <div class="m-select-header" v-if="multiple && hasSelectAll">
-                        <MCheckBox variant="primary" @update:model-value="toggleSelectAll" :model-value="selectAll"></MCheckBox>
+                        <MCheckBox variant="primary" @update:model-value="toggleSelectAll" :model-value="selectAllState"></MCheckBox>
                         <span>全选</span>
                     </div>
                 </slot>
@@ -95,7 +95,7 @@ const props = withDefaults(defineProps<MSelectProps>(), {
     hideAfterClick: true,
     width: 250,
     placement: "bottom",
-    maxHeight: 300,
+    maxHeight: 250,
     maxCount: 3,
     tooltipWidth: 250
 });
@@ -163,6 +163,14 @@ const onVisibleChange = (visible: boolean) => {
 
 const selectAll = computed(() => {
     return toggleValueMap.size > 0 && selectValueMap.size === toggleValueMap.size;
+});
+const isPartiallySelected = computed(() => {
+    return selectValueMap.size > 0 && selectValueMap.size < toggleValueMap.size;
+});
+const selectAllState = computed<boolean | "indeterminate">(() => {
+    if (selectAll.value) return true;
+    if (isPartiallySelected.value) return "indeterminate";
+    return false;
 });
 
 const toggleSelectAll = () => {

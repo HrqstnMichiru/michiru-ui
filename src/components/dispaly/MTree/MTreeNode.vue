@@ -15,12 +15,19 @@
                 }">
                 >
             </MIcon>
-            <MCheckBox variant="primary" :disabled="disabled" v-if="showCheck" @click.stop size="small" :model-value="checked" @update:model-value="treeContext?.toggleSelect(nodeKey)"></MCheckBox>
+            <MCheckBox
+                variant="primary"
+                :disabled="disabled"
+                v-if="showCheck"
+                @click.stop
+                size="small"
+                :model-value="checkState"
+                @update:model-value="treeContext?.toggleSelect(nodeKey)"></MCheckBox>
             <slot :node="props" :data="data">
                 <span
                     class="label"
                     :class="{
-                        'label--active': checked && !disabled
+                        'label--active': (checked || indeterminate) && !disabled
                     }">
                     {{ label }}
                 </span>
@@ -55,6 +62,9 @@ const treeContext = inject<MTreeContext>(MTreeContextKey)!;
 
 const paddingLeft = computed(() => {
     return `${33 * props.level! + 10}px`;
+});
+const checkState = computed<boolean | "indeterminate">(() => {
+    return props.indeterminate ? "indeterminate" : props.checked;
 });
 
 const onNodeClick = () => {
@@ -122,10 +132,9 @@ const transitionEvents: Record<string, (el: HTMLElement) => void> = {
         .label {
             color: rgb(96, 98, 102);
             font-size: 15px;
-            font-weight: 400;
+            font-weight: 500;
             transition: all 0.2s ease;
             &.label--active {
-                font-weight: 600;
                 color: #007bff;
             }
         }

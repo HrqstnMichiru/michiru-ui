@@ -304,7 +304,6 @@ onMounted(() => nextTick(updateBar));
         position: relative;
         flex: 1;
         overflow: hidden;
-        padding: 0 16px 16px 16px;
     }
     .m-tabs__nav--bar {
         .m-tabs__nav-item {

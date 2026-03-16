@@ -17,9 +17,11 @@ const MichiruUI: Plugin = {
         app.directive("ripple", ripple);
 
         // 注册组件
+        const registeredNames = new Set<string>();
         Object.values(components).forEach(component => {
-            if ("name" in component && component.name !== undefined) {
+            if ("name" in component && component.name !== undefined && !registeredNames.has(component.name)) {
                 app.component(component.name, component);
+                registeredNames.add(component.name);
             }
         });
     }

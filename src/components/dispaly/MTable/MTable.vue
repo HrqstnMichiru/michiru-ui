@@ -112,13 +112,15 @@ const headerScrollbarRef = useTemplateRef<HTMLDivElement>("headerScrollbarRef");
 const bodyScrollbarRef = useTemplateRef<HTMLDivElement>("bodyScrollbarRef");
 const slotColumns = reactive<MResolvedColumn[]>([]);
 const selectedRows = shallowReactive<Map<keyof T, T>>(new Map());
-const hasVerticalScrollbar = ref(false);
-const showLeftShadow = ref(false);
-const showRightShadow = ref(false);
+const hasVerticalScrollbar = ref(false); // 是否存在垂直滚动条
+const showLeftShadow = ref(false); // 左侧阴影仅在存在垂直滚动条且有左侧固定列时显示
+const showRightShadow = ref(false); // 右侧阴影仅在存在垂直滚动条且有右侧固定列时显示
+const headerTrackWidths = ref<string[]>([]);
 
 let isSyncingScroll = false;
 let bodyResizeObserver: ResizeObserver | null = null;
 let bodyScrollTarget: HTMLDivElement | null = null;
+let bodyContentTarget: HTMLDivElement | null = null;
 
 const RenderHeaderSlot = defineComponent({
     name: "MTableRenderHeaderSlot",
@@ -169,9 +171,18 @@ const mergeCssLengths = (lengths: string[]) => {
     if (lengths.length === 1) return lengths[0]!;
     return `calc(${lengths.join(" + ")})`;
 };
+
+const shouldSyncTrackWidth = (column: MResolvedColumn) => column.minWidth !== undefined || column.maxWidth !== undefined;
+
 const normalizeWidth = (column: MResolvedColumn) => {
-    if (column.minWidth !== undefined) return `minmax(${column.minWidth}px, 1fr)`;
     if (column.width !== undefined) return `${column.width}px`;
+    if (column.minWidth !== undefined && column.maxWidth !== undefined) {
+        const minWidth = Math.min(column.minWidth, column.maxWidth);
+        const maxWidth = Math.max(column.minWidth, column.maxWidth);
+        return `minmax(${minWidth}px, ${maxWidth}px)`;
+    }
+    if (column.minWidth !== undefined) return `minmax(${column.minWidth}px, 1fr)`;
+    if (column.maxWidth !== undefined) return `minmax(0, ${column.maxWidth}px)`;
     if (column.type === "selection") return SELECTION_COLUMN_WIDTH;
     if (column.type === "index") return INDEX_COLUMN_WIDTH;
     return resolveFixedSide(column.fixed) ? DEFAULT_FIXED_COLUMN_WIDTH : "minmax(0, 1fr)";
@@ -218,8 +229,42 @@ const bodyGridStyle = computed<CSSProperties>(() => ({
     gridTemplateColumns: renderColumns.value.map(column => column.trackWidth).join(" ") || "minmax(0, 1fr)"
 }));
 const headerGridStyle = computed<CSSProperties>(() => ({
-    gridTemplateColumns: compensateTracks(renderColumns.value.map(column => column.trackWidth)).join(" ") || "minmax(0, 1fr)"
+    gridTemplateColumns:
+        compensateTracks(
+            renderColumns.value.map((column, index) => {
+                if (!shouldSyncTrackWidth(column)) return column.trackWidth;
+                return headerTrackWidths.value[index] || column.trackWidth;
+            })
+        ).join(" ") || "minmax(0, 1fr)"
 }));
+
+const syncHeaderTrackWidths = () => {
+    const bodyEl = bodyScrollbarRef.value;
+    if (!bodyEl || props.data.length === 0) {
+        if (headerTrackWidths.value.length > 0) headerTrackWidths.value = [];
+        return;
+    }
+
+    const bodyRows = Array.from(bodyEl.querySelectorAll<HTMLElement>(".table-body-row"));
+    const nextTrackWidths = renderColumns.value.map((column, index) => {
+        if (!shouldSyncTrackWidth(column)) return "";
+
+        const measuredWidth = bodyRows.reduce((maxWidth, row) => {
+            const cell = row.children[index] as HTMLElement | undefined;
+            if (!cell) return maxWidth;
+            return Math.max(maxWidth, Math.ceil(cell.getBoundingClientRect().width));
+        }, column.minWidth || 0);
+
+        const boundedWidth = column.maxWidth !== undefined ? Math.min(measuredWidth, column.maxWidth) : measuredWidth;
+        return `${boundedWidth}px`;
+    });
+
+    const hasChanged = nextTrackWidths.length !== headerTrackWidths.value.length || nextTrackWidths.some((width, index) => width !== headerTrackWidths.value[index]);
+
+    if (hasChanged) {
+        headerTrackWidths.value = nextTrackWidths;
+    }
+};
 
 const updateScrollState = () => {
     const bodyEl = bodyScrollbarRef.value;
@@ -260,9 +305,11 @@ const cleanupBodyScrollTarget = () => {
     bodyResizeObserver?.disconnect();
     bodyResizeObserver = null;
     bodyScrollTarget = null;
+    bodyContentTarget = null;
     hasVerticalScrollbar.value = false;
     showLeftShadow.value = false;
     showRightShadow.value = false;
+    headerTrackWidths.value = [];
 };
 
 const setupBodyScrollTarget = () => {
@@ -273,11 +320,17 @@ const setupBodyScrollTarget = () => {
     if (!bodyEl) return;
 
     bodyScrollTarget = bodyEl;
+    bodyContentTarget = bodyEl.querySelector<HTMLDivElement>(".table-body");
     bodyScrollTarget.addEventListener("scroll", handleBodyScroll, { passive: true });
-    bodyResizeObserver = new ResizeObserver(updateScrollState);
+    bodyResizeObserver = new ResizeObserver(() => {
+        syncHeaderTrackWidths();
+        updateScrollState();
+    });
     bodyResizeObserver.observe(bodyScrollTarget);
+    if (bodyContentTarget) bodyResizeObserver.observe(bodyContentTarget);
 
     nextTick(() => {
+        syncHeaderTrackWidths();
         updateScrollState();
         handleBodyScroll();
     });
@@ -362,6 +415,7 @@ watch(
     () => {
         selectedRows.clear();
         nextTick(() => {
+            syncHeaderTrackWidths();
             setupBodyScrollTarget();
             updateScrollState();
         });
@@ -372,7 +426,10 @@ watch(
 watch(
     () => bodyScrollbarRef.value,
     () => {
-        nextTick(setupBodyScrollTarget);
+        nextTick(() => {
+            syncHeaderTrackWidths();
+            setupBodyScrollTarget();
+        });
     }
 );
 
@@ -381,6 +438,7 @@ watch(
     renderColumns,
     () => {
         nextTick(() => {
+            syncHeaderTrackWidths();
             updateScrollState();
             handleBodyScroll();
         });
@@ -419,9 +477,9 @@ defineExpose<MTableInstance<T>>({
     --table-header-color: #909399;
     --table-body-color: #606266;
     --table-row-bg: #fff;
-    --table-row-hover-bg: #ecf5ff;
-    --table-row-striped-bg: #f5f7fa;
-    --table-border-color: #ebeef5;
+    --table-row-hover-bg: #f5f7fa;
+    --table-row-striped-bg: #fafafa;
+    --table-border-color: #e4e7ed;
     --table-shadow-width: 12px;
     --table-shadow-color: rgba(0, 0, 0, 0.12);
     width: 100%;
@@ -508,7 +566,7 @@ defineExpose<MTableInstance<T>>({
 
 .table-header-wrapper {
     z-index: 6;
-    background: #fff;
+    background: #f5f7fa;
 }
 
 .table-header-cell,
@@ -527,7 +585,7 @@ defineExpose<MTableInstance<T>>({
 .table-header-cell {
     color: var(--table-header-color);
     font-weight: 500;
-    background: #fff;
+    background: #f5f7fa;
     border-bottom: 1px solid var(--table-border-color);
     text-wrap: nowrap;
 }
@@ -535,7 +593,7 @@ defineExpose<MTableInstance<T>>({
 .table-body-row {
     --table-current-row-bg: var(--table-row-bg);
     background-color: var(--table-current-row-bg);
-    transition: background-color 0.2s ease;
+    transition: background-color 0.25s ease;
 
     &.table-body-row--striped {
         --table-current-row-bg: var(--table-row-striped-bg);
@@ -561,6 +619,7 @@ defineExpose<MTableInstance<T>>({
     font-weight: 400;
     word-break: break-word;
     background-color: var(--table-current-row-bg);
+    transition: background-color 0.25s ease;
 }
 
 .table-body-cell--scoped {
@@ -587,6 +646,7 @@ defineExpose<MTableInstance<T>>({
     overflow: visible;
     background-color: var(--table-current-row-bg, #fff);
     background-clip: padding-box;
+    transition: background-color 0.25s ease;
 
     &::after {
         content: "";
@@ -604,7 +664,7 @@ defineExpose<MTableInstance<T>>({
 .table-header-cell.table-cell--fixed-left,
 .table-header-cell.table-cell--fixed-right {
     z-index: 10;
-    background-color: #fff;
+    background-color: #f5f7fa;
 }
 
 .table-cell--fixed-left-shadow::after {

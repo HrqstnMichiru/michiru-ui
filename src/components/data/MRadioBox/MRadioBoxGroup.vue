@@ -24,10 +24,10 @@ import { MRadioBoxGroupContextKey } from "./types";
 defineOptions({
     name: "MRadioBoxGroup"
 });
-
 const props = withDefaults(defineProps<MRadioBoxGroupProps>(), {
     variant: "primary",
-    type: "box"
+    type: "box",
+    bordered: false
 });
 const emits = defineEmits<MRadioBoxGroupEmits>();
 
@@ -57,10 +57,11 @@ const toggleChecked = (value: string | number) => {
 };
 
 provide<MRadioBoxGroupContext>(MRadioBoxGroupContextKey, {
-    disabled: props.disabled,
+    disabled: !!props.disabled,
     size: customSize.value,
     variant: props.variant,
     type: props.type,
+    bordered: props.type === "box" && !!props.bordered,
     isChecked,
     toggleChecked
 });

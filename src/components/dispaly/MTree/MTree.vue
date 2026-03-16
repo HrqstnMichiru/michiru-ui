@@ -58,6 +58,7 @@ const preProcessData = (data: T[]) => {
             showCheck,
             disabled,
             checked,
+            indeterminate: false,
             expanded: false
         };
         if (data.children) {
@@ -67,7 +68,6 @@ const preProcessData = (data: T[]) => {
                 processedNode.children.push(processedChild);
             }
         }
-        if (checked) selectedNodes.add(processedNode); // 初始化选中节点集合
         return processedNode;
     };
     return data.map(item => process(item));
@@ -89,18 +89,57 @@ const buildNodeMap = (nodes: MTreeNodeProps<T>[] | undefined, path: (string | nu
 };
 buildNodeMap(_data);
 
-// 递归将节点及其子节点的 checked 置为 false
+// 根据子节点计算当前节点的三态状态
+const syncNodeCheckStateByChildren = (node: MTreeNodeProps<T>) => {
+    const children = node.children || [];
+    const selectableChildren = children.filter(child => child.showCheck && !child.disabled);
+    const allChecked = selectableChildren.length > 0 && selectableChildren.every(child => child.checked && !child.indeterminate);
+    const hasChecked = selectableChildren.some(child => child.checked);
+    const hasIndeterminate = selectableChildren.some(child => child.indeterminate);
+
+    node.checked = allChecked;
+    node.indeterminate = !allChecked && (hasChecked || hasIndeterminate);
+};
+
+// 初始化联动场景下的父节点状态
+const initializeParentCheckState = (nodes: MTreeNodeProps<T>[] | undefined) => {
+    if (!nodes) return;
+    nodes.forEach(node => {
+        initializeParentCheckState(node.children);
+        if (props.syncParentWithChildren && !props.onlyLeaf && node.children?.length) {
+            syncNodeCheckStateByChildren(node);
+        }
+    });
+};
+
+// 重新构建已选中节点集合
+const rebuildSelectedNodes = (nodes: MTreeNodeProps<T>[] | undefined) => {
+    if (!nodes) return;
+    nodes.forEach(node => {
+        if (node.showCheck && !node.disabled && node.checked) {
+            selectedNodes.add(node);
+        }
+        rebuildSelectedNodes(node.children);
+    });
+};
+
+initializeParentCheckState(_data);
+selectedNodes.clear();
+rebuildSelectedNodes(_data);
+
+// 递归将节点及其子节点置为未选中
 const removeNodes = (nodes: MTreeNodeProps<T>[] | undefined) => {
     if (!nodes) return;
     nodes.forEach(node => {
-        if (node.showCheck) {
+        if (node.showCheck && !node.disabled) {
             selectedNodes.delete(node);
-            node.checked = false;
         }
+        node.checked = false;
+        node.indeterminate = false;
         removeNodes(node.children);
     });
 };
-// 递归将节点及其子节点的 checked 置为 true
+// 递归将节点及其子节点置为选中
 const addNodes = (nodes: MTreeNodeProps<T>[] | undefined) => {
     if (!nodes) return;
     nodes.forEach(node => {
@@ -108,9 +147,13 @@ const addNodes = (nodes: MTreeNodeProps<T>[] | undefined) => {
         if (props.syncParentWithChildren && node.disabled) return;
         // 非联动模式下只要节点本身展示并且不禁用就添加
         if (node.showCheck && !node.disabled) {
+            const wasChecked = node.checked;
             node.checked = true;
+            node.indeterminate = false;
             selectedNodes.add(node);
-            emits("node-select", node);
+            if (!wasChecked) {
+                emits("node-select", node);
+            }
         }
         addNodes(node.children);
     });
@@ -119,10 +162,11 @@ const addNodes = (nodes: MTreeNodeProps<T>[] | undefined) => {
 // 切换节点选中状态
 const toggleSelect = (nodeKey: string | number) => {
     const target = nodeMap.get(nodeKey);
-    if (!target) return;
+    if (!target || target.disabled || !target.showCheck) return;
 
-    const newChecked = !target.checked;
+    const newChecked = target.indeterminate ? true : !target.checked;
     target.checked = newChecked;
+    target.indeterminate = false;
 
     if (newChecked) {
         emits("node-select", target);
@@ -137,15 +181,16 @@ const toggleSelect = (nodeKey: string | number) => {
     if (props.syncParentWithChildren && !props.onlyLeaf) {
         let parent: MTreeNodeProps<T> | undefined = target.parent;
         while (parent) {
+            const wasChecked = parent.checked;
+            syncNodeCheckStateByChildren(parent);
             if (parent.showCheck && !parent.disabled) {
-                const allChildrenSelected = parent.children!.every(child => {
-                    if (child.disabled) return true; // 禁用节点不影响父节点状态
-                    return child.checked;
-                });
-                parent.checked = allChildrenSelected;
-                if (allChildrenSelected) {
+                if (parent.checked) {
                     selectedNodes.add(parent);
-                    emits("node-select", parent);
+                    if (!wasChecked) {
+                        emits("node-select", parent);
+                    }
+                } else {
+                    selectedNodes.delete(parent);
                 }
             }
             parent = parent.parent;
@@ -156,7 +201,7 @@ const toggleSelect = (nodeKey: string | number) => {
 
 // 切换全选状态
 const selectAll = computed(() => {
-    return Array.from(selectedNodes).filter(node => !node.disabled).length === selectedNodeCount.value && selectedNodeCount.value > 0;
+    return Array.from(selectedNodes).filter(node => node.showCheck && !node.disabled).length === selectedNodeCount.value && selectedNodeCount.value > 0;
 });
 const checkAll = () => {
     addNodes(_data);
@@ -169,6 +214,7 @@ const uncheckAll = () => {
                 selectedNodes.delete(node);
             }
             node.checked = false;
+            node.indeterminate = false;
             if (node.children) clearAll(node.children);
         });
     };
@@ -264,6 +310,12 @@ defineExpose<MTreeInstance<T>>({
     toggleExpand,
     get selectAll() {
         return selectAll.value;
+    },
+    get selectedSize() {
+        return Array.from(selectedNodes).filter(node => node.showCheck && !node.disabled).length;
+    },
+    get selectableSize() {
+        return selectedNodeCount.value;
     }
 });
 </script>
