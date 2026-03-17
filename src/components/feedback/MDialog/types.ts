@@ -3,11 +3,7 @@ import type { InjectionKey, Reactive } from "vue";
 export type MDialogVariant = "success" | "warning" | "danger" | "primary" | "info";
 export interface MDialogProps {
     maskClosable?: boolean; // 是否可以点击遮罩层关闭
-    maskTheme?: "light" | "dark" | "no-mask"; // 主题变体
     zIndex?: number; // z-index值
-    blurable?: boolean; // 是否启用背景模糊
-    transition?: "fade-translate" | "slide-down" | "none"; // 过渡动画类型
-    lock?: boolean; // 是否锁定背景滚动
 
     id: string; // 对话框唯一标识
     variant?: MDialogVariant; // 消息框变体

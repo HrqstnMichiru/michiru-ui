@@ -100,7 +100,7 @@ const onClick = () => {
     .left {
         flex: 1;
         .label {
-            color: rgb(41, 52, 61);
+            color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

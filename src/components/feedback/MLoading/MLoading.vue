@@ -1,34 +1,25 @@
-﻿<template>
-    <Teleport :to="to">
-        <div
-            class="loading-wrapper"
-            :class="{ 'loading-wrapper--fullscreen': isFullscreen }"
-            :style="{
-                backgroundColor: bgColor,
-                zIndex: zIndex
-            }">
-            <img :src="src" @dragstart.prevent />
+<template>
+    <Teleport :to="target">
+        <Transition name="fade" @after-leave="onAfterLeave">
             <div
-                class="loading-text"
-                :style="{
-                    fontSize: `${loadingFontSize}px`,
-                    gap: `${loadingGap}px`
+                v-if="visible"
+                class="m-loading-wrapper"
+                :class="{
+                    'is-fullscreen': fullScreen
                 }">
-                <span>正</span>
-                <span>在</span>
-                <span>拼</span>
-                <span>命</span>
-                <span>加</span>
-                <span>载</span>
-                <span>中</span>
-                <span>...</span>
+                <div class="m-loading">
+                    <span class="m-loading-item"></span>
+                    <span class="m-loading-item"></span>
+                    <span class="m-loading-item"></span>
+                    <span class="m-loading-item"></span>
+                    <span class="m-loading-item"></span>
+                </div>
             </div>
-        </div>
+        </Transition>
     </Teleport>
 </template>
 
 <script lang="ts" setup>
-import loadingImage from "@/assets/image/iloli.gif";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import type { MLoadingProps } from "./types";
 
@@ -36,139 +27,173 @@ defineOptions({
     name: "MLoading"
 });
 const props = withDefaults(defineProps<MLoadingProps>(), {
-    src: loadingImage,
-    to: "body",
-    theme: "light",
-    zIndex: 9999
+    target: "body"
 });
 
-const bgColor = computed(() => {
-    return props.theme === "light" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
-});
-const isFullscreen = computed(() => {
-    return props.to === "body";
-});
-const ratio = ref(1);
-const originalOverflow = ref<string>(""); // 保存原始 overflow 值
-// 根据容器宽度和页面宽度的比例动态计算字体大小
-const loadingFontSize = computed(() => {
-    return Math.max(16, Math.round(28 * ratio.value));
-});
-const loadingGap = computed(() => {
-    return Math.round(10 * ratio.value);
-});
+const visible = ref(true);
+const fullScreen = computed(() => props.target === "body" || props.target === document.body);
+const onAfterLeave = () => {
+    props.onDestroy();
+};
 
-// 获取目标元素和页面尺寸
-const updateSizes = () => {
-    const targetElement = typeof props.to === "string" ? document.querySelector(props.to) : props.to;
+const getTargetElement = (): HTMLElement | null => {
+    if (props.target instanceof HTMLElement) return props.target;
+    if (typeof props.target === "string") {
+        return document.querySelector(props.target) as HTMLElement | null;
+    }
+    return null;
+};
+
+const lockTarget = ref<HTMLElement | null>(null);
+const originalOverflow = ref<string>("");
+const lockScroll = () => {
+    const targetElement = getTargetElement();
     if (!targetElement) return;
-    const containerWidth = targetElement.clientWidth;
-    const pageWidth = window.innerWidth;
-    ratio.value = containerWidth / pageWidth;
+    lockTarget.value = targetElement;
+    originalOverflow.value = targetElement.style.overflow;
+    targetElement.style.overflow = "hidden";
 };
-// 锁定/解锁 body 滚动
-const lockBodyScroll = () => {
-    if (props.to !== "body") return;
-    originalOverflow.value = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+const unlockScroll = () => {
+    if (!lockTarget.value) return;
+    lockTarget.value.style.overflow = originalOverflow.value;
+    lockTarget.value = null;
 };
-const unlockBodyScroll = () => {
-    if (props.to !== "body") return;
-    document.body.style.overflow = originalOverflow.value;
-};
-
 onMounted(() => {
-    lockBodyScroll();
-    updateSizes();
+    lockScroll();
 });
 onBeforeUnmount(() => {
-    unlockBodyScroll();
+    unlockScroll();
+});
+
+defineExpose({
+    close: () => {
+        visible.value = false;
+    }
 });
 </script>
 
 <style lang="scss" scoped>
-.loading-wrapper {
+.m-loading-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 30px;
     user-select: none;
-    backdrop-filter: blur(10px);
+    background-color: #fff;
     position: absolute;
+    z-index: 9999;
     inset: 0;
-    &.loading-wrapper--fullscreen {
+    &.is-fullscreen {
         position: fixed;
-        height: 100%;
-        width: 100%;
     }
-    img {
-        height: 40%;
-        object-fit: contain;
-    }
-    .loading-text {
-        font-weight: 500;
+    .m-loading {
         display: flex;
-        align-items: center;
-        /* 让每个字符单独动画 */
-        span {
-            display: inline-block;
-            transform: translateY(0);
-            animation-name: bounce;
-            animation-duration: 2s;
-            animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite;
-            animation-fill-mode: both;
-            background: linear-gradient(90deg, #4096e1 0%, #7c3aed 50%, #f472b6 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        /* 交错延迟，产生波浪效果 */
-        span:nth-child(1) {
-            animation-delay: 0s;
-        }
-        span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        span:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-        span:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-        span:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-        span:nth-child(6) {
-            animation-delay: 0.6s;
-        }
-        span:nth-child(7) {
-            animation-delay: 0.7s;
-        }
-        span:nth-child(8) {
-            animation-delay: 0.8s;
+        position: relative;
+        width: 170px;
+        height: 20px;
+        padding: 0 15px;
+        gap: 10px;
+        .m-loading-item {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: loader 1.4s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+            &:nth-child(1) {
+                animation-delay: 0s;
+                background-color: #f0555a;
+            }
+            &:nth-child(2) {
+                animation-delay: 0.08s;
+                background-color: #2a96fa;
+            }
+            &:nth-child(3) {
+                animation-delay: 0.16s;
+                background-color: #00b4aa;
+            }
+            &:nth-child(4) {
+                animation-delay: 0.24s;
+                background-color: #ffe76c;
+            }
+            &:nth-child(5) {
+                animation-delay: 0.32s;
+                background-color: #7a5668;
+            }
         }
     }
+}
 
-    /* 上下浮动关键帧（向上移动然后回到原位） */
-    @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-            transform: translateY(0);
-        }
-        40% {
-            transform: translateY(-30px);
-            filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.2)) blur(1px);
-        }
-        60% {
-            transform: translateY(-15px);
-            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.15));
-        }
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 1.2s cubic-bezier(0.5, 1, 0.89, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+@keyframes loader {
+    0% {
+        transform: translateY(0);
+    }
+    5% {
+        transform: translateY(4px);
+        filter: blur(0.1px);
+        margin-left: -2px;
+        width: 24px;
+        height: 16px;
+    }
+    10% {
+        transform: translateY(4px);
+        filter: blur(0.1px);
+        margin-left: -1px;
+        width: 22px;
+        height: 18px;
+    }
+    15% {
+        transform: translateY(-17px);
+        filter: blur(0.3px);
+        margin-left: 1px;
+        width: 18px;
+        height: 22px;
+    }
+    22% {
+        transform: translateY(-34px);
+        filter: blur(0.2px);
+        margin-left: 0;
+        width: 20px;
+        height: 20px;
+    }
+    29% {
+        transform: translateY(-17px);
+        filter: blur(0.3px);
+        margin-left: 1px;
+        width: 18px;
+        height: 22px;
+    }
+    34% {
+        transform: translateY(0);
+        filter: blur(0.2px);
+        margin-left: 1px;
+        width: 18px;
+        height: 22px;
+    }
+    40% {
+        transform: translateY(0);
+        filter: blur(0.1px);
+        margin-left: -1px;
+        width: 22px;
+        height: 18px;
+    }
+    43% {
+        transform: translateY(0);
+        filter: blur(0px);
+        margin-left: 0;
+        width: 20px;
+        height: 20px;
+    }
+    100% {
+        transform: translateY(0);
+        margin-left: 0;
     }
 }
 </style>

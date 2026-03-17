@@ -1,5 +1,6 @@
-﻿<template>
+<template>
     <div
+        ref="segmentedRef"
         class="m-segmented"
         :class="[`m-segmented--${customSize}`, `m-segmented--${type}`, `m-segmented--${variant}`, { 'm-segmented--block': customBlock, 'm-segmented--disabled': disabled }]"
         :style="{
@@ -28,7 +29,7 @@
 import { MIcon } from "@/components";
 import type { MFormContext, MFormItemContext } from "@/components/data/MForm/types";
 import { MFormContextKey, MFormItemContextKey } from "@/components/data/MForm/types";
-import { computed, inject, nextTick, onMounted, ref, watch } from "vue";
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { MSegmentedEmits, MSegmentedOption, MSegmentedProps } from "./types";
 
 defineOptions({
@@ -44,6 +45,7 @@ const props = withDefaults(defineProps<MSegmentedProps>(), {
 });
 const emits = defineEmits<MSegmentedEmits>();
 const modelValue = defineModel<string | number>("modelValue");
+const segmentedRef = ref<HTMLElement | null>(null);
 const itemRefs = ref<HTMLElement[]>([]);
 const isAnimating = ref(false); // 是否正在动画中
 const formItemContext = inject<MFormItemContext | null>(MFormItemContextKey, null);
@@ -91,13 +93,19 @@ const handleSelect = (option: MSegmentedOption) => {
     }, 300); // 300ms是动画时长，应该和CSS中的一致
 };
 
+let resizeObserver: ResizeObserver | null = null;
 onMounted(() => {
     nextTick(updateThumb);
+    if (segmentedRef.value) {
+        resizeObserver = new ResizeObserver(updateThumb);
+        resizeObserver.observe(segmentedRef.value);
+    }
 });
-watch(
-    () => modelValue.value,
-    () => nextTick(updateThumb)
-);
+onBeforeUnmount(() => {
+    resizeObserver?.disconnect();
+    resizeObserver = null;
+});
+watch(modelValue, () => nextTick(updateThumb));
 watch(
     () => [props.type, props.gap, customSize.value, customBlock.value, props.iconOnly, props.options.length],
     () => nextTick(updateThumb)

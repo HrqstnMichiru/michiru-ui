@@ -179,8 +179,8 @@ onMounted(() => {
         .left {
             flex: 1;
             .label {
+                color: #333;
                 margin-left: 12px;
-                color: rgb(41, 52, 61);
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;

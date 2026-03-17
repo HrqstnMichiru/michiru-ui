@@ -114,5 +114,3 @@ provide<MDialogProviderContext>(MDialogProviderContextKey, {
     }
 });
 </script>
-
-<style lang="scss" scoped></style>

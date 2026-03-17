@@ -56,9 +56,6 @@ const iconMap: Record<MMessageVariant, string> = {
     purple: "bi:info-circle-fill",
     pink: "bi:info-circle-fill"
 };
-const icon = computed(() => {
-    return iconMap[props.variant] || iconMap["primary"];
-});
 
 const onAfterLeave = () => {
     props.onDestroy();

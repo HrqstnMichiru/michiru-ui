@@ -464,25 +464,22 @@ const loading = useLoading();
 const showFullscreenLoading = () => {
     const instance = loading.create();
     setTimeout(() => {
-        instance.onDestroy();
+        instance.destroy();
         message.success("加载完成");
-    }, 2000);
+    }, 5000);
 };
 const showTargetLoading = () => {
-    const instance = loading.create({
-        to: "#loading-target"
-    });
+    const instance = loading.create("#loading-target");
     setTimeout(() => {
-        instance.onDestroy();
+        instance.destroy();
         message.success("目标加载完成");
-    }, 2000);
+    }, 5000);
 };
 const showDarkLoading = () => {
-    const instance = loading.create({
-        theme: "dark"
-    });
+    const instance = loading.create(
+    );
     setTimeout(() => {
-        instance.onDestroy();
+        instance.destroy();
         message.success("加载完成");
     }, 2000);
 };

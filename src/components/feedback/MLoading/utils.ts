@@ -1,37 +1,39 @@
-﻿import { nanoid } from "nanoid";
 import { h, render } from "vue";
 import MLoading from "./MLoading.vue";
-import type { MLoadingInstance, MLoadingOptions, MLoadingProps } from "./types";
+import type { MLoadingInstance, MLoadingProps } from "./types";
 
-const instances: Map<string, MLoadingInstance> = new Map();
-const createLoading = (options?: MLoadingOptions): MLoadingInstance => {
+let globalLoadingInstance: MLoadingInstance | null = null;
+const createLoading = (): MLoadingInstance => {
+    if (globalLoadingInstance !== null) {
+        return globalLoadingInstance;
+    }
+
     const container = document.createElement("div");
-    const id = nanoid();
-    const destroy = (): void => {
-        if (instances.has(id)) {
-            instances.delete(id);
+    const props: MLoadingProps = {
+        onDestroy: () => {
             render(null, container);
             container.remove();
-        }
+            globalLoadingInstance = null;
+        },
+        target: "body"
     };
-    const newProps: MLoadingProps = {
-        ...options,
-        id,
-        onDestroy: destroy,
-        zIndex: 15000 + instances.size
-    };
-    const vnode = h(MLoading, newProps);
+
+    const vnode = h(MLoading, props);
     render(vnode, container);
-    const instance: MLoadingInstance = {
-        id,
-        destroy
+
+    globalLoadingInstance = {
+        destroy: () => {
+            const vm = vnode?.component;
+            if (vm?.exposed?.close) {
+                vm.exposed.close();
+            }
+        },
+        vm: vnode.component!
     };
-    instances.set(id, instance);
-    return instance;
+
+    return globalLoadingInstance;
 };
+
 export default {
-    create: createLoading,
-    destroyAll: (): void => {
-        instances.forEach(instance => instance.destroy());
-    }
+    create: createLoading
 };

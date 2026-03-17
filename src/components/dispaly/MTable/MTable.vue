@@ -10,23 +10,21 @@
         </div>
 
         <div ref="headerScrollbarRef" class="table-header-scrollbar">
-            <div class="table-content">
-                <div class="table-header-wrapper">
-                    <div class="table-header-row table-grid-row" :style="headerGridStyle">
-                        <div v-for="column in renderColumns" :key="column.key" class="table-header-cell" :class="getCellClass(column, true)" :style="getCellStyle(column, true)">
-                            <template v-if="column.type === 'selection'">
-                                <MCheckBox @click.stop :size="size" :model-value="checkAll" @update:model-value="toggleAll"></MCheckBox>
-                            </template>
-                            <template v-else-if="column.type === 'index'">
-                                {{ column.label || "#" }}
-                            </template>
+            <div class="table-header-wrapper">
+                <div class="table-header-row table-grid-row" :style="headerGridStyle">
+                    <div v-for="column in renderColumns" :key="column.key" class="table-header-cell" :class="getCellClass(column, true)" :style="getCellStyle(column, true)">
+                        <template v-if="column.type === 'selection'">
+                            <MCheckBox @click.stop :size="size" :model-value="checkAll" @update:model-value="toggleAll"></MCheckBox>
+                        </template>
+                        <template v-else-if="column.type === 'index'">
+                            {{ column.label || "#" }}
+                        </template>
+                        <template v-else>
+                            <RenderHeaderSlot v-if="column.slots?.header" :render="column.slots?.header" :scope="{ column }"></RenderHeaderSlot>
                             <template v-else>
-                                <RenderHeaderSlot v-if="column.slots?.header" :render="column.slots?.header" :scope="{ column }"></RenderHeaderSlot>
-                                <template v-else>
-                                    {{ column.label }}
-                                </template>
+                                {{ column.label }}
                             </template>
-                        </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -41,36 +39,34 @@
                 maxHeight: `${maxHeight}px`
             }"
             v-loading="props.loading">
-            <div class="table-content">
-                <div class="table-body">
-                    <div
-                        v-for="(row, rowIndex) in data"
-                        :key="getRowKey(row)"
-                        class="table-body-row table-grid-row"
-                        :class="{ 'table-body-row--hoverable': hoverable, 'table-body-row--striped': striped && rowIndex % 2 === 1 }"
-                        :style="bodyGridStyle"
-                        @click="handleRowClick(row)">
-                        <div v-for="column in renderColumns" :key="column.key" class="table-body-cell" :class="getCellClass(column, false)" :style="getCellStyle(column, false)">
-                            <template v-if="column.type === 'selection'">
-                                <MCheckBox @click.stop :size="size" :model-value="isSelected(row)" @update:model-value="() => toggleRow(row)"></MCheckBox>
-                            </template>
-                            <template v-else-if="column.type === 'index'">
-                                {{ rowIndex + 1 }}
-                            </template>
-                            <template v-else-if="column.slots?.default">
-                                <div class="table-body-cell--scoped" :style="{ justifyContent: alignMap[column.aligns || 'center'] }">
-                                    <RenderCellSlot :render="column.slots?.default" :scope="{ row, index: rowIndex, column }"></RenderCellSlot>
-                                </div>
-                            </template>
-                            <template v-else-if="column.prop">
-                                <span class="table-body-cell__value">
-                                    <template v-if="column.tooltip">
-                                        <MEllipsis :tooltip="column.tooltip" :placement="column.placement || 'top'" :max-lines="column.maxLines">{{ row[column.prop] }}</MEllipsis>
-                                    </template>
-                                    <template v-else>{{ row[column.prop] }}</template>
-                                </span>
-                            </template>
-                        </div>
+            <div class="table-body">
+                <div
+                    v-for="(row, rowIndex) in data"
+                    :key="getRowKey(row)"
+                    class="table-body-row table-grid-row"
+                    :class="{ 'table-body-row--hoverable': hoverable, 'table-body-row--striped': striped && rowIndex % 2 === 1 }"
+                    :style="bodyGridStyle"
+                    @click="handleRowClick(row)">
+                    <div v-for="column in renderColumns" :key="column.key" class="table-body-cell" :class="getCellClass(column, false)" :style="getCellStyle(column, false)">
+                        <template v-if="column.type === 'selection'">
+                            <MCheckBox @click.stop :size="size" :model-value="isSelected(row)" @update:model-value="() => toggleRow(row)"></MCheckBox>
+                        </template>
+                        <template v-else-if="column.type === 'index'">
+                            {{ rowIndex + 1 }}
+                        </template>
+                        <template v-else-if="column.slots?.default">
+                            <div class="table-body-cell--scoped" :style="{ justifyContent: alignMap[column.aligns || 'center'] }">
+                                <RenderCellSlot :render="column.slots?.default" :scope="{ row, index: rowIndex, column }"></RenderCellSlot>
+                            </div>
+                        </template>
+                        <template v-else-if="column.prop">
+                            <span class="table-body-cell__value">
+                                <template v-if="column.tooltip">
+                                    <MEllipsis :tooltip="column.tooltip" :placement="column.placement || 'top'" :max-lines="column.maxLines">{{ row[column.prop] }}</MEllipsis>
+                                </template>
+                                <template v-else>{{ row[column.prop] }}</template>
+                            </span>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -521,9 +517,6 @@ defineExpose<MTableInstance<T>>({
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-
     &::-webkit-scrollbar {
         height: 0;
     }
@@ -532,12 +525,10 @@ defineExpose<MTableInstance<T>>({
 .table-body-scrollbar {
     width: 100%;
     overflow: auto;
-
     &::-webkit-scrollbar {
         width: 6px;
         height: 6px;
     }
-
     &::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 3px;
@@ -548,15 +539,10 @@ defineExpose<MTableInstance<T>>({
     }
 }
 
-.table-content,
 .table-grid-row,
 .table-body {
     width: max-content;
     min-width: 100%;
-}
-
-.table-content {
-    position: relative;
 }
 
 .table-grid-row {

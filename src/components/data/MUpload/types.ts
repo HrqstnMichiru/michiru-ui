@@ -12,6 +12,8 @@ export interface MUploadProps {
     listStyle?: "normal" | "gallery"; // 文件列表的展示样式
     circle?: boolean; // gallery模式下是否显示为圆形
     size?: number; //gallery模式下的宽高
+    width?: number; //gallery模式下的宽度，优先级高于size
+    height?: number; //gallery模式下的高度，优先级高于size
     urlFormat?: (url: string) => string; // gallery模式下图片URL的格式化函数
     thumbnailUrlFormat?: (url: string) => string; // gallery模式下预览图URL的格式化函数
 }

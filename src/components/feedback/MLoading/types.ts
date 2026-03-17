@@ -1,26 +1,17 @@
-import type { InjectionKey } from "vue";
+import type { ComponentInternalInstance, InjectionKey } from "vue";
 
+// 传递给 MLoading 组件的 props 类型
 export interface MLoadingProps {
-    id: string;
-    src?: string;
-    to?: string | HTMLElement;
-    theme?: "light" | "dark";
-    zIndex: number;
     onDestroy: () => void;
-}
-export type MLoadingOptions = Omit<MLoadingProps, "id" | "zIndex" | "onDestroy">;
-export type _MLoadingInstance = MLoadingProps;
-export interface MLoadingInstance {
-    id: string;
-    destroy: () => void;
+    target?: string | HTMLElement;
 }
 
-export interface MLoadingProviderProps {
-    maxCount?: number;
-    zIndex?: number; // 加载动画的起始 z-index 值
+// 外部访问 MLoading 实例的方法
+export interface MLoadingInstance {
+    destroy: () => void;
+    vm?: ComponentInternalInstance;
 }
 export interface MLoadingProviderContext {
-    create: (options?: MLoadingOptions) => _MLoadingInstance;
-    destroyAll: () => void;
+    create: (target?: string | HTMLElement) => MLoadingInstance;
 }
 export const MLoadingProviderContextKey: InjectionKey<MLoadingProviderContext> = Symbol("MLoadingProviderContext");

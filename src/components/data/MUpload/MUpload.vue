@@ -63,7 +63,7 @@
                 :key="uploadFile.fid"
                 class="m-gallery__item"
                 :class="uploadFile.status"
-                :style="{ width: `${size}px`, height: `${size}px`, borderRadius: circle ? '50%' : '8px' }">
+                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px' }">
                 <img v-if="uploadFile.url" :src="urlFormat(uploadFile.url)" class="m-gallery__item-img" @dragstart.prevent />
                 <img v-else-if="uploadFile.thumbnailUrl" :src="uploadFile.thumbnailUrl" class="m-gallery__item-img" />
                 <div v-if="uploadFile.status === 'uploading'" class="m-gallery__item-mask mask--uploading">
@@ -78,7 +78,7 @@
                         <MIcon name="fa7-solid:rotate-forward" :size="30" @click.stop="reUploadFile(uploadFile)" v-if="uploadFile.status === 'upload-error'" />
                         <MIcon name="material-symbols:delete-outline" :size="30" @click.stop="removeFile(index)" />
                     </div>
-                    <span class="m-gallery__error-msg">{{ uploadFile.errorMessage || "涓婁紶澶辫触" }}</span>
+                    <span class="m-gallery__error-msg">{{ uploadFile.errorMessage || "上传失败" }}</span>
                 </div>
                 <div v-else class="m-gallery__item-overlay">
                     <MIcon name="octicon:zoom-in-16" :size="30" @click.stop="previewFile(uploadFile)" />
@@ -91,7 +91,7 @@
                 @click="selectFile"
                 @dragover.prevent
                 @drop.prevent="handleDrop"
-                :style="{ width: `${size}px`, height: `${size}px`, borderRadius: circle ? '50%' : '8px' }">
+                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px' }">
                 <MIcon :name="placeIcon || 'icon-park-outline:upload-picture'" :size="48" />
                 <span class="m-gallery__trigger-text">{{ placeholder || "上传图片" }}</span>
             </div>
