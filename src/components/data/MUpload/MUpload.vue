@@ -212,6 +212,9 @@ const uploadFile = (file: MUploadFile) => {
     file.errorMessage = undefined;
     props.request(file.file).then(response => {
         if (response.status === "success") {
+            if (response.percent === undefined) {
+                response.percent = 100;
+            }
             file.percent = response.percent;
             if (response.percent === 100) {
                 file.file = undefined;

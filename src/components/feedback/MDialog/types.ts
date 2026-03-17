@@ -11,7 +11,7 @@ export interface MDialogProps {
     message?: string; // 消息内容
     width?: number; // 对话框宽度
     closable?: boolean; // 对话框是否可关闭
-    contentCenter?: boolean; // 内容是否居中
+    center?: boolean; // 是否垂直居中
     positiveText?: string; // 确认按钮文本
     negativeText?: string; // 取消按钮文本
     loading?: boolean; // 确认按钮加载状态

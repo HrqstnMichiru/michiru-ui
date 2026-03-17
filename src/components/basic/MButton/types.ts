@@ -15,7 +15,6 @@ export interface MButtonProps {
     disabled?: boolean; // 是否禁用
     block?: boolean; // 是否为块级按钮
     loading?: boolean; // 加载状态
-    ripple?: boolean; // 是否有波纹效果
 }
 export interface MButtonEmits {
     (e: "click"): void;

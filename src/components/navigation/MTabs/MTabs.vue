@@ -9,11 +9,16 @@
             class="m-tabs__nav"
             :class="[`m-tabs__nav--${direction}`, `m-tabs__nav--${variant}`]"
             :style="{
-                width: direction === 'vertical' ? `${width}px` : 'auto',
-                gap: `${gutter}px`
+                width: direction === 'vertical' ? `${width}px` : '100%',
+                justifyContent: center ? 'center' : variant === 'box' ? 'space-between' : 'flex-start'
             }">
             <div class="m-tabs__active-bar" :style="activeBarStyle" :class="{ 'm-tabs__active-bar--ready': isReady }"></div>
-            <div class="m-tabs__nav-list">
+            <div
+                class="m-tabs__nav-list"
+                :style="{
+                    gap: `${gutter}px`,
+                    width: inline ? 'fit-content' : '100%',
+                }">
                 <div
                     v-for="(item, index) in tabItemList"
                     :key="item.name ?? index"
@@ -35,7 +40,7 @@
                 <slot name="action"></slot>
             </div>
         </div>
-        <div :class="{ 'm-tabs__content': !empty }">
+        <div class="m-tabs__content">
             <slot></slot>
         </div>
     </div>
@@ -228,7 +233,6 @@ onMounted(() => nextTick(updateBar));
         display: flex;
         position: relative;
         height: 42px;
-        justify-content: space-between;
         .m-tabs__active-bar {
             position: absolute;
             z-index: 1;
@@ -242,7 +246,6 @@ onMounted(() => nextTick(updateBar));
         .m-tabs__nav-list {
             display: flex;
             align-items: center;
-            flex: 1;
             .m-tabs__nav-item {
                 display: flex;
                 align-items: center;
@@ -305,7 +308,7 @@ onMounted(() => nextTick(updateBar));
         flex: 1;
         overflow: hidden;
     }
-    .m-tabs__nav--bar {
+    .m-tabs__nav--card {
         .m-tabs__nav-item {
             &:hover:not(.m-tabs__nav-item--disabled):not(.m-tabs__nav-item--active) {
                 color: #8b5cf6;
@@ -338,8 +341,11 @@ onMounted(() => nextTick(updateBar));
             }
         }
     }
-    .m-tabs__nav--line {
+    .m-tabs__nav--line,
+    .m-tabs__nav--bar {
+        height: 36px;
         .m-tabs__nav-item {
+            padding: 0 !important;
             border-radius: 0;
             &:hover:not(.m-tabs__nav-item--disabled):not(.m-tabs__nav-item--active) {
                 color: #8b5cf6;
@@ -350,21 +356,61 @@ onMounted(() => nextTick(updateBar));
             }
         }
         &.m-tabs__nav--horizontal {
-            border-bottom: 1px solid #e4e7ed;
             .m-tabs__active-bar {
-                background: #801eff;
-                height: 2px !important;
+                height: 0 !important;
+                border-bottom: 2px solid #801eff;
                 bottom: -1px !important;
                 top: auto;
             }
         }
         &.m-tabs__nav--vertical {
-            border-left: 1px solid #e4e7ed;
             .m-tabs__active-bar {
-                background: #801eff;
-                width: 2px !important;
+                width: 0 !important;
+                border-left: 2px solid #801eff;
                 right: auto;
                 left: -1px !important;
+            }
+        }
+    }
+    .m-tabs__nav--line {
+        &.m-tabs__nav--horizontal .m-tabs__nav-list {
+            border-bottom: 1px solid #e4e7ed;
+        }
+        &.m-tabs__nav--vertical .m-tabs__nav-list {
+            border-left: 1px solid #e4e7ed;
+        }
+    }
+    .m-tabs__nav--segmented {
+        height: fit-content;
+        padding: 3px;
+        border-radius: 8px;
+        background: #f0f0f0;
+        overflow: hidden;
+        .m-tabs__active-bar {
+            z-index: 1;
+            background: #801eff;
+            border-radius: 6px;
+            top: 3px !important;
+            bottom: 3px !important;
+            height: auto !important;
+        }
+        .m-tabs__nav-item {
+            border-radius: 6px;
+            color: #606266;
+            font-weight: 400;
+            &:hover:not(.m-tabs__nav-item--disabled):not(.m-tabs__nav-item--active) {
+                color: #8b5cf6;
+            }
+            &.m-tabs__nav-item--active {
+                color: #fff;
+                font-weight: 500;
+            }
+        }
+        &.m-tabs__nav--vertical {
+            .m-tabs__active-bar {
+                left: 3px !important;
+                right: 3px !important;
+                width: auto !important;
             }
         }
     }

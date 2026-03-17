@@ -9,11 +9,8 @@
             }">
             <template v-if="title">
                 <span class="m-card__header-title">
-                    <MIcon :name="icon" v-if="icon" :color="colorMap[iconVariant]"></MIcon>
+                    <MIcon :name="icon" v-if="icon" :color="colorMap[variant]"></MIcon>
                     <span>{{ title }}</span>
-                </span>
-                <span v-if="action" class="m-card__header-action" @click="onActionClick">
-                    {{ action }}
                 </span>
             </template>
             <template v-else>
@@ -50,14 +47,10 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MCardProps>(), {
     shadow: "always",
-    iconVariant: "gray"
+    variant: "gray"
 });
 const emits = defineEmits<MCardEmits>();
 const slots = useSlots();
-
-const onActionClick = () => {
-    emits("action-click");
-};
 
 const colorMap: Record<MCardIconVariant, string> = {
     gray: "#6B6B6B",
@@ -110,25 +103,6 @@ const colorMap: Record<MCardIconVariant, string> = {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-        }
-        .m-card__header-action {
-            cursor: pointer;
-            font-size: 16px;
-            padding: 3px 12px;
-            color: rgb(107, 107, 107);
-            flex-shrink: 0;
-            position: relative;
-            &::after {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background-color: rgba(0, 0, 0, 0.1);
-                opacity: 0;
-                border-radius: 20px;
-            }
-            &:hover::after {
-                opacity: 1;
-            }
         }
     }
     .m-card__content {

@@ -11,7 +11,8 @@ export interface MTabsProps {
     gap?: number; // 导航栏与内容之间的间距
     width?: number | string; // 选项卡导航栏宽度, 仅 position 为 left 或 right 时有效
     gutter?: number | string; // 选项卡面板之间的间距
-    empty?: boolean; // 是否无内容
+    inline?: boolean; // 是否内联显示
+    center?: boolean; // 是否居中显示
 }
 
 export interface MTabsEmits {

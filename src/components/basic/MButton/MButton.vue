@@ -19,7 +19,7 @@
         :disabled="disabled"
         type="button"
         @click="onClick"
-        v-ripple="ripple && !disabled && !loading && !outline">
+        v-ripple="!disabled && !loading && !outline">
         <div class="m-btn__prefix" :class="{ 'is-loading': loading || icon }">
             <svg viewBox="0 0 16 16" v-if="loading" class="loading-circle">
                 <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5" pathLength="100" />

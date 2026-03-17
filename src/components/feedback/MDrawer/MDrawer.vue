@@ -1,36 +1,43 @@
-﻿<template>
+<template>
     <Teleport to="body">
-        <Transition name="fade" @after-enter="onAfterEnter">
-            <div v-if="wrapperVisible" class="drawer-overlay" @click="onMaskClick" :class="[`drawer-overlay--${maskTheme}`]" :style="{ zIndex: zIndex }" ref="maskRef">
-                <Transition :name="`slide-${placement}`" @after-leave="onAfterClose">
-                    <div v-if="innerVisible" class="drawer-wrapper" :class="[`drawer-wrapper--${placement}`]" :style="drawerStyle">
-                        <!-- 上下方向: 拖动指示器 -->
-                        <div v-if="placement === 'bottom'" class="drawer-indicator" @mousedown="onIndicatorMouseDown"></div>
-
+        <Transition name="fade">
+            <div v-if="wrapperVisible" class="drawer-overlay" @click="onMaskClick" :style="{ zIndex: zIndex }">
+                <Transition :name="`slide-${placement}`" appear @after-leave="onAfterLeave">
+                    <div v-if="innerVisible" ref="wrapperRef" class="drawer-wrapper" :class="[`drawer-wrapper--${placement}`]" :style="drawerStyle" @click.stop>
                         <!-- 抽屉头部 -->
-                        <div v-if="isHorizontal" class="drawer-header">
+                        <div
+                            v-if="header"
+                            ref="headerRef"
+                            class="drawer-header"
+                            :style="{
+                                justifyContent: center ? 'center' : 'flex-start'
+                            }">
                             <div class="drawer-title">
                                 {{ title }}
                             </div>
                         </div>
 
                         <!-- 抽屉内容 -->
-                        <MScrollBar v-if="isHorizontal" class="drawer-body" :height="scrollHeight">
+                        <MScrollBar v-if="scrollable" class="drawer-body" :style="bodyStyle">
                             <slot></slot>
                         </MScrollBar>
-                        <div v-else class="drawer-body">
+                        <div v-else class="drawer-body" :style="bodyStyle">
                             <slot></slot>
                         </div>
 
-                        <!-- 上方向: 拖动指示器在底部 -->
-                        <div v-if="placement === 'top'" class="drawer-indicator" @mousedown="onIndicatorMouseDown"></div>
-
-                        <div v-if="isHorizontal && footer" class="drawer-footer">
+                        <div
+                            v-if="footer"
+                            ref="footerRef"
+                            class="drawer-footer"
+                            :style="{
+                                justifyContent: center ? 'center' : 'flex-end'
+                            }">
                             <slot name="footer">
-                                <MButton variant="gray" outline icon="icon-park-outline:close" @click="onCancel" :icon-size="20" :disabled="loading">{{ cancelText }}</MButton>
-                                <MButton variant="primary" icon="mingcute:check-fill" @click="onConfirm" :loading="loading" :icon-size="20">{{ confirmText }}</MButton>
+                                <MButton variant="gray" outline :icon="showIcon ? negativeIcon : ''" @click="onCancel" :disabled="loading">{{ negativeText }}</MButton>
+                                <MButton variant="primary" :icon="showIcon ? positiveIcon : ''" @click="onConfirm" :loading="loading">{{ positiveText }}</MButton>
                             </slot>
                         </div>
+                        <span v-if="closable" class="drawer-close" @click="close"></span>
                     </div>
                 </Transition>
             </div>
@@ -40,175 +47,165 @@
 
 <script lang="ts" setup>
 import { MButton, MScrollBar } from "@/components";
-import { computed, ref, useTemplateRef, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, ref, useTemplateRef, watch } from "vue";
 import type { MDrawerEmits, MDrawerInstance, MDrawerProps } from "./types";
 
 defineOptions({
     name: "MDrawer"
 });
 const props = withDefaults(defineProps<MDrawerProps>(), {
-    confirmText: "确定",
-    cancelText: "取消",
-    maskTheme: "dark",
+    positiveText: "确定",
+    negativeText: "取消",
     zIndex: 500,
     loading: false,
     placement: "right",
-    footer: true
+    footer: true,
+    header: true,
+    maskClosable: true,
+    negativeIcon: "icon-park-outline:close",
+    positiveIcon: "mingcute:check-fill",
+    showIcon: false,
+    closable: true,
+    center: false
 });
 
 const emits = defineEmits<MDrawerEmits>();
 
 const wrapperVisible = ref<boolean>(false); // 对话框可见状态
 const innerVisible = ref<boolean>(false); // 抽屉打开状态
-const originalOverflow = ref<string>(""); // 保存原始 overflow 值
-const scrollHeight = computed(() => {
-    if (props.footer) {
-        return window.innerHeight - 129;
-    } else {
-        return window.innerHeight - 60;
-    }
-});
-const maskRef = useTemplateRef<HTMLDivElement>("maskRef");
-const confirmed = ref<boolean>(false); // 确认状态
-const loading = ref<boolean>(false);
-const isDrawerDragging = ref<boolean>(false);
-const dragStartY = ref<number>(0); // 拖动起始位置
-const dragOffset = ref<number>(0); // 拖动偏移量
+const originalOverflow = ref<string>("");
+const wrapperRef = useTemplateRef<HTMLElement>("wrapperRef");
+const headerRef = useTemplateRef<HTMLElement>("headerRef");
+const footerRef = useTemplateRef<HTMLElement>("footerRef");
+const scrollableBodyHeight = ref<number | null>(null);
+let resizeObserver: ResizeObserver | null = null;
 
-// 判断是否为水平方向
-const isHorizontal = computed(() => {
-    return props.placement === "left" || props.placement === "right";
-});
-
-// 根据位置计算抽屉样式
+const isHorizontal = computed(() => props.placement === "left" || props.placement === "right");
 const drawerStyle = computed(() => {
     const style: Record<string, string> = {};
-
     if (isHorizontal.value) {
-        // 左右方向：height 为 100%
-        style.height = "100%";
+        style.height = "100vh";
         if (props.width) {
             style.width = `${props.width}px`;
         }
     } else {
-        // 上下方向：根据位置决定加减偏移量
-        const delta = props.placement === "bottom" ? -dragOffset.value : dragOffset.value;
-        const current = props.height! + delta;
-        const maxHeight = window.innerHeight / 2;
-        const clampedHeight = Math.min(current, maxHeight);
-        style.height = `${clampedHeight}px`;
-        if (props.width) {
-            style.width = `${props.width}px`;
+        style.width = "100%";
+        if (props.height) {
+            style.height = `${props.height}px`;
         }
     }
     return style;
 });
 
-// 锁定/解锁 body 滚动
 const lockBodyScroll = () => {
     originalOverflow.value = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 };
-
 const unlockBodyScroll = () => {
     document.body.style.overflow = originalOverflow.value;
 };
 
-const onIndicatorMouseDown = (e: MouseEvent) => {
-    e.preventDefault();
-    if (dragStartY.value === 0) {
-        dragStartY.value = e.clientY;
+const bodyStyle = computed(() => {
+    const style: Record<string, any> = { ...props.contentStyle };
+    if (props.center) {
+        style.justifyContent = "center";
     }
-    isDrawerDragging.value = true;
-    document.body.style.userSelect = "none";
-    document.addEventListener("mousemove", onDocumentMouseMove);
-    document.addEventListener("mouseup", onDocumentMouseUp);
-};
-
-const onDocumentMouseMove = (e: MouseEvent) => {
-    if (!isDrawerDragging.value) return;
-    const offsetY = e.clientY - dragStartY.value;
-    if (props.placement === "top" && offsetY < 0) return;
-    dragOffset.value = e.clientY - dragStartY.value;
-};
-
-const onDocumentMouseUp = () => {
-    if (!isDrawerDragging.value) return;
-    const threshold = 80; // 拖动了 80px 才会关闭
-    const deltaY = dragOffset.value;
-    if (props.placement === "bottom" && deltaY > threshold) {
-        close();
+    if (props.scrollable && scrollableBodyHeight.value !== null) {
+        style.height = `${scrollableBodyHeight.value}px`;
     }
-
-    document.removeEventListener("mousemove", onDocumentMouseMove);
-    document.removeEventListener("mouseup", onDocumentMouseUp);
-    document.body.style.userSelect = "auto";
-
-    setTimeout(() => {
-        isDrawerDragging.value = false;
-    }, 500);
-};
-
-// 监听 visible 变化，控制 body 滚动
-watch(wrapperVisible, newVal => {
-    if (newVal) {
-        lockBodyScroll();
-    } else {
-        unlockBodyScroll();
-    }
+    return style;
 });
 
-const onCancel = () => {
-    confirmed.value = false; // 重置确认状态
-    close();
+const updateScrollableBodyHeight = () => {
+    if (!props.scrollable || !wrapperRef.value) {
+        scrollableBodyHeight.value = null;
+        return;
+    }
+    const wrapperHeight = wrapperRef.value.clientHeight;
+    const headerHeight = props.header ? (headerRef.value?.offsetHeight ?? 0) : 0;
+    const footerHeight = props.footer ? (footerRef.value?.offsetHeight ?? 0) : 0;
+    scrollableBodyHeight.value = Math.max(wrapperHeight - headerHeight - footerHeight, 0);
+};
+const stopObserveSize = () => {
+    resizeObserver?.disconnect();
+    resizeObserver = null;
+    window.removeEventListener("resize", updateScrollableBodyHeight);
+};
+const startObserveSize = () => {
+    if (!wrapperVisible.value || !props.scrollable) return;
+    stopObserveSize();
+    resizeObserver = new ResizeObserver(updateScrollableBodyHeight);
+    if (wrapperRef.value) resizeObserver.observe(wrapperRef.value);
+    if (headerRef.value) resizeObserver.observe(headerRef.value);
+    if (footerRef.value) resizeObserver.observe(footerRef.value);
+    window.addEventListener("resize", updateScrollableBodyHeight);
 };
 
+let hideWrapperRafId: number | null = null;
 const close = () => {
+    if (props.loading) return;
     innerVisible.value = false;
-    emits("after-close", confirmed.value);
+    if (hideWrapperRafId !== null) {
+        cancelAnimationFrame(hideWrapperRafId);
+    }
+    hideWrapperRafId = requestAnimationFrame(() => {
+        wrapperVisible.value = false;
+        hideWrapperRafId = null;
+        stopObserveSize();
+    });
+    unlockBodyScroll();
 };
 
-const delayedClose = () => {
-    setTimeout(() => {
-        close();
-    }, 500);
-};
-
-const onAfterClose = () => {
-    dragOffset.value = 0;
-    dragStartY.value = 0;
-    isDrawerDragging.value = false;
-    wrapperVisible.value = false;
-};
-
-const onAfterEnter = () => {
-    innerVisible.value = true;
+const onAfterLeave = () => {
+    emits("after-close");
 };
 
 const onConfirm = async () => {
-    if (props.confirm) {
-        loading.value = true;
-        const result = await props.confirm();
-        loading.value = false;
-        if (!result) return;
-        confirmed.value = true; // 标记为已确认
-        delayedClose();
+    if (props.onPositiveClick) {
+        const result = await props.onPositiveClick();
+        if (result) {
+            close();
+        }
     } else {
-        onCancel();
-    }
-};
-
-const onMaskClick = (event: MouseEvent) => {
-    if (props.maskClosable && event.target === maskRef.value && !isDrawerDragging.value) {
         close();
     }
 };
 
+const onCancel = () => {
+    props.onNegativeClick?.();
+    close();
+};
+
+const onMaskClick = (event: MouseEvent) => {
+    if (!props.maskClosable) return;
+    close();
+};
+
+watch(
+    () => [props.header, props.footer, props.scrollable, props.placement, props.width, props.height],
+    () => {
+        if (!wrapperVisible.value) return;
+        nextTick(() => {
+            updateScrollableBodyHeight();
+            startObserveSize();
+        });
+    }
+);
+
+onBeforeUnmount(() => {
+    stopObserveSize();
+});
+
 defineExpose<MDrawerInstance>({
     close,
-    delayedClose,
-    open: () => {
+    open: async () => {
         wrapperVisible.value = true;
+        innerVisible.value = true;
+        lockBodyScroll(); // 锁定滚动
+        nextTick(() => {
+            updateScrollableBodyHeight(); // 计算高度
+            startObserveSize(); // 开始监听尺寸变化
+        });
     }
 });
 </script>
@@ -220,114 +217,108 @@ defineExpose<MDrawerInstance>({
     transition: all 0.3s ease-in-out;
     display: flex;
     justify-content: center;
-    &.drawer-overlay--no-mask {
-        background-color: rgba(255, 255, 255, 0.01);
+    background-color: rgba(0, 0, 0, 0.5);
+    .drawer-wrapper {
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #d1d9e6;
+        position: fixed;
+        transition: transform 0.3s ease;
+        max-height: 100vh;
+        overflow: hidden;
+
+        &.drawer-wrapper--left {
+            top: 0;
+            left: 0;
+            height: 100vh;
+            min-width: 300px;
+            box-shadow: 6px 0px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &.drawer-wrapper--right {
+            top: 0;
+            right: 0;
+            height: 100vh;
+            min-width: 200px;
+            box-shadow: -6px 0px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &.drawer-wrapper--top {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            min-height: 200px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &.drawer-wrapper--bottom {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            min-height: 200px;
+            box-shadow: 0px -6px 12px rgba(0, 0, 0, 0.15);
+        }
     }
-    &.drawer-overlay--light {
-        background-color: rgba(255, 255, 255, 0.5);
-    }
-    &.drawer-overlay--dark {
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-}
 
-.drawer-wrapper {
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #d1d9e6;
-    position: fixed;
-    transition: transform 0.3s ease;
-
-    &.drawer-wrapper--left {
-        top: 0;
-        left: 0;
-        height: 100vh;
-        min-width: 300px;
-        box-shadow: 6px 0px 12px rgba(0, 0, 0, 0.15);
+    .drawer-header {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px 8px;
+        border-bottom: 2px solid #e5e7eb;
+        .drawer-title {
+            background: linear-gradient(90deg, #4096e1 0%, #7c3aed 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
     }
 
-    &.drawer-wrapper--right {
-        top: 0;
-        right: 0;
-        height: 100vh;
-        min-width: 300px;
-        box-shadow: -6px 0px 12px rgba(0, 0, 0, 0.15);
+    .drawer-body {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 16px 24px;
+        overflow: auto;
     }
 
-    &.drawer-wrapper--top {
-        background-color: #fdf7ff;
-        top: 0;
-        left: 50%;
-        transform: translate(-50%, 0);
-        min-width: 600px;
-        border-radius: 0 0 16px 16px;
-        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+    .drawer-footer {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 12px 12px;
+        border-top: 2px solid #e5e7eb;
     }
 
-    &.drawer-wrapper--bottom {
-        background-color: #fdf7ff;
-        bottom: 0;
-        left: 50%;
-        transform: translate(-50%, 0);
-        min-width: 600px;
-        border-radius: 16px 16px 0 0;
-        box-shadow: 0px -6px 12px rgba(0, 0, 0, 0.15);
+    .drawer-close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        background-image: url("@/assets/image/k_hoshi.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        transition: all 0.2s ease;
+        opacity: 0.6;
+        &:hover {
+            opacity: 1;
+            transform: rotate(45deg);
+        }
     }
-}
-
-.drawer-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 16px 8px;
-    border-bottom: 2px solid #e5e7eb;
-    .drawer-title {
-        background: linear-gradient(90deg, #4096e1 0%, #7c3aed 50%, #f472b6 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 24px;
-        font-weight: 600;
-        line-height: 1.4;
-    }
-}
-
-.drawer-body {
-    flex: 1;
-    padding: 20px 24px;
-}
-
-.drawer-indicator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 0;
-    cursor: pointer;
-
-    &::before {
-        content: "";
-        display: block;
-        width: 40px;
-        height: 4px;
-        background-color: #d4d5d9;
-        border-radius: 2px;
-    }
-}
-
-.drawer-footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 16px 16px 20px;
-    border-top: 2px solid #e5e7eb;
 }
 
 // 抽屉淡入淡出动画
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 .fade-enter-from,
@@ -338,44 +329,68 @@ defineExpose<MDrawerInstance>({
 // 从右侧滑入滑出
 .slide-right-enter-active,
 .slide-right-leave-active {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+    will-change: transform;
 }
 
 .slide-right-enter-from,
 .slide-right-leave-to {
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
+}
+
+.slide-right-enter-to,
+.slide-right-leave-from {
+    transform: translate3d(0, 0, 0);
 }
 
 // 从左侧滑入滑出
 .slide-left-enter-active,
 .slide-left-leave-active {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+    will-change: transform;
 }
 
 .slide-left-enter-from,
 .slide-left-leave-to {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
+}
+
+.slide-left-enter-to,
+.slide-left-leave-from {
+    transform: translate3d(0, 0, 0);
 }
 
 // 从顶部滑入滑出
 .slide-top-enter-active,
 .slide-top-leave-active {
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+    will-change: transform;
 }
 
 .slide-top-enter-from,
 .slide-top-leave-to {
-    transform: translate(-50%, -100%) !important;
+    transform: translate3d(-50%, -100%, 0) !important;
+}
+
+.slide-top-enter-to,
+.slide-top-leave-from {
+    transform: translate3d(-50%, 0, 0) !important;
 }
 
 // 从底部滑入滑出
 .slide-bottom-enter-active,
 .slide-bottom-leave-active {
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s cubic-bezier(0.55, 0, 0.1, 1);
+    will-change: transform;
 }
 
 .slide-bottom-enter-from,
 .slide-bottom-leave-to {
-    transform: translate(-50%, 100%) !important;
+    transform: translate3d(-50%, 100%, 0) !important;
+}
+
+.slide-bottom-enter-to,
+.slide-bottom-leave-from {
+    transform: translate3d(-50%, 0, 0) !important;
 }
 </style>

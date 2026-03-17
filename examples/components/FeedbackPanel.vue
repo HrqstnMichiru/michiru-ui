@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="tab-content">
         <!-- MAlert -->
         <MCard title="MAlert - 警告提示">
@@ -37,12 +37,19 @@
 
         <!-- MDrawer -->
         <MCard title="MDrawer - 抽屉">
-            <p>点击按钮从不同方向打开抽屉</p>
+            <p>基础方向与高级配置测试</p>
             <div class="actions">
                 <MButton variant="primary" @click="openDrawerRight">从右侧打开</MButton>
                 <MButton variant="primary" @click="openDrawerLeft">从左侧打开</MButton>
                 <MButton variant="primary" @click="openDrawerTop">从顶部打开</MButton>
                 <MButton variant="primary" @click="openDrawerBottom">从底部打开</MButton>
+            </div>
+            <p style="margin-top: 16px">更多配置</p>
+            <div class="actions">
+                <MButton variant="warning" @click="openMaskLockedDrawer">禁用遮罩关闭</MButton>
+                <MButton variant="info" @click="openSimpleDrawer">无头无底</MButton>
+                <MButton variant="purple" @click="openScrollableDrawer">可滚动内容</MButton>
+                <MButton variant="success" @click="openAsyncDrawer">异步确认</MButton>
             </div>
         </MCard>
 
@@ -355,6 +362,30 @@
             </div>
         </MCard>
 
+        <!-- MModal -->
+        <MCard title="MModal - 模态框">
+            <p>基础用法 / 拖拽缩放 / 异步确认</p>
+            <div class="actions">
+                <MButton variant="primary" @click="openBasicModal">基础弹窗</MButton>
+                <MButton variant="success" @click="openDragResizeModal">拖拽+缩放</MButton>
+                <MButton variant="warning" @click="openAsyncModal">异步确认</MButton>
+            </div>
+
+            <MModal ref="basicModalRef" title="基础 Modal" :width="520" transition="fade-translate">
+                <p>这是一个基础模态框示例。</p>
+                <p>可以在这里放置任意业务内容。</p>
+            </MModal>
+
+            <MModal ref="dragResizeModalRef" title="可拖拽 Modal" :width="560" draggable resizable transition="slide-down">
+                <p>试试拖拽头部移动位置，以及右下角缩放尺寸。</p>
+                <p>适用于桌面化交互场景的测试。</p>
+            </MModal>
+
+            <MModal ref="asyncModalRef" title="异步确认 Modal" :width="540" scrollable :loading="modalConfirmLoading" :onPositiveClick="onModalAsyncConfirm">
+                <p v-for="i in 10" :key="`modal-line-${i}`">可滚动内容第 {{ i }} 行</p>
+            </MModal>
+        </MCard>
+
         <!-- MLoading -->
         <MCard title="MLoading - 加载中">
             <p>使用 useLoading 管理加载，需配合 MLoadingProvider 使用</p>
@@ -437,28 +468,74 @@
             </div>
         </MCard>
 
-        <MDrawer ref="drawerRef" :placement="placement" title="抽屉标题" :width="300" :height="200" maskClosable @after-close="onDrawerClose">
-            <div style="padding: 20px">
-                <p>
-                    当前方向：
-                    <strong>{{ placement }}</strong>
-                    方向的抽屉
-                </p>
-                <p>这里是抽屉的内容区域，可以放任何内容。</p>
-            </div>
+        <MDrawer ref="drawerRef" :placement="placement" title="抽屉标题" :width="300" maskClosable @after-close="onDrawerClose">
+            <p>
+                当前方向：
+                <strong>{{ placement }}</strong>
+                方向的抽屉
+            </p>
+            <p>这里是抽屉的内容区域，可以放任何内容。</p>
+        </MDrawer>
+
+        <MDrawer ref="maskLockedDrawerRef" title="遮罩不可关闭" :width="360" :maskClosable="false" center showIcon :onNegativeClick="onDrawerCancel">
+            <p>点击遮罩不会关闭该抽屉，请使用右上角关闭或底部按钮。</p>
+        </MDrawer>
+
+        <MDrawer ref="simpleDrawerRef" title="简洁抽屉" :width="320" :header="false" :footer="false" :closable="false">
+            <p>这是一个无头部、无底部、无关闭按钮的抽屉示例。</p>
+            <p>适用于只承载自定义内容的场景。</p>
+        </MDrawer>
+
+        <MDrawer ref="scrollableDrawerRef" title="可滚动抽屉" :width="420" scrollable :contentStyle="{ height: '420px' }">
+            <p v-for="i in 16" :key="`drawer-scroll-${i}`">滚动内容第 {{ i }} 行</p>
+        </MDrawer>
+
+        <MDrawer
+            ref="asyncDrawerRef"
+            title="异步确认抽屉"
+            :width="380"
+            showIcon
+            positiveText="提交"
+            negativeText="取消"
+            :loading="drawerAsyncLoading"
+            :onPositiveClick="onDrawerAsyncConfirm"
+            :onNegativeClick="onDrawerCancel">
+            <p>点击“提交”会模拟 1.2 秒异步操作，完成后再关闭。</p>
         </MDrawer>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { DrawerInstance } from "@/components";
-import { MAlert, MButton, MCard, MDrawer, MFlex, MMessage, MNotification, MPopconfirm, MPopover, MResult, MTooltip, useDialog, useLoading, useMessage, useNotification } from "@/components";
+import type { DrawerInstance, MModalInstance } from "@/components";
+import { MAlert, MButton, MCard, MDrawer, MFlex, MMessage, MModal, MNotification, MPopconfirm, MPopover, MResult, MTooltip, useDialog, useLoading, useMessage, useNotification } from "@/components";
 import { ref, useTemplateRef } from "vue";
 
 const dialog = useDialog();
 const message = useMessage();
 const notification = useNotification();
 const loading = useLoading();
+
+// MModal
+const basicModalRef = useTemplateRef<MModalInstance>("basicModalRef");
+const dragResizeModalRef = useTemplateRef<MModalInstance>("dragResizeModalRef");
+const asyncModalRef = useTemplateRef<MModalInstance>("asyncModalRef");
+const modalConfirmLoading = ref(false);
+const openBasicModal = () => {
+    basicModalRef.value?.open();
+};
+const openDragResizeModal = () => {
+    dragResizeModalRef.value?.open();
+};
+const openAsyncModal = () => {
+    asyncModalRef.value?.open();
+};
+const onModalAsyncConfirm = async () => {
+    modalConfirmLoading.value = true;
+    await sleep(1200);
+    modalConfirmLoading.value = false;
+    message.success("Modal 确认完成");
+    return true;
+};
 
 // MLoading
 const showFullscreenLoading = () => {
@@ -476,8 +553,7 @@ const showTargetLoading = () => {
     }, 5000);
 };
 const showDarkLoading = () => {
-    const instance = loading.create(
-    );
+    const instance = loading.create();
     setTimeout(() => {
         instance.destroy();
         message.success("加载完成");
@@ -486,6 +562,10 @@ const showDarkLoading = () => {
 
 // MDrawer
 const drawerRef = useTemplateRef<DrawerInstance>("drawerRef");
+const maskLockedDrawerRef = useTemplateRef<DrawerInstance>("maskLockedDrawerRef");
+const simpleDrawerRef = useTemplateRef<DrawerInstance>("simpleDrawerRef");
+const scrollableDrawerRef = useTemplateRef<DrawerInstance>("scrollableDrawerRef");
+const asyncDrawerRef = useTemplateRef<DrawerInstance>("asyncDrawerRef");
 const placement = ref<"left" | "right" | "top" | "bottom">("right");
 const openDrawer = (dir: "left" | "right" | "top" | "bottom") => {
     placement.value = dir;
@@ -495,6 +575,21 @@ const openDrawerRight = () => openDrawer("right");
 const openDrawerLeft = () => openDrawer("left");
 const openDrawerTop = () => openDrawer("top");
 const openDrawerBottom = () => openDrawer("bottom");
+const openMaskLockedDrawer = () => maskLockedDrawerRef.value?.open();
+const openSimpleDrawer = () => simpleDrawerRef.value?.open();
+const openScrollableDrawer = () => scrollableDrawerRef.value?.open();
+const openAsyncDrawer = () => asyncDrawerRef.value?.open();
+const drawerAsyncLoading = ref(false);
+const onDrawerAsyncConfirm = async () => {
+    drawerAsyncLoading.value = true;
+    await sleep(1200);
+    drawerAsyncLoading.value = false;
+    message.success("抽屉异步确认完成");
+    return true;
+};
+const onDrawerCancel = () => {
+    message.info("已取消抽屉操作");
+};
 
 const onDrawerClose = () => {
     console.log("抽屉已关闭");

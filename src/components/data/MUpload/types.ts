@@ -33,7 +33,7 @@ export interface MUploadFile {
 export interface MUploadResponse {
     url: string; // 远程服务器的地址
     status: "success" | "error"; // 上传结果状态
-    percent: number; // 上传进度 (0-100)，仅在上传过程中返回
+    percent?: number; // 上传进度 (0-100)，仅在上传过程中返回
 }
 
 export interface MUploadEmits {

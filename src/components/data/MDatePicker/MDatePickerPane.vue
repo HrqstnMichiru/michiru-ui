@@ -157,6 +157,8 @@ const selectDate = (date: dayjs.Dayjs) => {
         emits("change"); // 通知外部变化
     } else {
         const dateStr = date.format(props.format);
+        selectValueMap.clear();
+        selectValueMap.add(dateStr);
         modelValue.value = dateStr;
         emits("change"); // 通知外部变化
         emits("click");

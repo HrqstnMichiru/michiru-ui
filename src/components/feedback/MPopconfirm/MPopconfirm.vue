@@ -73,7 +73,6 @@ const iconMap: Record<MPopconfirmVariant, string> = {
 const onConfirm = async () => {
     if (props.onPositiveClick) {
         const result = await props.onPositiveClick();
-        console.log(result);
         if (result) {
             tooltipRef.value?.hide();
         }
