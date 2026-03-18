@@ -950,6 +950,56 @@
                 <MTreeSelect v-model="treeSelectValue5" :data="treeMedium" block placeholder="块级布局，宽度100%" />
             </div>
         </MCard>
+
+        <!-- MCascader -->
+        <MCard title="MCascader - 级联选择器">
+            <p>级联选择器，支持路径回显、仅返回末级值、逐级选择与禁用状态。</p>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">基础用法（返回完整路径）</h4>
+                <div class="actions">
+                    <MCascader v-model="cascaderValue1" :options="cascaderOptions" clearable placeholder="请选择地区" />
+                </div>
+                <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前路径: {{ cascaderValue1.length ? cascaderValue1.join(" / ") : "未选择" }}</p>
+            </div>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">仅返回末级值（emitPath = false）</h4>
+                <div class="actions">
+                    <MCascader v-model="cascaderValue2" :options="cascaderOptions" :emit-path="false" :show-all-levels="false" clearable placeholder="仅返回末级值" />
+                </div>
+                <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前值: {{ cascaderValue2 || "未选择" }}</p>
+            </div>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">changeOnSelect（父级可直接选中）</h4>
+                <div class="actions">
+                    <MCascader v-model="cascaderValue3" :options="cascaderOptions" change-on-select clearable placeholder="选择父级会立即更新" />
+                </div>
+                <p style="margin: 8px 0 0; color: #909399; font-size: 14px">当前路径: {{ cascaderValue3.length ? cascaderValue3.join(" / ") : "未选择" }}</p>
+            </div>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">不同尺寸</h4>
+                <div class="actions">
+                    <MCascader v-model="cascaderValue4" :options="cascaderOptions" size="small" placeholder="小尺寸" />
+                    <MCascader v-model="cascaderValue4" :options="cascaderOptions" size="medium" placeholder="中尺寸" />
+                    <MCascader v-model="cascaderValue4" :options="cascaderOptions" size="large" placeholder="大尺寸" />
+                </div>
+            </div>
+
+            <div style="margin-bottom: 24px">
+                <h4 style="margin: 0 0 16px">禁用状态</h4>
+                <div class="actions">
+                    <MCascader v-model="cascaderValue5" :options="cascaderOptions" disabled placeholder="禁用状态" />
+                </div>
+            </div>
+
+            <div>
+                <h4 style="margin: 0 0 16px">块级布局</h4>
+                <MCascader v-model="cascaderValue6" :options="cascaderOptions" block placeholder="块级布局，宽度100%" />
+            </div>
+        </MCard>
         <!-- MSwitch -->
         <MCard title="MSwitch - 开关">
             <p>基础开关</p>
@@ -1199,6 +1249,7 @@
 import type { MCheckBoxGroupInstance, MFormInstance } from "@/components";
 import {
     MButton,
+    MCascader,
     MCard,
     MCheckBox,
     MCheckBoxGroup,
@@ -1399,6 +1450,200 @@ const treeSelectValue4 = ref<number>();
 const treeSelectValue5 = ref<number>();
 const treeSelectList1 = ref<Array<number>>([]);
 const treeSelectList2 = ref<Array<number>>([]);
+
+// MCascader 状态
+const cascaderOptions = [
+    {
+        label: "浙江省",
+        value: "zhejiang",
+        children: [
+            {
+                label: "杭州市",
+                value: "hangzhou",
+                children: [
+                    { label: "西湖区", value: "xihu" },
+                    { label: "余杭区", value: "yuhang" },
+                    { label: "滨江区", value: "binjiang", disabled: true },
+                    { label: "上城区", value: "shangcheng" }
+                ]
+            },
+            {
+                label: "宁波市",
+                value: "ningbo",
+                children: [
+                    { label: "海曙区", value: "haishu" },
+                    { label: "鄞州区", value: "yinzhou" },
+                    { label: "江北区", value: "jiangbei_nb" },
+                    { label: "北仑区", value: "beilun" }
+                ]
+            },
+            {
+                label: "温州市",
+                value: "wenzhou",
+                children: [
+                    { label: "鹿城区", value: "lucheng_wz" },
+                    { label: "龙湾区", value: "longwan" },
+                    { label: "瓯海区", value: "ouhai" },
+                    { label: "洞头区", value: "dongtou" }
+                ]
+            },
+            {
+                label: "嘉兴市",
+                value: "jiaxing",
+                children: [
+                    { label: "南湖区", value: "nanhu" },
+                    { label: "秀洲区", value: "xiuzhou" },
+                    { label: "海宁市", value: "haining" },
+                    { label: "桐乡市", value: "tongxiang" }
+                ]
+            }
+        ]
+    },
+    {
+        label: "江苏省",
+        value: "jiangsu",
+        children: [
+            {
+                label: "南京市",
+                value: "nanjing",
+                children: [
+                    { label: "玄武区", value: "xuanwu" },
+                    { label: "鼓楼区", value: "gulou" },
+                    { label: "建邺区", value: "jianye" },
+                    { label: "秦淮区", value: "qinhuai" }
+                ]
+            },
+            {
+                label: "苏州市",
+                value: "suzhou",
+                children: [
+                    { label: "姑苏区", value: "gusu" },
+                    { label: "工业园区", value: "sip" },
+                    { label: "吴中区", value: "wuzhong" },
+                    { label: "相城区", value: "xiangcheng_sz" }
+                ]
+            },
+            {
+                label: "无锡市",
+                value: "wuxi",
+                children: [
+                    { label: "梁溪区", value: "liangxi" },
+                    { label: "锡山区", value: "xishan" },
+                    { label: "滨湖区", value: "binhu" },
+                    { label: "惠山区", value: "huishan" }
+                ]
+            },
+            {
+                label: "常州市",
+                value: "changzhou",
+                children: [
+                    { label: "天宁区", value: "tianning" },
+                    { label: "钟楼区", value: "zhonglou" },
+                    { label: "新北区", value: "xinbei" },
+                    { label: "武进区", value: "wujin" }
+                ]
+            }
+        ]
+    },
+    {
+        label: "广东省",
+        value: "guangdong",
+        children: [
+            {
+                label: "广州市",
+                value: "guangzhou",
+                children: [
+                    { label: "天河区", value: "tianhe_gz" },
+                    { label: "越秀区", value: "yuexiu" },
+                    { label: "海珠区", value: "haizhu" },
+                    { label: "黄埔区", value: "huangpu_gz" }
+                ]
+            },
+            {
+                label: "深圳市",
+                value: "shenzhen",
+                children: [
+                    { label: "南山区", value: "nanshan" },
+                    { label: "福田区", value: "futian" },
+                    { label: "罗湖区", value: "luohu" },
+                    { label: "宝安区", value: "baoan" }
+                ]
+            },
+            {
+                label: "佛山市",
+                value: "foshan",
+                children: [
+                    { label: "禅城区", value: "chancheng" },
+                    { label: "南海区", value: "nanhai" },
+                    { label: "顺德区", value: "shunde" },
+                    { label: "三水区", value: "sanshui" }
+                ]
+            },
+            {
+                label: "东莞市",
+                value: "dongguan",
+                children: [
+                    { label: "南城街道", value: "nancheng_dg" },
+                    { label: "东城街道", value: "dongcheng_dg" },
+                    { label: "虎门镇", value: "humen" },
+                    { label: "长安镇", value: "changan_dg" }
+                ]
+            }
+        ]
+    },
+    {
+        label: "四川省",
+        value: "sichuan",
+        children: [
+            {
+                label: "成都市",
+                value: "chengdu",
+                children: [
+                    { label: "锦江区", value: "jinjiang_cd" },
+                    { label: "青羊区", value: "qingyang" },
+                    { label: "武侯区", value: "wuhou" },
+                    { label: "高新区", value: "gaoxin_cd" }
+                ]
+            },
+            {
+                label: "绵阳市",
+                value: "mianyang",
+                children: [
+                    { label: "涪城区", value: "fucheng" },
+                    { label: "游仙区", value: "youxian" },
+                    { label: "安州区", value: "anzhou" },
+                    { label: "江油市", value: "jiangyou" }
+                ]
+            },
+            {
+                label: "德阳市",
+                value: "deyang",
+                children: [
+                    { label: "旌阳区", value: "jingyang" },
+                    { label: "罗江区", value: "luojiang" },
+                    { label: "广汉市", value: "guanghan" },
+                    { label: "绵竹市", value: "mianzhu" }
+                ]
+            },
+            {
+                label: "乐山市",
+                value: "leshan",
+                children: [
+                    { label: "市中区", value: "shizhong_ls" },
+                    { label: "沙湾区", value: "shawan" },
+                    { label: "五通桥区", value: "wutongqiao" },
+                    { label: "峨眉山市", value: "emeishan" }
+                ]
+            }
+        ]
+    }
+];
+const cascaderValue1 = ref<Array<string | number>>(["zhejiang", "hangzhou", "xihu"]);
+const cascaderValue2 = ref<string | number | "">("xihu");
+const cascaderValue3 = ref<Array<string | number>>([]);
+const cascaderValue4 = ref<Array<string | number>>([]);
+const cascaderValue5 = ref<Array<string | number>>(["zhejiang", "hangzhou", "yuhang"]);
+const cascaderValue6 = ref<Array<string | number>>([]);
 
 // MProgress 进度条数据
 const progressLine1 = ref<number>(30);

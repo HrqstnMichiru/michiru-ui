@@ -4,7 +4,7 @@
         :style="{
             width: `${width}px`,
             height: `${height}px`,
-            borderRadius: square ? '0px' : circle ? '50%' : rounded ? '500px' : '10px',
+            borderRadius: square ? '0px' : circle ? '50%' : rounded ? '500px' : '8px',
             border: showBorder ? '1px solid #dcdfe6' : 'none'
         }">
         <div v-if="loading" class="image__loading">

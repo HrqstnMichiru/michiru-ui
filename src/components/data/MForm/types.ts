@@ -47,7 +47,7 @@ export interface MFormItemProps {
     labelPosition?: "left" | "top"; // 标签位置
     labelAlign?: "left" | "right" | "center"; // 标签对齐方式
     labelWidth?: number; // 标签宽度，单位px
-    trigger?: "blur" | "change"; // 校验触发方式
+    trigger?: "blur" | "change" | "none"; // 校验触发方式
     size?: "small" | "medium" | "large"; // 表单项尺寸
     block?: boolean; // 是否为块级元素
     required?: boolean; // 是否必填

@@ -5,7 +5,7 @@ export interface MTooltipProps {
     content?: string; // 内容
     trigger?: "hover" | "click" | "manual" | "contextmenu"; // 触发方式
     placement?: MPlacement; // 位置
-    transition?: "fade" | "none" | "translate"; // 动画
+    transition?: "fade" | "none" | "translate" | "unfold"; // 动画
     showArrow?: boolean; // 是否显示箭头
     disabled?: boolean; // 是否禁用
     block?: boolean; // 是否占满触发元素的宽度

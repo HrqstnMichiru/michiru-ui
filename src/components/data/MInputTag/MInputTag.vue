@@ -15,7 +15,7 @@
         @focus="onFocus">
         <template #prefix v-if="tags.length > 0">
             <MTag variant="gray" closable v-for="(tag, index) in displayTags" :key="index" :text="tag" @close="onClose(index)" :size="customSize" outlined></MTag>
-            <MTooltip transition="none" theme="light" :z-index="2000">
+            <MTooltip transition="unfold" theme="light" :z-index="10002">
                 <MTag :text="`+${hiddenTags.length}`" v-if="hiddenTags.length > 0" :size="customSize" variant="gray" shape="circle" outlined></MTag>
                 <template #content>
                     <div

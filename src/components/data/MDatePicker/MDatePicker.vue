@@ -3,7 +3,7 @@
         ref="tooltipRef"
         @visible-change="onVisibleChange"
         trigger="click"
-        transition="translate"
+        transition="unfold"
         theme="light"
         :show-arrow="false"
         :placement="placement"
@@ -27,7 +27,7 @@
             @clear="handleClear">
             <template v-if="multiple" #prefix>
                 <MTag v-for="(date, index) in displayDates" :key="date" :text="date" variant="gray" closable :size="customSize" @close="onClose(index)" outlined></MTag>
-                <MTooltip transition="none" theme="light" :z-index="2000">
+                <MTooltip transition="unfold" theme="light" :z-index="10002">
                     <MTag :text="`+${hiddenDates.length}`" v-if="hiddenDates.length > 0" :size="customSize" variant="gray" shape="circle" outlined></MTag>
                     <template #content>
                         <div

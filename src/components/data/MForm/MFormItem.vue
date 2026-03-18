@@ -46,7 +46,7 @@ defineOptions({
     name: "MFormItem"
 });
 const props = withDefaults(defineProps<MFormItemProps>(), {
-    trigger: "blur",
+    trigger: "none",
     gap: 10,
     aligns: "center",
     block: false,

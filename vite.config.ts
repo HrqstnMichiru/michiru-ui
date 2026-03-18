@@ -23,8 +23,8 @@ export default defineConfig({
         lib: {
             // 库的入口文件
             entry: path.resolve(__dirname, "src/index.ts"),
-            //打包后的全局变量名（主要用于 UMD 模式）。当用户通过 <script> 标签引入你的库时，可以通过 window.MichiruUI 访问到它。
-            name: "MichiruUI",
+            //打包后的全局变量名（主要用于 UMD 模式）。当用户通过 <script> 标签引入你的库时，可以通过 window.Michiru 访问到它
+            name: "Michiru",
             // 生成文件的命名规则
             fileName: format => `michiru-ui.${format}.js`,
             formats: ["es", "umd"]

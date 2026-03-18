@@ -2,7 +2,7 @@
     <div class="main">
         <h1 style="text-align: center; margin-bottom: 24px">Michiru UI 组件预览</h1>
 
-        <MTabs default-active="display" position="top" :gap="24" variant="line" closable inline center :gutter="20">
+        <MTabs default-active="display" position="top" :gap="24" variant="bar" closable inline center :gutter="20">
             <!-- 基础组件 -->
             <MTabPane label="基础组件" name="basic">
                 <BasicPanel />

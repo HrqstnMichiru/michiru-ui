@@ -4,8 +4,7 @@
         @visible-change="visibleChange"
         trigger="click"
         sync-width
-        transition="translate"
-        :show-arrow="false"
+        transition="unfold"
         :placement="placement"
         :disabled="disabled"
         :block="customBlock"
@@ -37,7 +36,7 @@
                     closable
                     :size="customSize"
                     @close="onClose(node[nodeKey], index)"></MTag>
-                <MTooltip transition="none" theme="light" :z-index="2000">
+                <MTooltip transition="unfold" theme="light" :z-index="10002">
                     <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle" outlined></MTag>
                     <template #content>
                         <div
@@ -311,7 +310,7 @@ if (formItemContext && formItemContext.prop) {
     .m-tree-select-header {
         padding: 6px 10px;
         font-size: 15px;
-        gap: 8px;
+        gap: 5px;
         font-weight: 500;
         margin: 0 -3px;
         margin-bottom: 3px;

@@ -694,4 +694,54 @@ defineExpose<MTooltipInstance>({
         transform: translateX(-8px);
     }
 }
+
+.unfold-enter-active,
+.unfold-leave-active {
+    transition:
+        opacity 300ms var(--ease-in-out),
+        transform 300ms var(--ease-in-out);
+}
+
+.unfold-enter-from,
+.unfold-leave-to {
+    opacity: 0;
+}
+
+.unfold-enter-to,
+.unfold-leave-from {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.tooltip__popper {
+    &.placement-top.unfold-enter-from,
+    &.placement-top.unfold-leave-to,
+    &.placement-top-start.unfold-enter-from,
+    &.placement-top-start.unfold-leave-to,
+    &.placement-top-end.unfold-enter-from,
+    &.placement-top-end.unfold-leave-to,
+    &.placement-bottom.unfold-enter-from,
+    &.placement-bottom.unfold-leave-to,
+    &.placement-bottom-start.unfold-enter-from,
+    &.placement-bottom-start.unfold-leave-to,
+    &.placement-bottom-end.unfold-enter-from,
+    &.placement-bottom-end.unfold-leave-to {
+        transform: scaleY(0);
+    }
+
+    &.placement-left.unfold-enter-from,
+    &.placement-left.unfold-leave-to,
+    &.placement-left-start.unfold-enter-from,
+    &.placement-left-start.unfold-leave-to,
+    &.placement-left-end.unfold-enter-from,
+    &.placement-left-end.unfold-leave-to,
+    &.placement-right.unfold-enter-from,
+    &.placement-right.unfold-leave-to,
+    &.placement-right-start.unfold-enter-from,
+    &.placement-right-start.unfold-leave-to,
+    &.placement-right-end.unfold-enter-from,
+    &.placement-right-end.unfold-leave-to {
+        transform: scaleX(0);
+    }
+}
 </style>

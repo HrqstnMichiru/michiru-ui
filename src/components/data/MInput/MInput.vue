@@ -104,7 +104,8 @@ defineOptions({
 const props = withDefaults(defineProps<MInputProps>(), {
     width: 250,
     type: "text",
-    injected: true
+    injected: true,
+    isEmpty: undefined
 });
 const slots = useSlots();
 const emits = defineEmits<MInputEmits>();
@@ -156,7 +157,6 @@ const hasValue = computed(() => {
     if (props.isEmpty !== undefined) {
         return !props.isEmpty;
     }
-    // 否则根据 inputValue 判断
     return !!inputValue.value;
 });
 

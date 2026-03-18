@@ -3,8 +3,7 @@
         ref="tooltipRef"
         @visible-change="onVisibleChange"
         trigger="click"
-        transition="translate"
-        :show-arrow="false"
+        transition="unfold"
         sync-width
         :placement="placement"
         :disabled="disabled"
@@ -29,7 +28,7 @@
             @clear="handleClear">
             <template v-if="multiple" #prefix>
                 <MTag v-for="([value, label], index) in displayLabels" :key="value" :text="label" variant="gray" closable :size="customSize" @close="onClose(value, index)" outlined></MTag>
-                <MTooltip transition="none" theme="light" :z-index="2000">
+                <MTooltip transition="unfold" theme="light" :z-index="10002">
                     <MTag :text="`+${hiddenLabels.length}`" v-if="hiddenLabels.length > 0" :size="customSize" variant="gray" shape="circle" outlined></MTag>
                     <template #content>
                         <div
@@ -63,7 +62,7 @@
             <div class="m-select-options">
                 <slot name="header" v-if="toggleValueMap.size > 0">
                     <div class="m-select-header" v-if="multiple && hasSelectAll">
-                        <MCheckBox variant="primary" @update:model-value="toggleSelectAll" :model-value="selectAllState"></MCheckBox>
+                        <MCheckBox variant="purple" @update:model-value="toggleSelectAll" :model-value="selectAllState"></MCheckBox>
                         <span>全选</span>
                     </div>
                 </slot>
@@ -311,7 +310,7 @@ onMounted(() => {
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
     .m-select-header {
         padding: 6px 10px;
-        gap: 8px;
+        gap: 5px;
         font-size: 15px;
         font-weight: 500;
         margin: 0 -3px;
