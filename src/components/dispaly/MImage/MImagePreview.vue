@@ -200,8 +200,7 @@ defineExpose<MImagePreviewInstance>({
 .image-preview-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
     z-index: 2000;
     display: flex;
     align-items: center;

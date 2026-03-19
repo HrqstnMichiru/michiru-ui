@@ -3,7 +3,7 @@
         class="m-grid"
         :style="{
             gap: Array.isArray(gap) ? `${gap[1]}px ${gap[0]}px` : `${gap}px`,
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+            gridTemplateColumns: templateColumns,
             placeItems: aligns
         }">
         <slot></slot>
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { provide, ref } from "vue";
+import { computed, provide, ref } from "vue";
 import type { MGridContext, MGridProps } from "./types";
 import { MGridContextKey } from "./types";
 
@@ -21,11 +21,25 @@ defineOptions({
 const props = withDefaults(defineProps<MGridProps>(), {
     gap: 0,
     aligns: "stretch",
-    cols: 24
+    cols: 24,
+    minWidth: undefined,
+    maxWidth: undefined
+});
+
+const autoLayout = computed(() => !!props.minWidth && props.minWidth > 0);
+const templateColumns = computed(() => {
+    if (!autoLayout.value) {
+        return `repeat(${props.cols}, 1fr)`;
+    }
+    const minWidth = props.minWidth!;
+    const maxWidth = !!props.maxWidth && props.maxWidth > 0 ? Math.max(props.maxWidth, minWidth) : null;
+    const maxExpr = maxWidth ? `${maxWidth}px` : "1fr";
+    return `repeat(auto-fill, minmax(${minWidth}px, ${maxExpr}))`;
 });
 
 const currentCol = ref(1); // 当前列起始位置
 const register = (span: number, offset: number) => {
+    if (autoLayout.value) return 1;
     const start = currentCol.value + offset;
     const end = start + span;
     // 检查是否需要换行
@@ -46,7 +60,10 @@ const register = (span: number, offset: number) => {
 };
 
 provide<MGridContext>(MGridContextKey, {
-    register
+    register,
+    get autoLayout() {
+        return autoLayout.value;
+    }
 });
 </script>
 

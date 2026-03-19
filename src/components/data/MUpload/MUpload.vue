@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="m-upload" :class="[`m-upload--${listStyle}`]">
         <input ref="inputRef" type="file" :accept="accept" :multiple="multiple" style="display: none" @change="handleFileChange" />
         <template v-if="listStyle === 'normal'">
@@ -62,8 +62,7 @@
                 v-for="(uploadFile, index) in uploadFileList"
                 :key="uploadFile.fid"
                 class="m-gallery__item"
-                :class="uploadFile.status"
-                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px' }">
+                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px', flex: limit === 1 && !width && !size ? '1 1 0' : 'initial' }">
                 <img v-if="uploadFile.url" :src="urlFormat(uploadFile.url)" class="m-gallery__item-img" @dragstart.prevent />
                 <img v-else-if="uploadFile.thumbnailUrl" :src="uploadFile.thumbnailUrl" class="m-gallery__item-img" />
                 <div v-if="uploadFile.status === 'uploading'" class="m-gallery__item-mask mask--uploading">
@@ -91,7 +90,7 @@
                 @click="selectFile"
                 @dragover.prevent
                 @drop.prevent="handleDrop"
-                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px' }">
+                :style="{ width: `${width || size}px`, height: `${height || size}px`, borderRadius: circle ? '50%' : '8px', flex: limit === 1 && !width && !size ? '1 1 0' : 'initial' }">
                 <MIcon :name="placeIcon || 'icon-park-outline:upload-picture'" :size="48" />
                 <span class="m-gallery__trigger-text">{{ placeholder || "上传图片" }}</span>
             </div>
@@ -120,7 +119,6 @@ const props = withDefaults(defineProps<MUploadProps>(), {
     errorStrategy: "keep",
     enqueueStrategy: "replace",
     listStyle: "normal",
-    size: 120,
     urlFormat: (url: string) => url,
     thumbnailUrlFormat: (url: string) => url
 });
@@ -598,7 +596,6 @@ onBeforeMount(() => {
                         position: relative;
                     }
                 }
-
                 &.mask--error {
                     background: rgba(220, 53, 69, 0.6);
                     color: #fff;
@@ -647,6 +644,11 @@ onBeforeMount(() => {
             color: #999;
             font-size: 14px;
             transition: all 0.2s ease;
+            &.is-single {
+                width: 100%;
+                height: 100%;
+                flex: 1;
+            }
             .m-gallery__trigger-text {
                 font-size: 14px;
                 color: #666;

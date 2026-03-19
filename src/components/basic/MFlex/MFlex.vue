@@ -3,19 +3,22 @@
         :style="{
             display: inline ? 'inline-flex' : 'flex',
             flexDirection: vertical ? 'column' : 'row',
-            gap: Array.isArray(gap) ? `${gap[0]}px ${gap[1]}px` : `${gap}px`,
+            columnGap: `${gapX}px`,
+            rowGap: `${gapY}px`,
             alignItems: aligns,
             justifyContent: justify,
             flexWrap: wrap ? 'wrap' : 'nowrap',
-            marginLeft: `${offset}px`,
-            flex: span > 0 ? `0 0 ${span}%` : 'initial'
+            marginLeft: offsetMargin,
+            flex: flexBasis
         }">
         <slot></slot>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { MFlexProps } from "./types";
+import { computed, inject, provide } from "vue";
+import type { MFlexContext, MFlexProps } from "./types";
+import { MFlexContextKey } from "./types";
 
 defineOptions({
     name: "MFlex"
@@ -30,14 +33,31 @@ const props = withDefaults(defineProps<MFlexProps>(), {
     inline: false,
     span: 0
 });
-// 当 span > 0 时 (例如 span = 25)：
-// 结果为：flex: 0 0 25%
-// flex-grow: 0: 禁止放大。即使整行有剩余空间，该元素也不会变宽。
-// flex-shrink: 0: 禁止缩小。即使空间不足，该元素也不会被挤压。
-// flex-basis: 25%: 基础宽度。规定该元素在行内占据 25% 的空间。
-// 当 span <= 0 时：
-// 结果为：flex: initial
-// 这是 flex 属性的默认值。
-// 相当于 flex: 0 1 auto。
-// 效果：元素的宽度由其自身内容决定。如果没有设置 width，它会有多大内容就占多大地方。
+
+const parentFlexContext = inject<MFlexContext | null>(MFlexContextKey, null);
+
+const gapX = computed(() => (Array.isArray(props.gap) ? props.gap[0] : props.gap));
+const gapY = computed(() => (Array.isArray(props.gap) ? props.gap[1] : props.gap));
+const gapForSpan = computed(() => (props.vertical ? 0 : gapX.value));
+const parentGapForSpan = computed(() => parentFlexContext?.gapForSpan ?? 0);
+
+provide(MFlexContextKey, {
+    get gapForSpan() {
+        return gapForSpan.value;
+    }
+});
+
+const flexBasis = computed(() => {
+    if (props.span <= 0) return "initial";
+    const percent = (props.span / 24) * 100;
+    const gapOffset = ((24 - props.span) / 24) * parentGapForSpan.value;
+    return `0 0 calc(${percent}% - ${gapOffset}px)`;
+});
+
+const offsetMargin = computed(() => {
+    if (props.offset <= 0) return "0px";
+    const percent = (props.offset / 24) * 100;
+    const gapAddition = (props.offset / 24) * parentGapForSpan.value;
+    return `calc(${percent}% + ${gapAddition}px)`;
+});
 </script>

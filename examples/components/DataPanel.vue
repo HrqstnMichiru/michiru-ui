@@ -1054,7 +1054,7 @@
             <p>拖拽上传（最多5个文件）</p>
             <MUpload droppable :limit="5"></MUpload>
             <p>头像上传</p>
-            <MUpload :limit="1" list-style="gallery" circle></MUpload>
+            <MUpload :limit="1" list-style="gallery" circle :size="120"></MUpload>
         </MCard>
         <!-- MSegmented -->
         <MCard title="MSegmented - 分段控制器">
