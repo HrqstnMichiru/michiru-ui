@@ -57,7 +57,7 @@ const colorMap: Record<MCardIconVariant, string> = {
     primary: "#409EFF",
     success: "#67C23A",
     warning: "#E6A23C",
-    error: "#F56C6C",
+    danger: "#F56C6C",
     info: "#17A2B8",
     purple: "#801EFF",
     pink: "#FF69B4"

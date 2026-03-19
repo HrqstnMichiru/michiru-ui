@@ -17,6 +17,22 @@
             </MCheckBoxGroup>
             <p style="margin: 8px 0 0; color: #909399; font-size: 14px">已选择: {{ checkboxValues1.join(", ") || "无" }}</p>
 
+            <p style="margin-top: 16px">基础风格 - 不同尺寸（small / medium / large）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MCheckBoxGroup v-model="checkboxValues27" size="small">
+                    <MCheckBox label="Small A" value="small-a" />
+                    <MCheckBox label="Small B" value="small-b" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues28" size="medium">
+                    <MCheckBox label="Medium A" value="medium-a" />
+                    <MCheckBox label="Medium B" value="medium-b" />
+                </MCheckBoxGroup>
+                <MCheckBoxGroup v-model="checkboxValues29" size="large">
+                    <MCheckBox label="Large A" value="large-a" />
+                    <MCheckBox label="Large B" value="large-b" />
+                </MCheckBoxGroup>
+            </div>
+
             <p style="margin-top: 16px">三态状态（未选择 / 选中 / 部分选择）</p>
             <div class="actions">
                 <MCheckBox v-model="checkboxTriState" label="任务状态" variant="primary" bordered />
@@ -1304,6 +1320,9 @@ const checkboxValues23 = ref<Array<string | number>>(["enabled", "disabled-b"]);
 const checkboxValues24 = ref<Array<string | number>>(["group-a"]);
 const checkboxValues25 = ref<Array<string | number>>(["vertical-1", "vertical-3"]);
 const checkboxValues26 = ref<Array<string | number>>(["button-a", "button-c"]);
+const checkboxValues27 = ref<Array<string | number>>(["small-a"]);
+const checkboxValues28 = ref<Array<string | number>>(["medium-a"]);
+const checkboxValues29 = ref<Array<string | number>>(["large-a"]);
 const checkboxTriState = ref<boolean | "indeterminate">("indeterminate");
 
 // RadioBox状态

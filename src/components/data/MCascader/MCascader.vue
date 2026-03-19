@@ -303,7 +303,7 @@ if (formItemContext && formItemContext.prop) {
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        min-height: 34px;
+        min-height: 32px;
         padding: 0 10px;
         line-height: 1.5;
         cursor: pointer;

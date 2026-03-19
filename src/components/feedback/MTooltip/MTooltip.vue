@@ -75,6 +75,7 @@ provide<MTooltipProviderContext>(MTooltipProviderContextKey, {
     register: context?.register,
     unregister: context?.unregister,
     isDescendant: context?.isDescendant,
+    hideParent: context?.hideParent,
     parentId: instanceId
 });
 
@@ -230,23 +231,15 @@ const show = () => {
     });
 };
 
-const finalShow = () => {
-    show();
-};
-
 const hide = () => {
     visible.value = false;
     detachPositionListeners();
     emits("visible-change", false);
 };
 
-const finalHide = () => {
-    hide();
-};
-
 const toggle = () => {
-    if (visible.value) finalHide();
-    else finalShow();
+    if (visible.value) hide();
+    else show();
 };
 
 const isTargetInside = (element: HTMLElement, node: HTMLElement) => {
@@ -254,8 +247,8 @@ const isTargetInside = (element: HTMLElement, node: HTMLElement) => {
 };
 
 const handleMouseLeave = (event: MouseEvent) => {
-    const target = event.relatedTarget as HTMLElement; // 鼠标移出后进入的新元素
     if (!popperNode.value || !triggerNode.value) return;
+    const target = event.relatedTarget as HTMLElement; // 鼠标移出后进入的新元素
     // 如果鼠标移到自己的 popper 上，或者移回 trigger 区域，则不立即隐藏
     if (isTargetInside(target, popperNode.value) || isTargetInside(target, triggerNode.value)) return;
 
@@ -264,9 +257,15 @@ const handleMouseLeave = (event: MouseEvent) => {
         const targetId = target.closest?.("[data-tooltip-id]")?.getAttribute("data-tooltip-id");
         const isGoingToDescendant = targetId && context?.isDescendant?.(instanceId, targetId);
         if (isGoingToDescendant) return;
+        const isGoingToParent = targetId && context?.isDescendant?.(targetId, instanceId);
+        if (isGoingToParent) {
+            // 如果移到父级 tooltip 上，应该隐藏自己
+            hide();
+            return;
+        }
     }
 
-    finalHide();
+    context?.hideParent?.(instanceId);
 };
 
 const handleClickOutside = (event: MouseEvent) => {
@@ -280,7 +279,7 @@ const handleClickOutside = (event: MouseEvent) => {
         const isGoingToDescendant = targetId && context?.isDescendant?.(instanceId, targetId);
         if (isGoingToDescendant) return;
     }
-    if (visible.value) finalHide();
+    if (visible.value) hide();
 };
 
 const cleanupEvents = () => {
@@ -297,9 +296,9 @@ const cleanupEvents = () => {
 
 const attachEvents = () => {
     if (props.trigger === "hover") {
-        triggerEvents.mouseenter = finalShow; // 鼠标进入触发元素时显示 tooltip
+        triggerEvents.mouseenter = show; // 鼠标进入触发元素时显示 tooltip
         triggerEvents.mouseleave = handleMouseLeave;
-        popperEvents.mouseenter = finalShow;
+        popperEvents.mouseenter = show; // 鼠标进入 tooltip 时保持显示
         popperEvents.mouseleave = handleMouseLeave;
     } else if (props.trigger === "click") {
         triggerEvents.click = toggle;
@@ -314,7 +313,7 @@ const attachEvents = () => {
 
 onMounted(() => {
     if (context) {
-        context.register?.(instanceId, context.parentId);
+        context.register?.(instanceId, context.parentId, hide);
     }
     if (props.trigger !== "manual") attachEvents();
 });
@@ -328,8 +327,8 @@ onBeforeUnmount(() => {
 });
 
 defineExpose<MTooltipInstance>({
-    show: finalShow,
-    hide: finalHide,
+    show,
+    hide,
     toggle
 });
 </script>

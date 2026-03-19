@@ -40,15 +40,15 @@ if (selectContext) {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 6px;
     width: 100%;
-    height: 36px;
+    height: 32px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     border-radius: 4px;
     .label {
         flex: 1;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 500;
         color: rgb(96, 98, 102);
         white-space: nowrap;

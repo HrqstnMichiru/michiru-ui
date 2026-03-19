@@ -308,11 +308,10 @@ if (formItemContext && formItemContext.prop) {
     border: 1px solid rgb(220, 223, 230);
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
     .m-tree-select-header {
-        padding: 6px 10px;
+        padding: 6px;
         font-size: 15px;
         gap: 5px;
         font-weight: 500;
-        margin: 0 -3px;
         margin-bottom: 3px;
         border-bottom: 1px solid rgb(220, 223, 230);
         display: flex;
@@ -323,11 +322,10 @@ if (formItemContext && formItemContext.prop) {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-right: 10px;
         transition: all 0.2s ease;
         .label {
             flex: 1;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: rgb(96, 98, 102);
             white-space: nowrap;

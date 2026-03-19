@@ -1,6 +1,6 @@
 ﻿import type { InjectionKey } from "vue";
 
-export type MCollapseIconVariant = "gray" | "primary" | "success" | "warning" | "error" | "info" | "purple" | "pink";
+export type MCollapseIconVariant = "gray" | "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink";
 export interface MCollapseProps {
     duration?: number;
     name: string | number;

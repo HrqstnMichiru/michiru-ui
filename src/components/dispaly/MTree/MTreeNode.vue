@@ -15,14 +15,7 @@
                 }">
                 >
             </MIcon>
-            <MCheckBox
-                variant="primary"
-                :disabled="disabled"
-                v-if="showCheck"
-                @click.stop
-                size="small"
-                :model-value="checkState"
-                @update:model-value="treeContext?.toggleSelect(nodeKey)"></MCheckBox>
+            <MCheckBox variant="primary" :disabled="disabled" v-if="showCheck" @click.stop size="small" :model-value="checkState" @update:model-value="treeContext?.toggleSelect(nodeKey)"></MCheckBox>
             <slot :node="props" :data="data">
                 <span
                     class="label"
@@ -61,7 +54,7 @@ const props = defineProps<MTreeNodeProps<T>>();
 const treeContext = inject<MTreeContext>(MTreeContextKey)!;
 
 const paddingLeft = computed(() => {
-    return `${33 * props.level! + 10}px`;
+    return `${33 * props.level! + 6}px`;
 });
 const checkState = computed<boolean | "indeterminate">(() => {
     return props.indeterminate ? "indeterminate" : props.checked;
@@ -116,6 +109,7 @@ const transitionEvents: Record<string, (el: HTMLElement) => void> = {
         line-height: 32px;
         transition: background-color 0.2s var(--ease-soft-spring);
         align-items: center;
+        padding-right: 6px;
         gap: 3px;
         cursor: pointer;
         &:hover {

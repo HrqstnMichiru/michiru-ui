@@ -153,7 +153,7 @@ const handleClick = () => {
         &.m-action--icon {
             padding: 6px;
             &.m-action--circle {
-                border-radius: 50%;
+                border-radius: 50% !important;
             }
             &.m-action--small {
                 width: 32px;

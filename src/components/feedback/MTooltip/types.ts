@@ -26,10 +26,15 @@ export interface MTooltipInstance {
 }
 
 export interface MTooltipProviderContext {
-    register?: (id: string, parentId: string | null) => void;
+    register?: (id: string, parentId: string | null, hide: () => void) => void;
     unregister?: (id: string) => void;
     // 判断一个 ID 是否是另一个 ID 的子孙
     isDescendant?: (parentId: string, candidateId: string) => boolean;
+    hideParent?: (id: string) => void;
     parentId: string | null;
+}
+export interface MTooltipProviderHandler {
+    parentId: string | null;
+    hide: () => void;
 }
 export const MTooltipProviderContextKey: InjectionKey<MTooltipProviderContext> = Symbol("MTooltipProviderContextKey");

@@ -189,6 +189,24 @@
             <p style="margin-top: 16px">小尺寸 + 减少按钮数/自定义每页按钮数</p>
             <MPagination :total-count="88" size="small" :page-count="5" @page-change="handlePageChange" show-total position="right" />
 
+            <p style="margin-top: 16px">不同 Variant（主要体现 active 样式）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MPagination :total-count="180" :page-count="5" variant="primary" />
+                <MPagination :total-count="180" :page-count="5" variant="success" />
+                <MPagination :total-count="180" :page-count="5" variant="warning" />
+                <MPagination :total-count="180" :page-count="5" variant="danger" />
+                <MPagination :total-count="180" :page-count="5" variant="info" />
+                <MPagination :total-count="180" :page-count="5" variant="purple" />
+                <MPagination :total-count="180" :page-count="5" variant="pink" />
+            </div>
+
+            <p style="margin-top: 16px">样式模式（default / plain / outlined）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MPagination :total-count="180" :page-count="5" variant="primary" />
+                <MPagination :total-count="180" :page-count="5" variant="primary" plain />
+                <MPagination :total-count="180" :page-count="5" variant="primary" outlined />
+            </div>
+
             <p style="margin-top: 16px">当前操作：{{ paginationLog }}</p>
         </MCard>
     </div>

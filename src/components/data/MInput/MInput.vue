@@ -424,6 +424,7 @@ onUnmounted(() => {
                 border-radius: 4px;
                 .m-input__inner {
                     font-size: 14px;
+                    line-height: 16px;
                 }
             }
             .word-count {
@@ -446,16 +447,17 @@ onUnmounted(() => {
     }
 
     &.m-input--medium {
-        font-size: 16px;
+        font-size: 15px;
         .m-text-wrapper {
             .m-input__content {
                 height: 34px;
-                font-size: 16px;
+                font-size: 15px;
                 line-height: 34px;
                 padding: 0 8px;
                 border-radius: 6px;
                 .m-input__inner {
-                    font-size: 16px;
+                    font-size: 15px;
+                    line-height: 18px;
                 }
             }
             .word-count {
@@ -469,7 +471,7 @@ onUnmounted(() => {
         .m-input__prefix,
         .m-input__suffix {
             .text {
-                font-size: 16px;
+                font-size: 15px;
             }
             :deep(.m-icon) {
                 font-size: 18px;
@@ -477,16 +479,17 @@ onUnmounted(() => {
         }
     }
     &.m-input--large {
-        font-size: 18px;
+        font-size: 16px;
         .m-text-wrapper {
             .m-input__content {
                 height: 40px;
-                font-size: 18px;
+                font-size: 16px;
                 padding: 0 10px;
                 border-radius: 8px;
                 line-height: 40px;
                 .m-input__inner {
-                    font-size: 18px;
+                    line-height: 20px;
+                    font-size: 16px;
                 }
             }
             .word-count {
@@ -500,7 +503,7 @@ onUnmounted(() => {
         .m-input__prefix,
         .m-input__suffix {
             .text {
-                font-size: 18px;
+                font-size: 16px;
             }
             :deep(.m-icon) {
                 font-size: 20px;

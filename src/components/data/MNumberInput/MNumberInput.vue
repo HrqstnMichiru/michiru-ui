@@ -306,13 +306,16 @@ onUnmounted(() => {
             .m-number-input__suffix {
                 border-radius: 0 3px 3px 0;
                 :deep(.m-icon) {
-                    font-size: 14px;
+                    font-size: 16px;
+                    &:hover {
+                        color: rgba(128, 30, 255, 1);
+                    }
                 }
             }
         }
     }
     &.m-number-input--medium {
-        font-size: 16px;
+        font-size: 15px;
         .m-number-input__content {
             height: 34px;
             line-height: 34px;
@@ -320,7 +323,7 @@ onUnmounted(() => {
             .m-number-input__inner-wrapper {
                 padding: 7.2px;
                 .m-number-input__inner {
-                    font-size: 16px;
+                    font-size: 15px;
                     line-height: 18px;
                     height: 18px;
                 }
@@ -338,7 +341,7 @@ onUnmounted(() => {
         }
     }
     &.m-number-input--large {
-        font-size: 18px;
+        font-size: 16px;
         .m-number-input__content {
             height: 40px;
             line-height: 40px;
@@ -346,7 +349,7 @@ onUnmounted(() => {
             .m-number-input__inner-wrapper {
                 padding: 9.2px;
                 .m-number-input__inner {
-                    font-size: 18px;
+                    font-size: 16px;
                     line-height: 20px;
                     height: 20px;
                 }
@@ -355,7 +358,7 @@ onUnmounted(() => {
                 cursor: pointer;
                 border-radius: 0 7px 7px 0;
                 :deep(.m-icon) {
-                    font-size: 18px;
+                    font-size: 20px;
                     &:hover {
                         color: rgba(128, 30, 255, 1);
                     }

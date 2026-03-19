@@ -110,7 +110,7 @@ const props = withDefaults(defineProps<MVirtualSelectProps>(), {
     hideAfterClick: true,
     width: 250,
     placement: "bottom",
-    itemHeight: 36,
+    itemHeight: 32,
     bufferSize: 5,
     maxCount: 6,
     tooltipMaxCount: 3,
@@ -313,11 +313,10 @@ const onClose = (value: string | number, index: number) => {
     border: 1px solid rgb(220, 223, 230);
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
     .m-virtual-select-header {
-        padding: 6px 10px;
+        padding: 6px;
         font-size: 15px;
         gap: 5px;
         font-weight: 500;
-        margin: 0 -3px;
         margin-bottom: 3px;
         border-bottom: 1px solid rgb(220, 223, 230);
         display: flex;
@@ -329,13 +328,13 @@ const onClose = (value: string | number, index: number) => {
         justify-content: space-between;
         width: 100%;
         height: 100%;
-        padding: 10px;
+        padding: 6px;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.2s ease;
         .label {
             flex: 1;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             color: rgb(96, 98, 102);
             white-space: nowrap;

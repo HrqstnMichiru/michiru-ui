@@ -309,11 +309,10 @@ onMounted(() => {
     border: 1px solid rgb(220, 223, 230);
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12);
     .m-select-header {
-        padding: 6px 10px;
+        padding: 6px;
         gap: 5px;
         font-size: 15px;
         font-weight: 500;
-        margin: 0 -3px;
         margin-bottom: 3px;
         border-bottom: 1px solid rgb(220, 223, 230);
         display: flex;

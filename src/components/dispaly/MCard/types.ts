@@ -1,4 +1,4 @@
-export type MCardIconVariant = "gray" | "primary" | "success" | "warning" | "error" | "info" | "purple" | "pink";
+export type MCardIconVariant = "gray" | "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink";
 
 export interface MCardProps {
     contentStyle?: Record<string, string>; // 内容区域的自定义样式

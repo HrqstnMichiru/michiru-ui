@@ -144,17 +144,17 @@ const onChange = () => {
 
             &.m-checkbox--small {
                 height: 28px;
-                padding: 5.2px 8px;
+                padding: 5.2px 7.2px;
                 border-radius: 4px;
             }
             &.m-checkbox--medium {
                 height: 34px;
-                padding: 7.2px 10px;
+                padding: 7.2px 9.2px;
                 border-radius: 6px;
             }
             &.m-checkbox--large {
                 height: 40px;
-                padding: 9.2px 12px;
+                padding: 9.2px 11.2px;
                 border-radius: 8px;
             }
 
@@ -212,7 +212,7 @@ const onChange = () => {
                 }
             }
             .m-checkbox__label {
-                font-size: 16px;
+                font-size: 15px;
             }
         }
         &.m-checkbox--large {
@@ -229,7 +229,7 @@ const onChange = () => {
                 }
             }
             .m-checkbox__label {
-                font-size: 18px;
+                font-size: 16px;
             }
         }
 
@@ -408,7 +408,7 @@ const onChange = () => {
 
         // 尺寸变体
         &.m-checkbox--small {
-            padding: 5.2px 9.2px;
+            padding: 5.2px 7.2px;
             font-size: 14px;
             height: 28px;
             .m-checkbox__label {
@@ -417,16 +417,16 @@ const onChange = () => {
         }
         &.m-checkbox--medium {
             height: 34px;
-            font-size: 16px;
-            padding: 7.2px 13.2px;
+            font-size: 15px;
+            padding: 7.2px 9.2px;
             .m-checkbox__label {
                 line-height: 18px;
             }
         }
         &.m-checkbox--large {
             height: 40px;
-            padding: 9.2px 17.2px;
-            font-size: 18px;
+            padding: 9.2px 11.2px;
+            font-size: 16px;
             .m-checkbox__label {
                 line-height: 20px;
             }

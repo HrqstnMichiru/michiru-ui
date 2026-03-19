@@ -99,17 +99,17 @@ const handleChange = () => {
 
             &.m-radiobox--small {
                 height: 28px;
-                padding: 5.2px 8px;
+                padding: 5.2px 7.2px;
                 border-radius: 4px;
             }
             &.m-radiobox--medium {
                 height: 34px;
-                padding: 7.2px 10px;
+                padding: 7.2px 9.2px;
                 border-radius: 6px;
             }
             &.m-radiobox--large {
                 height: 40px;
-                padding: 9.2px 12px;
+                padding: 9.2px 11.2px;
                 border-radius: 8px;
             }
 
@@ -159,7 +159,7 @@ const handleChange = () => {
                 }
             }
             .m-radiobox__label {
-                font-size: 16px;
+                font-size: 15px;
                 line-height: 18px;
             }
         }
@@ -173,7 +173,7 @@ const handleChange = () => {
                 }
             }
             .m-radiobox__label {
-                font-size: 18px;
+                font-size: 16px;
                 line-height: 20px;
             }
         }
@@ -331,16 +331,16 @@ const handleChange = () => {
         }
         &.m-radiobox--medium {
             height: 34px;
-            font-size: 16px;
-            padding: 7.2px 13.2px;
+            font-size: 15px;
+            padding: 7.2px 11.2px;
             .m-radiobox__label {
                 line-height: 18px;
             }
         }
         &.m-radiobox--large {
             height: 40px;
-            padding: 9.2px 17.2px;
-            font-size: 18px;
+            padding: 9.2px 13.2px;
+            font-size: 16px;
             .m-radiobox__label {
                 line-height: 20px;
             }

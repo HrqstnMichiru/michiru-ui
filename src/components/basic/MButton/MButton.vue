@@ -123,7 +123,7 @@ const onClick = () => {
 
     // 小尺寸
     &.m-btn--small {
-        padding: 5.2px 10px;
+        padding: 5.2px 7.2px;
         height: 28px;
         border-radius: 4px;
         .m-btn__prefix {
@@ -144,7 +144,7 @@ const onClick = () => {
     }
     // 中等尺寸
     &.m-btn--medium {
-        padding: 7.2px 14px;
+        padding: 7.2px 9.2px;
         height: 34px;
         border-radius: 6px;
         .m-btn__prefix {
@@ -159,13 +159,13 @@ const onClick = () => {
             }
         }
         .m-btn__content {
-            font-size: 16px;
+            font-size: 15px;
             line-height: 18px;
         }
     }
     // 大尺寸
     &.m-btn--large {
-        padding: 9.2px 18px;
+        padding: 9.2px 11.2px;
         height: 40px;
         border-radius: 8px;
         .m-btn__prefix {
@@ -180,7 +180,7 @@ const onClick = () => {
             }
         }
         .m-btn__content {
-            font-size: 18px;
+            font-size: 16px;
             line-height: 20px;
         }
     }
