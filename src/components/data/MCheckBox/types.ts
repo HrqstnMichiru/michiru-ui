@@ -39,7 +39,7 @@ export interface MCheckBoxGroupContext {
     variant: MCheckBoxVariant;
     type: "button" | "box";
     bordered: boolean;
-    toggle: (value: string | number) => void;
+    toggleChecked: (value: string | number) => void;
     isChecked: (value: string | number) => boolean;
     register: (value: string | number) => void;
 }

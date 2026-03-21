@@ -1,7 +1,7 @@
 ﻿<template>
     <div>
         <slot></slot>
-        <MImagePreview ref="imagePreviewRef" :list="imageList" :url-format="urlFormat" :show-toolbar="showToolbar" :show-tooltip="showTooltip" loop v-if="imageList.length > 0" />
+        <MImagePreview ref="imagePreviewRef" :list="imageList" :url-format="urlFormat" :show-toolbar="showToolbar" :show-tooltip="showTooltip" loop v-if="previewEnabled && imageList.length > 0" />
     </div>
 </template>
 
@@ -29,6 +29,7 @@ const register = (src: string): number => {
     return index;
 };
 const previewImage = (index: number) => {
+    if (!props.previewEnabled) return;
     imagePreviewRef.value?.previewImage(index);
 };
 

@@ -46,7 +46,7 @@ const slots = useSlots();
         }
     }
     .empty__description {
-        font-size: 15px;
+        font-size: 16px;
         line-height: 1.6;
         color: #909399;
     }

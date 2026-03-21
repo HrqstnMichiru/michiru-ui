@@ -51,7 +51,6 @@ const props = withDefaults(defineProps<MTooltipProps>(), {
     block: false,
     theme: "dark",
     offset: 10,
-    timer: 100,
     zIndex: 10000,
     syncWidth: false
 });
@@ -251,21 +250,22 @@ const handleMouseLeave = (event: MouseEvent) => {
     const target = event.relatedTarget as HTMLElement; // 鼠标移出后进入的新元素
     // 如果鼠标移到自己的 popper 上，或者移回 trigger 区域，则不立即隐藏
     if (isTargetInside(target, popperNode.value) || isTargetInside(target, triggerNode.value)) return;
-
     if (context) {
-        // 移到自己的子孙级 popper 上，也不立即隐藏
         const targetId = target.closest?.("[data-tooltip-id]")?.getAttribute("data-tooltip-id");
+        // 移到自己的子孙级 popper 上，也不立即隐藏
         const isGoingToDescendant = targetId && context?.isDescendant?.(instanceId, targetId);
         if (isGoingToDescendant) return;
+        // 如果移到父级 trigger 上，应该隐藏自己的 popper
         const isGoingToParent = targetId && context?.isDescendant?.(targetId, instanceId);
         if (isGoingToParent) {
-            // 如果移到父级 tooltip 上，应该隐藏自己
             hide();
             return;
         }
+        // 如果既没有移到子孙级 popper 和父级 trigger 上，则应该隐藏自己和所有父级 popper
+        context.hideParent?.(instanceId);
+    } else {
+        hide();
     }
-
-    context?.hideParent?.(instanceId);
 };
 
 const handleClickOutside = (event: MouseEvent) => {

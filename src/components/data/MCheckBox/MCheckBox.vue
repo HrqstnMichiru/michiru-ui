@@ -79,7 +79,7 @@ const onChange = () => {
     if (disabled.value) return;
     // 如果在组中，调用组的toggle方法切换选中状态
     if (groupContext) {
-        groupContext.toggle(props.value!);
+        groupContext.toggleChecked(props.value!);
         emits("change");
         return;
     }

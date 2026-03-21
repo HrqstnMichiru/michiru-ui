@@ -1,28 +1,35 @@
+import MLoading from "@/components/feedback/MLoading/MLoading.vue";
+import type { MLoadingInstance, MLoadingProps } from "@/components/feedback/MLoading/types";
 import type { DirectiveBinding } from "vue";
 import { h, render } from "vue";
-import MLoading from "../components/feedback/MLoading/MLoading.vue";
-import type { MLoadingInstance, MLoadingProps } from "../components/feedback/MLoading/types";
 
-type LoadingDirectiveState = {
-    instance: MLoadingInstance;
-    originalPosition?: string;
+interface MLoadingDirectiveOptions {
+    loading: boolean;
+    duration?: number;
+}
+type MLoadingDirectiveValue = boolean | MLoadingDirectiveOptions;
+
+const DEFAULT_DURATION = 300;
+const states = new WeakMap<HTMLElement, MLoadingInstance>();
+
+const resolveDirectiveValue = (value: MLoadingDirectiveValue): Required<MLoadingDirectiveOptions> => {
+    if (typeof value === "boolean") {
+        return {
+            loading: value,
+            duration: DEFAULT_DURATION
+        };
+    }
+
+    const loading = value.loading;
+    const duration = typeof value.duration === "number" ? Math.max(DEFAULT_DURATION, value.duration) : DEFAULT_DURATION;
+
+    return {
+        loading,
+        duration
+    };
 };
 
-const states = new WeakMap<HTMLElement, LoadingDirectiveState>();
-
-const patchRelativePosition = (el: HTMLElement): string | undefined => {
-    if (getComputedStyle(el).position !== "static") return undefined;
-    const originalPosition = el.style.position;
-    el.style.position = "relative";
-    return originalPosition;
-};
-
-const restorePosition = (el: HTMLElement, originalPosition?: string) => {
-    if (originalPosition === undefined) return;
-    el.style.position = originalPosition;
-};
-
-const createLoading = (target: HTMLElement): MLoadingInstance => {
+const createLoading = (target: HTMLElement, duration: number): MLoadingInstance => {
     const container = document.createElement("div");
     const props: MLoadingProps = {
         onDestroy: () => {
@@ -30,7 +37,8 @@ const createLoading = (target: HTMLElement): MLoadingInstance => {
             container.remove();
             states.delete(target);
         },
-        target
+        target,
+        duration
     };
 
     const vnode = h(MLoading, props);
@@ -49,32 +57,29 @@ const createLoading = (target: HTMLElement): MLoadingInstance => {
     return instance;
 };
 
-const mountLoading = (el: HTMLElement) => {
+const mountLoading = (el: HTMLElement, duration: number) => {
     if (states.has(el)) return;
-    const originalPosition = patchRelativePosition(el);
-    const instance = createLoading(el);
-    states.set(el, {
-        instance,
-        originalPosition
-    });
+    const instance = createLoading(el, duration);
+    states.set(el, instance);
 };
 
 const unmountLoading = (el: HTMLElement) => {
     const state = states.get(el);
     if (!state) return;
-    state.instance.destroy();
-    restorePosition(el, state.originalPosition);
+    state.destroy();
 };
 
 const loading = {
-    mounted(el: HTMLElement, binding: DirectiveBinding<boolean>) {
-        if (binding.value) {
-            mountLoading(el);
+    mounted(el: HTMLElement, binding: DirectiveBinding<MLoadingDirectiveValue>) {
+        const config = resolveDirectiveValue(binding.value);
+        if (config.loading) {
+            mountLoading(el, config.duration);
         }
     },
-    updated(el: HTMLElement, binding: DirectiveBinding<boolean>) {
-        if (binding.value) {
-            mountLoading(el);
+    updated(el: HTMLElement, binding: DirectiveBinding<MLoadingDirectiveValue>) {
+        const config = resolveDirectiveValue(binding.value);
+        if (config.loading) {
+            mountLoading(el, config.duration);
         } else {
             unmountLoading(el);
         }

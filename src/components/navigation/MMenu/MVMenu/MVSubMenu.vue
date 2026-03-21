@@ -67,6 +67,7 @@ const labelStyle = computed(() => {
 const menuClasses = computed(() => {
     if (isCollapsed.value) {
         return {
+            "sub-menu--collapsed": !!context,
             "sub-menu--disabled": props.disabled,
             "sub-menu--active": isActive.value
         };
@@ -228,6 +229,9 @@ onMounted(() => {
             .right {
                 transform: rotate(90deg);
             }
+        }
+        &.sub-menu--collapsed {
+            height: 36px;
         }
     }
 }

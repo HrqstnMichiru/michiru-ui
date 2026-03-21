@@ -32,7 +32,7 @@
                 objectFit: fit,
                 objectPosition: position
             }" />
-        <MImagePreview ref="imagePreviewRef" v-if="!previewDisabled && !imageGroupContext" :src="displaySrc" :show-toolbar="showToolbar" :show-tooltip="showTooltip" />
+        <MImagePreview ref="imagePreviewRef" v-if="previewEnabled && !imageGroupContext" :src="displaySrc" :show-toolbar="showToolbar" :show-tooltip="showTooltip" />
     </div>
 </template>
 
@@ -107,11 +107,11 @@ const handleError = async () => {
 };
 
 const handleImageClick = () => {
-    if (props.previewDisabled) return;
     if (imageGroupContext) {
         imageGroupContext.previewImage(_index.value);
         return;
     }
+    if (!props.previewEnabled) return;
     imagePreviewRef.value?.previewImage();
 };
 

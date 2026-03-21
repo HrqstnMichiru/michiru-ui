@@ -20,7 +20,6 @@ export interface MDropdownProps {
     width?: number; // 下拉菜单宽度
     showArrow?: boolean; // 是否显示箭头
     offset?: number; // 下拉菜单偏移量，单位px
-    timer?: number; // 延时显示时间，单位毫秒
     label?: string; // 触发元素文本
     icon?: string; // 触发元素图标
 }

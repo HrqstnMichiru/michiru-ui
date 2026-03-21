@@ -376,7 +376,7 @@
                 <p>可以在这里放置任意业务内容。</p>
             </MModal>
 
-            <MModal ref="dragResizeModalRef" title="可拖拽 Modal" :width="560" draggable resizable transition="slide-down">
+            <MModal ref="dragResizeModalRef" title="可拖拽 Modal" :width="560" draggable transition="slide-down">
                 <p>试试拖拽头部移动位置，以及右下角缩放尺寸。</p>
                 <p>适用于桌面化交互场景的测试。</p>
             </MModal>

@@ -139,14 +139,12 @@
 
         <!-- MTable -->
         <MCard title="MTable - 表格">
-            <p>统一使用 `MTableCol` 列组件式写法，分别演示 `height` 与 `max-height`</p>
+            <p>统一使用 `MTableCol` 列组件式写法，演示固定列、多选/单选与高度滚动</p>
 
             <div style="display: flex; flex-direction: column; gap: 24px">
                 <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 16px">MTableCol 组件式（height）</h4>
-                    <MTable :data="tableDemoData" row-key="id" striped hoverable :height="tableDemoHeight">
-                        <MTableCol type="selection" fixed></MTableCol>
-                        <MTableCol type="index" fixed></MTableCol>
+                    <MTable :data="tableDemoData" row-key="id" :height="tableDemoHeight" hoverable highlight-current-row>
                         <MTableCol prop="name" label="成员" :width="180" fixed tooltip :max-lines="2"></MTableCol>
                         <MTableCol prop="department" label="部门" :width="160"></MTableCol>
                         <MTableCol prop="role" label="角色" :width="160"></MTableCol>
@@ -174,9 +172,9 @@
                 </div>
 
                 <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
-                    <h4 style="margin: 0 0 16px; font-size: 16px">MTableCol 组件式（max-height，含左右固定列）</h4>
-                    <MTable :data="tableDemoData" row-key="id" striped hoverable :max-height="tableDemoMaxHeight" bordered>
-                        <MTableCol type="index" label="#" fixed></MTableCol>
+                    <h4 style="margin: 0 0 8px; font-size: 16px">MTableCol 组件式（height，含左右固定列 + 单选）</h4>
+                    <p style="margin: 0 0 16px; font-size: 14px; color: #909399">`showCheckbox=true`、`showIndex=true`、`multiple=false`</p>
+                    <MTable :data="tableDemoData" row-key="id" striped hoverable :height="tableDemoFixedHeight" bordered :multiple="false">
                         <MTableCol prop="name" label="成员" :width="180" fixed></MTableCol>
                         <MTableCol prop="department" label="部门" :width="160"></MTableCol>
                         <MTableCol prop="role" label="角色" :width="160"></MTableCol>
@@ -210,7 +208,6 @@
                         <div>
                             <p style="margin-bottom: 12px">small</p>
                             <MTable :data="tableDemoSizeData" row-key="id" size="small" striped hoverable :height="180">
-                                <MTableCol type="index" label="#"></MTableCol>
                                 <MTableCol prop="name" label="成员" :min-width="180"></MTableCol>
                                 <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
                                 <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
@@ -227,7 +224,6 @@
                         <div>
                             <p style="margin-bottom: 12px">medium</p>
                             <MTable :data="tableDemoSizeData" row-key="id" size="medium" striped hoverable :height="200">
-                                <MTableCol type="index" label="#"></MTableCol>
                                 <MTableCol prop="name" label="成员" :width="300"></MTableCol>
                                 <MTableCol prop="department" label="部门" :min-width="180"></MTableCol>
                                 <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
@@ -244,7 +240,6 @@
                         <div>
                             <p style="margin-bottom: 12px">large</p>
                             <MTable :data="tableDemoSizeData" row-key="id" size="large" striped hoverable :height="220">
-                                <MTableCol type="index" label="#" :width="80"></MTableCol>
                                 <MTableCol prop="name" label="成员" :width="300"></MTableCol>
                                 <MTableCol prop="department" label="部门" :min-width="200"></MTableCol>
                                 <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
@@ -263,8 +258,6 @@
                 <div style="border: 1px solid #e4e7ed; border-radius: 12px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 16px">空数据状态</h4>
                     <MTable :data="tableDemoEmptyData" row-key="id" striped hoverable :height="500">
-                        <MTableCol type="selection"></MTableCol>
-                        <MTableCol type="index" label="#"></MTableCol>
                         <MTableCol prop="name" label="成员" :min-width="180"></MTableCol>
                         <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
                         <MTableCol prop="score" label="完成度" :width="120"></MTableCol>
@@ -285,7 +278,6 @@
                         </MButton>
                     </div>
                     <MTable :data="tableDemoData.slice(0, 6)" :loading="tableDemoLoading" row-key="id" striped hoverable :height="260">
-                        <MTableCol type="index" label="#"></MTableCol>
                         <MTableCol prop="name" label="成员" :width="180"></MTableCol>
                         <MTableCol prop="department" label="部门" :min-width="160"></MTableCol>
                         <MTableCol prop="score" label="完成度" :min-width="120" aligns="center"></MTableCol>
@@ -363,7 +355,7 @@
 
             <p style="margin-top: 16px">Outlined</p>
             <div class="tag-row">
-                <MTag variant="primary" outlined>Outlined</MTag>
+                <MTag variant="primary" outlined rounded>Outlined</MTag>
                 <MTag variant="success" outlined>Outlined</MTag>
                 <MTag variant="warning" outlined>Outlined</MTag>
                 <MTag variant="danger" outlined>Outlined</MTag>
@@ -373,12 +365,13 @@
 
             <p style="margin-top: 16px">Plain</p>
             <div class="tag-row">
-                <MTag variant="primary" plain>Plain</MTag>
-                <MTag variant="success" plain>Plain</MTag>
-                <MTag variant="warning" plain>Plain</MTag>
-                <MTag variant="danger" plain>Plain</MTag>
-                <MTag variant="info" plain>Plain</MTag>
-                <MTag variant="gray" plain>Plain</MTag>
+                <MTag variant="primary" plain borderless>Plain</MTag>
+                <MTag variant="success" plain borderless>Plain</MTag>
+                <MTag variant="warning" plain borderless>Plain</MTag>
+                <MTag variant="danger" plain borderless>Plain</MTag>
+                <MTag variant="info" plain borderless>Plain</MTag>
+                <MTag variant="purple" plain borderless>Purple</MTag>
+                <MTag variant="gray" plain borderless>Plain</MTag>
             </div>
 
             <p style="margin-top: 16px">不同尺寸与形状</p>
@@ -407,42 +400,42 @@
                 <!-- 默认用法 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">默认用法</h4>
-                    <MImage :src="sampleImages[0]!" :width="160" :height="120" :url-format="urlFormat" />
+                    <MImage :src="sampleImages[0]!" :width="160" :height="120" :url-format="urlFormat" preview-enabled />
                 </div>
 
                 <!-- contain填充 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">contain 填充</h4>
-                    <MImage :src="sampleImages[1]!" :width="120" :height="120" fit="contain" :url-format="urlFormat" />
+                    <MImage :src="sampleImages[1]!" :width="120" :height="120" fit="contain" :url-format="urlFormat" preview-enabled />
                 </div>
 
                 <!-- 圆形裁剪 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">圆形裁剪</h4>
-                    <MImage :src="sampleImages[2]!" :width="120" :height="120" circle :url-format="urlFormat" />
+                    <MImage :src="sampleImages[2]!" :width="120" :height="120" circle :url-format="urlFormat" preview-enabled />
                 </div>
 
                 <!-- 圆角边框 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">圆角边框</h4>
-                    <MImage :src="sampleImages[0]!" :width="200" :height="120" rounded :url-format="urlFormat" />
+                    <MImage :src="sampleImages[0]!" :width="200" :height="120" rounded :url-format="urlFormat" preview-enabled />
                 </div>
 
                 <!-- 带边框 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">带边框</h4>
-                    <MImage :src="sampleImages[1]!" :width="160" :height="120" show-border :url-format="urlFormat" />
+                    <MImage :src="sampleImages[1]!" :width="160" :height="120" show-border :url-format="urlFormat" preview-enabled />
                 </div>
                 <!-- 禁用预览 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">禁用预览</h4>
-                    <MImage :src="sampleImages[2]!" :width="160" :height="120" preview-disabled :url-format="urlFormat" />
+                    <MImage :src="sampleImages[2]!" :width="160" :height="120" :url-format="urlFormat" />
                 </div>
             </MGrid>
 
             <h4 style="margin: 24px 0 16px">图片组（MImageGroup）</h4>
             <p style="font-size: 13px; color: #606266; margin-bottom: 12px">MImageGroup 将多张图片组合为统一预览组，点击任意图片可翻页浏览整个组</p>
-            <MImageGroup :url-format="urlFormat">
+            <MImageGroup :url-format="urlFormat" preview-enabled>
                 <MFlex :gap="12" wrap>
                     <MImage v-for="(img, index) in sampleImages" :key="index" :src="img" :width="100" :height="100" show-border />
                 </MFlex>
@@ -456,25 +449,25 @@
                 <!-- 翻页切换 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">翻页切换</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="page" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="page" preview-enabled />
                 </div>
 
                 <!-- slide切换 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">slide切换</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="slide" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="slide" preview-enabled />
                 </div>
 
                 <!-- 禁用预览 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">禁用预览</h4>
-                    <MImageGallery :list="editableImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="rotate" preview-disabled />
+                    <MImageGallery :list="editableImages" :width="800" :height="600" :url-format="urlFormat" :thumb-format="urlFormat" transition="rotate" />
                 </div>
 
                 <!-- contain 填充 -->
                 <div style="border: 1px solid #e4e7ed; border-radius: 8px; padding: 20px">
                     <h4 style="margin: 0 0 16px; font-size: 14px; color: #909399">contain 填充</h4>
-                    <MImageGallery :list="sampleImages" :width="800" :height="600" fit="contain" :url-format="urlFormat" :thumb-format="urlFormat" />
+                    <MImageGallery :list="sampleImages" :width="800" :height="600" fit="contain" :url-format="urlFormat" :thumb-format="urlFormat" preview-enabled />
                 </div>
             </MGrid>
         </MCard>
@@ -491,7 +484,7 @@
 
             <div style="margin-bottom: 24px">
                 <h4 style="margin: 0 0 16px">深层树（3层，手风琴模式）</h4>
-                <MTree :data="treeDeepSmall" accordion />
+                <MTree :data="treeDeepSmall" accordion highlight-current/>
             </div>
 
             <div style="margin-bottom: 24px">
@@ -531,12 +524,12 @@ import {
     MImageGroup,
     MNumberAnimation,
     MStatistic,
-    MTag,
+    MStatisticTrendType,
     MTable,
     MTableCol,
+    MTag,
     MTree,
-    MWaterFall,
-    MStatisticTrendType
+    MWaterFall
 } from "@/components";
 import { ref, useTemplateRef } from "vue";
 import manager from "../scripts/data-manager";
@@ -559,7 +552,7 @@ interface TableDemoRow {
 }
 
 const tableDemoHeight = 320;
-const tableDemoMaxHeight = 320;
+const tableDemoFixedHeight = 320;
 const tableDemoBaseData: TableDemoRow[] = [
     { id: 101, name: "霜月 千夏", department: "前端组", role: "Vue 开发", location: "上海", score: "98%", priority: "P0", status: "online", statusLabel: "在线", updatedAt: "2026-03-11 09:20" },
     { id: 102, name: "神崎 栞", department: "设计组", role: "交互设计", location: "杭州", score: "92%", priority: "P1", status: "busy", statusLabel: "忙碌", updatedAt: "2026-03-11 09:35" },

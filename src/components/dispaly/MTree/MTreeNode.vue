@@ -1,10 +1,16 @@
-﻿<template>
+<template>
     <div
         class="tree-node"
         :style="{
             '--tree-node-speed': `${treeContext?.duration}ms`
         }">
-        <div class="tree-node__trigger" :style="{ paddingLeft }" @click="onNodeClick">
+        <div
+            class="tree-node__trigger"
+            :class="{
+                'tree-node__trigger--current': isCurrent
+            }"
+            :style="{ paddingLeft }"
+            @click="onNodeClick">
             <MIcon
                 name="fluent:triangle-right-48-filled"
                 class="expand-icon"
@@ -59,6 +65,9 @@ const paddingLeft = computed(() => {
 const checkState = computed<boolean | "indeterminate">(() => {
     return props.indeterminate ? "indeterminate" : props.checked;
 });
+const isCurrent = computed(() => {
+    return treeContext?.isCurrentNode(props.nodeKey);
+});
 
 const onNodeClick = () => {
     if (!treeContext?.onlyPrefix) {
@@ -101,19 +110,28 @@ const transitionEvents: Record<string, (el: HTMLElement) => void> = {
 
 <style lang="scss" scoped>
 .tree-node {
+    --tree-node-bg: transparent;
+    --tree-node-hover-bg: rgba(0, 0, 0, 0.08);
+    --tree-node-current-bg: #ecf5ff;
     width: 100%;
     .tree-node__trigger {
         display: flex;
         width: 100%;
         height: 32px;
         line-height: 32px;
-        transition: background-color 0.2s var(--ease-soft-spring);
+        background-color: var(--tree-node-bg);
         align-items: center;
         padding-right: 6px;
         gap: 3px;
         cursor: pointer;
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.08);
+
+        &.tree-node__trigger--current {
+            --tree-node-bg: var(--tree-node-current-bg);
+        }
+
+        &:not(.tree-node__trigger--current):hover {
+            transition: background-color 0.2s var(--ease-soft-spring);
+            --tree-node-bg: var(--tree-node-hover-bg);
         }
         .expand-icon {
             font-size: 13px;

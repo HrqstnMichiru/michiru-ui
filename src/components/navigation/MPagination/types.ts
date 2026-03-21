@@ -8,8 +8,9 @@ export interface MPaginationProps {
     pageSize?: number; // 默认每页显示条数
     position?: "left" | "center" | "right"; // 分页组件的位置
     variant?: "primary" | "success" | "warning" | "danger" | "info" | "purple" | "pink";
-    plain?:boolean;
-    outlined?:boolean;
+    plain?: boolean;
+    outlined?: boolean;
+    disabled?: boolean;
 }
 
 export interface PageItem {

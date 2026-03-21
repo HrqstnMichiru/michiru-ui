@@ -75,7 +75,7 @@
                             <span>全选</span>
                         </div>
                     </slot>
-                    <MScrollBar :max-height="maxHeight" :right="0">
+                    <MScrollBar :max-height="maxHeight">
                         <MTree
                             ref="treeRef"
                             :selectable="multiple"
@@ -147,7 +147,7 @@ const props = withDefaults(defineProps<MTreeSelectProps<T>>(), {
 const emits = defineEmits<MTreeSelectEmits>();
 
 const tooltipRef = useTemplateRef<MTooltipInstance>("tooltipRef");
-const treeRef = useTemplateRef<MTreeInstance>("treeRef");
+const treeRef = useTemplateRef<MTreeInstance<T>>("treeRef");
 const inputRef = useTemplateRef<MInputInstance>("inputRef");
 const optionsRef = useTemplateRef<HTMLDivElement>("optionsRef");
 const isActive = ref<boolean>(false);

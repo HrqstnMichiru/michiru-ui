@@ -77,7 +77,7 @@ provide<MCheckBoxGroupContext>(MCheckBoxGroupContextKey, {
     variant: props.variant,
     type: props.type || "box",
     bordered: (props.type || "box") === "box" && !!props.bordered,
-    toggle,
+    toggleChecked: toggle,
     isChecked,
     register
 });

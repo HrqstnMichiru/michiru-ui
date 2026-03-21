@@ -17,7 +17,7 @@
                 class="m-tabs__nav-list"
                 :style="{
                     gap: `${gutter}px`,
-                    width: inline ? 'fit-content' : '100%',
+                    width: inline ? 'fit-content' : '100%'
                 }">
                 <div
                     v-for="(item, index) in tabItemList"

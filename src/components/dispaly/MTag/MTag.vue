@@ -1,21 +1,21 @@
 <template>
     <span
-        v-if="visible"
         class="tag"
         :class="[
             `tag--${size}`,
             `tag--${variant}`,
-            `tag--${shape}`,
             {
+                'tag--rounded': rounded,
                 'tag--outlined': outlined,
+                'tag--borderless': borderless,
                 'tag--plain': plain
             }
         ]">
         <!-- 图标 -->
-        <MIcon v-if="icon" :name="icon" style="flex-shrink: 0; margin-right: 2px" />
+        <MIcon v-if="icon" :name="icon" class="tag-icon" />
 
         <!-- 文本内容 -->
-        <span v-if="text || slots.default" class="tag-content">
+        <span v-if="text || slots.default">
             <slot>{{ text }}</slot>
         </span>
 
@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { MIcon } from "@/components";
-import { ref, useSlots } from "vue";
+import { useSlots } from "vue";
 import type { MTagEmits, MTagProps } from "./types";
 
 defineOptions({
@@ -34,17 +34,12 @@ defineOptions({
 });
 const props = withDefaults(defineProps<MTagProps>(), {
     size: "medium",
-    variant: "gray",
-    shape: "rounded"
+    variant: "primary"
 });
 const slots = useSlots();
 const emits = defineEmits<MTagEmits>();
 
-const visible = ref<boolean>(true);
 const onClose = () => {
-    if (props.autoClose) {
-        visible.value = false;
-    }
     emits("close");
 };
 </script>
@@ -57,6 +52,9 @@ const onClose = () => {
     border: 1px solid transparent;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
+    border-radius: 3px;
+    padding-left: 7px;
+    padding-right: 7px;
     .tag-close {
         flex-shrink: 0;
         opacity: 0.7;
@@ -67,62 +65,55 @@ const onClose = () => {
             opacity: 1;
         }
     }
+    .tag-icon {
+        flex-shrink: 0;
+        margin-right: 2px;
+    }
 
     // 大小变体
     &.tag--small {
-        height: 20px;
-        padding: 3.7px 6px;
-        font-size: 11px; // 20px/28px
-        .tag-content {
-            line-height: 11px;
-        }
+        height: 22px;
+        font-size: 12px;
+        line-height: 22px;
+        .tag-icon,
         .tag-close {
-            font-size: 11px !important;
+            font-size: 14px;
         }
     }
     &.tag--medium {
-        height: 24px;
-        padding: 4.7px 8px;
-        font-size: 13px; // 24px/34px
-        .tag-content {
-            line-height: 13px;
-        }
+        height: 28px;
+        font-size: 14px;
+        line-height: 28px;
+        .tag-icon,
         .tag-close {
-            font-size: 13px !important;
+            font-size: 16px;
         }
     }
     &.tag--large {
-        height: 28px;
-        padding: 5.7px 10px;
-        font-size: 15px; // 28px/40px
-        .tag-content {
-            line-height: 15px !important;
-        }
+        height: 34px;
+        font-size: 15px;
+        line-height: 34px;
+        .tag-icon,
         .tag-close {
-            font-size: 13px !important;
+            font-size: 18px;
         }
     }
 
     // 形状变体
     &.tag--rounded {
-        border-radius: 14px;
-    }
-    &.tag--circle {
-        border-radius: 50%;
-        overflow: hidden;
-        justify-content: center;
+        border-radius: 17px;
         &.tag--small {
-            width: 20px;
+            padding-left: 10.2px;
+            padding-right: 10.2px;
         }
         &.tag--medium {
-            width: 24px;
+            padding-left: 13.2px;
+            padding-right: 13.2px;
         }
         &.tag--large {
-            width: 28px;
+            padding-left: 16.2px;
+            padding-right: 16.2px;
         }
-    }
-    &.tag--square {
-        border-radius: 4px;
     }
 
     // 颜色变体
@@ -130,73 +121,41 @@ const onClose = () => {
         background-color: #409eff;
         color: #ffffff;
         border-color: #409eff;
-        &:hover {
-            background-color: #66b1ff;
-            border-color: #66b1ff;
-        }
     }
     &.tag--success {
         background-color: #67c23a;
         color: #ffffff;
         border-color: #67c23a;
-        &:hover {
-            background-color: #85ce61;
-            border-color: #85ce61;
-        }
     }
     &.tag--warning {
         background-color: #e6a23c;
         color: #ffffff;
         border-color: #e6a23c;
-        &:hover {
-            background-color: #ebb563;
-            border-color: #ebb563;
-        }
     }
     &.tag--danger {
         background-color: #f56c6c;
         color: #ffffff;
         border-color: #f56c6c;
-        &:hover {
-            background-color: #f78989;
-            border-color: #f78989;
-        }
     }
     &.tag--info {
         background-color: #13c2c2;
-        color: white;
+        color: #ffffff;
         border-color: #13c2c2;
-        &:hover {
-            background-color: #36cfc9;
-            border-color: #36cfc9;
-        }
     }
     &.tag--purple {
-        background-color: #7c3aed;
+        background-color: #801eff;
         color: #ffffff;
-        border-color: #7c3aed;
-        &:hover {
-            background-color: #8b5cf6;
-            border-color: #8b5cf6;
-        }
+        border-color: #801eff;
     }
     &.tag--pink {
         background-color: #db2777;
         color: white;
         border-color: #db2777;
-        &:hover:not(.tag--disabled) {
-            background-color: #ec4899;
-            border-color: #ec4899;
-        }
     }
     &.tag--gray {
-        background-color: #6b7280;
+        background-color: #6b6b6b;
         color: white;
-        border-color: #6b7280;
-        &:hover:not(.tag--disabled) {
-            background-color: #7c8594;
-            border-color: #7c8594;
-        }
+        border-color: #6b6b6b;
     }
 
     // 轮廓样式
@@ -205,58 +164,34 @@ const onClose = () => {
         &.tag--primary {
             color: #409eff;
             border-color: #409eff;
-            &:hover {
-                background-color: transparent;
-            }
         }
         &.tag--success {
             color: #67c23a;
             border-color: #67c23a;
-            &:hover {
-                background-color: transparent;
-            }
         }
         &.tag--warning {
             color: #e6a23c;
             border-color: #e6a23c;
-            &:hover {
-                background-color: transparent;
-            }
         }
         &.tag--danger {
             color: #f56c6c;
             border-color: #f56c6c;
-            &:hover {
-                background-color: transparent;
-            }
         }
         &.tag--info {
             color: #13c2c2;
             border-color: #13c2c2;
-            &:hover {
-                background-color: transparent;
-            }
         }
         &.tag--purple {
-            color: #7c3aed;
-            border-color: #7c3aed;
-            &:hover {
-                background-color: transparent;
-            }
+            color: #801eff;
+            border-color: #801eff;
         }
         &.tag--pink {
-            color: #db2777;
-            border-color: #db2777;
-            &:hover {
-                background-color: transparent;
-            }
+            color: #ff69b4;
+            border-color: #ff69b4;
         }
         &.tag--gray {
-            color: #6b7280;
-            border-color: #6b7280;
-            &:hover {
-                background-color: transparent;
-            }
+            color: #333;
+            border-color: #c0c0c0;
         }
     }
 
@@ -264,67 +199,46 @@ const onClose = () => {
     &.tag--plain {
         &.tag--primary {
             color: #409eff;
-            background-color: #e3f0ff;
-            border-color: #409eff;
-            &:hover {
-                background-color: #e3f0ff;
-            }
+            background-color: rgba(64, 158, 255, 0.12);
+            border-color: rgba(64, 158, 255, 0.3);
         }
         &.tag--success {
             color: #67c23a;
-            background-color: #e8f5df;
-            border-color: #67c23a;
-            &:hover {
-                background-color: #e8f5df;
-            }
+            background-color: rgba(103, 194, 58, 0.12);
+            border-color: rgba(103, 194, 58, 0.3);
         }
         &.tag--warning {
             color: #e6a23c;
-            background-color: #fbefdd;
-            border-color: #e6a23c;
-            &:hover {
-                background-color: #fbefdd;
-            }
+            background-color: rgba(230, 162, 60, 0.15);
+            border-color: rgba(230, 162, 60, 0.35);
         }
         &.tag--danger {
             color: #f56c6c;
-            background-color: #fde8e8;
-            border-color: #f56c6c;
-            &:hover {
-                background-color: #fde8e8;
-            }
+            background-color: rgba(245, 108, 108, 0.1);
+            border-color: rgba(245, 108, 108, 0.23);
         }
         &.tag--info {
             color: #13c2c2;
-            background-color: #d8faf4;
-            border-color: #13c2c2;
-            &:hover {
-                background-color: #d8faf4;
-            }
+            background-color: rgba(19, 194, 194, 0.12);
+            border-color: rgba(19, 194, 194, 0.3);
         }
         &.tag--purple {
-            color: #7c3aed;
-            background-color: #ebdcff;
-            border-color: #7c3aed;
-            &:hover {
-                background-color: #ebdcff;
-            }
+            color: #801eff;
+            background-color: rgba(128, 30, 255, 0.12);
+            border-color: rgba(128, 30, 255, 0.3);
         }
         &.tag--pink {
-            color: #db2777;
-            background-color: #fbe7f2;
-            border-color: #db2777;
-            &:hover {
-                background-color: #fbe7f2;
-            }
+            color: #ff69b4;
+            background-color: rgba(255, 105, 180, 0.1);
+            border-color: rgba(255, 105, 180, 0.3);
         }
         &.tag--gray {
-            color: #6b7280;
-            background-color: #ebedf0;
-            border-color: #6b7280;
-            &:hover {
-                background-color: #ebedf0;
-            }
+            color: #333;
+            background-color: rgba(107, 107, 107, 0.12);
+            border-color: #c0c0c0;
+        }
+        &.tag--borderless {
+            border-color: transparent;
         }
     }
 }

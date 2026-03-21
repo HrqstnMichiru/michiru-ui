@@ -39,7 +39,7 @@
                 :class="{ active: currentIndex === index }"
                 @click="onThumbnailClick(index)"></MImage>
         </div>
-        <MImagePreview ref="imagePreviewRef" loop v-if="!previewDisabled" :list="list" :url-format="urlFormat" :show-toolbar="showToolbar" :show-tooltip="showTooltip" />
+        <MImagePreview ref="imagePreviewRef" loop v-if="previewEnabled" :list="list" :url-format="urlFormat" :show-toolbar="showToolbar" :show-tooltip="showTooltip" />
     </div>
 </template>
 
@@ -90,7 +90,7 @@ const getImageStyle = (index: number) => {
 };
 
 const onImageClick = (index: number) => {
-    if (props.previewDisabled) return;
+    if (!props.previewEnabled) return;
     imagePreviewRef.value?.previewImage(index);
 };
 const onThumbnailClick = (index: number) => {

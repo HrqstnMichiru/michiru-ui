@@ -6,6 +6,8 @@
                 class="m-loading-wrapper"
                 :class="{
                     'is-fullscreen': fullScreen
+                }" :style="{
+                    '--duration': `${duration}ms`
                 }">
                 <div class="m-loading">
                     <span class="m-loading-item"></span>
@@ -27,7 +29,8 @@ defineOptions({
     name: "MLoading"
 });
 const props = withDefaults(defineProps<MLoadingProps>(), {
-    target: "body"
+    target: "body",
+    duration: 300
 });
 
 const visible = ref(true);
@@ -123,7 +126,7 @@ defineExpose({
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 1.2s cubic-bezier(0.5, 1, 0.89, 1);
+    transition: opacity var(--duration) cubic-bezier(0.5, 1, 0.89, 1);
 }
 
 .fade-enter-from,

@@ -4,7 +4,7 @@
             ref="tooltipRef"
             theme="light"
             block
-            transition="translate"
+            :transition="!parentName ? 'unfold' : 'translate'"
             :showArrow="!parentName"
             :placement="!parentName ? 'bottom' : 'right'"
             :disabled="data.disabled"

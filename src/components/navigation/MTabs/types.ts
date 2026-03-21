@@ -26,6 +26,7 @@ export interface MTabPanelProps {
     disabled?: boolean; // 是否禁用该选项卡
     fixed?: boolean;
 }
+export type MTabOption = Required<Omit<MTabPanelProps, "disabled" | "fixed">>;
 
 export interface MTabsContext {
     register: (item: MTabPanelProps) => void;

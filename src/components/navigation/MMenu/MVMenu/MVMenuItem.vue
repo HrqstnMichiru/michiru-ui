@@ -3,6 +3,7 @@
         class="menu-item"
         :style="itemStyle"
         :class="{
+            'menu-item--collapsed': isCollapsed && !!context,
             'menu-item--active': isActive,
             'menu-item--disabled': disabled
         }"
@@ -143,6 +144,9 @@ const onClick = () => {
         &:hover {
             background-color: transparent;
         }
+    }
+    &.menu-item--collapsed {
+        height: 36px;
     }
 }
 </style>

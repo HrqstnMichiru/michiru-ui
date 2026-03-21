@@ -6,10 +6,13 @@ type MRadioBoxSize = "small" | "medium" | "large";
 export interface MRadioBoxProps {
     disabled?: boolean; // 是否禁用
     size?: MRadioBoxSize; // 尺寸
-    value: string | number; // 选项的值
+    value?: string | number; // 选项的值
     variant?: MRadioBoxVariant; // 风格
-    label: string; // 选项的显示文本
+    label?: string; // 选项的显示文本
     bordered?: boolean; // 是否有边框
+}
+export interface MRadioBoxEmits {
+    (event: "change"): void;
 }
 
 export interface MRadioBoxGroupProps {

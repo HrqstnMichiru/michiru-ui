@@ -1,6 +1,11 @@
+import { ClickScrollPlugin, OverlayScrollbars } from "OverlayScrollbars";
 import type { App, Plugin } from "vue";
 
+// 注册 OverlayScrollbars 插件
+OverlayScrollbars.plugin(ClickScrollPlugin);
+
 // 导入样式
+import "overlayscrollbars/overlayscrollbars.css";
 import "./assets/style/base.css";
 import "./assets/style/ripple.css";
 

@@ -1,6 +1,6 @@
 import type { ComponentInternalInstance, InjectionKey } from "vue";
 
-export type MNotificationVariant = "primary" | "success" | "warning" | "danger" | "info";
+export type MNotificationVariant = "primary" | "success" | "warning" | "danger" | "info" | "pink" | "purple";
 export type MNotificationPlacement = "top-right" | "top-left" | "bottom-right" | "bottom-left";
 export interface MNotificationProps {
     message: string; // 通知内容

@@ -33,9 +33,8 @@ const props = withDefaults(defineProps<MPopoverProps>(), {
     disabled: false,
     block: false,
     offset: 10,
-    timer: 100
 });
-const tooltipProps = pick(props, ["placement", "trigger", "transition", "showArrow", "disabled", "block", "offset", "timer", "width"]);
+const tooltipProps = pick(props, ["placement", "trigger", "transition", "showArrow", "disabled", "block", "offset", "width"]);
 const cardProps = pick(props, ["center", "title", "icon", "action", "footerStyle", "iconVariant", "iconColor"]);
 const headerStyle = {
     fontSize: "18px",

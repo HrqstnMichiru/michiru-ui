@@ -1,7 +1,7 @@
 import type { MPlacement } from "@/components/feedback/MTooltip/types";
 import type { PropType, SlotsType } from "vue";
 import { defineComponent, inject, onBeforeUnmount, onMounted, useSlots, watch } from "vue";
-import type { MTableAlign, MTableColProps, MTableColSlots, MTableColType, MTableColumnConfig, MTableColumnSlots, MTableContext, MTableFixed } from "./types";
+import type { MTableAlign, MTableColSlots, MTableColumnConfig, MTableColumnSlots, MTableContext, MTableFixed } from "./types";
 import { MTableContextKey } from "./types";
 
 const MTableCol = defineComponent({
@@ -15,7 +15,6 @@ const MTableCol = defineComponent({
         maxWidth: Number,
         aligns: String as PropType<MTableAlign>,
         fixed: [Boolean, String] as PropType<MTableFixed>,
-        type: String as PropType<MTableColType>,
         tooltip: Boolean,
         placement: String as PropType<MPlacement>,
         maxLines: Number
@@ -39,7 +38,7 @@ const MTableCol = defineComponent({
         });
 
         watch(
-            () => [props.prop, props.label, props.width, props.minWidth, props.maxWidth, props.aligns, props.fixed, props.type],
+            () => [props.prop, props.label, props.width, props.minWidth, props.maxWidth, props.aligns, props.fixed],
             () => {
                 if (!tableContext || !columnId) return;
                 tableContext.updateColumn(columnId, createColumn());
@@ -57,11 +56,4 @@ const MTableCol = defineComponent({
     }
 });
 
-type MTableColComponent = typeof MTableCol & {
-    new <T extends Record<string, any> = Record<string, any>>(): {
-        $props: MTableColProps;
-        $slots: MTableColSlots<T>;
-    };
-};
-
-export default MTableCol as MTableColComponent;
+export default MTableCol;

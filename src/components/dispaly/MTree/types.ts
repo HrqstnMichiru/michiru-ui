@@ -6,7 +6,7 @@ export interface MTreeData {
     [key: string]: any;
 }
 
-export interface MTreeNodeProps<T extends MTreeData = any> {
+export interface MTreeNodeProps<T extends MTreeData> {
     nodeKey: string | number; // 节点唯一标识
     label: string; // 节点显示文本
     children?: MTreeNodeProps<T>[]; // 子节点
@@ -21,13 +21,13 @@ export interface MTreeNodeProps<T extends MTreeData = any> {
     data: T; // 节点数据
 }
 
-export interface MTreeEmits {
-    <T extends MTreeData = any>(e: "node-select", node: MTreeNodeProps<T>): void;
-    <T extends MTreeData = any>(e: "node-click", node: MTreeNodeProps<T>): void;
-    <T extends MTreeData = any>(e: "selection-change", selectedNodes: T[]): void;
+export interface MTreeEmits<T extends MTreeData> {
+    (e: "node-select", node: MTreeNodeProps<T>): void;
+    (e: "node-click", node: MTreeNodeProps<T>): void;
+    (e: "selection-change", selectedNodes: T[]): void;
 }
 
-export interface MTreeProps<T extends MTreeData = any> {
+export interface MTreeProps<T extends MTreeData> {
     data?: T[]; // 树节点数据
     nodeKey?: keyof T; // 节点唯一标识字段
     nodeLabel?: keyof T; // 节点显示文本字段
@@ -40,9 +40,10 @@ export interface MTreeProps<T extends MTreeData = any> {
     expandAll?: boolean; // 初始是否展开所有节点
     duration?: number; // 展开/收起动画时长，单位毫秒
     accordion?: boolean; // 是否启用手风琴模式
+    highlightCurrent?: boolean; // 是否高亮当前选中节点
 }
 
-export interface MTreeInstance<T extends MTreeData = any> {
+export interface MTreeInstance<T extends MTreeData> {
     getSelectedNodes: () => T[]; // 获取已选中的节点
     toggleExpandAll: () => void; // 切换所有节点展开/收起状态
     toggleSelectAll: () => void; // 切换所有节点选中/取消选中状态
@@ -59,6 +60,7 @@ export interface MTreeContext<T extends MTreeData = any> {
     toggleSelect: (nodeKey: string | number) => void; // 切换节点选中状态
     toggleExpand: (nodeKey: string | number) => void; // 切换节点展开状态
     nodeClick: (node: MTreeNodeProps<T>) => void; // 处理节点点击事件
+    isCurrentNode: (nodeKey: string | number) => boolean; // 判断是否为当前高亮节点
     onlyPrefix: boolean; // 是否仅前缀区域可点击展开/收起
     duration: number; // 展开/收起动画时长，单位毫秒
 }

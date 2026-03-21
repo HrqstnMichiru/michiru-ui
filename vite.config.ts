@@ -33,7 +33,7 @@ export default defineConfig({
         sourcemap: true,
         rollupOptions: {
             // 确保外部化处理那些你不想打包进库的依赖
-            external: ["vue", "dayjs", "lodash-es", "nanoid", "vue-router", "@iconify/vue"],
+            external: ["vue", "dayjs", "lodash-es", "nanoid", "vue-router", "@iconify/vue", "overlayscrollbars"],
             output: {
                 // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
                 globals: {
@@ -42,7 +42,8 @@ export default defineConfig({
                     "lodash-es": "_",
                     nanoid: "nanoid",
                     "vue-router": "VueRouter",
-                    "@iconify/vue": "IconifyVue"
+                    "@iconify/vue": "IconifyVue",
+                    overlayscrollbars: "OverlayScrollbars"
                 },
                 exports: "named",
                 assetFileNames: assetInfo => {

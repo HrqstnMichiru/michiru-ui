@@ -6,11 +6,14 @@
 <script lang="ts" setup>
 import { provide, ref, useTemplateRef } from "vue";
 import MLoading from "./MLoading.vue";
-import type { MLoadingInstance, MLoadingProps, MLoadingProviderContext } from "./types";
+import type { MLoadingInstance, MLoadingProps, MLoadingProviderContext, MLoadingProviderProps } from "./types";
 import { MLoadingProviderContextKey } from "./types";
 
 defineOptions({
     name: "MLoadingProvider"
+});
+const props = withDefaults(defineProps<MLoadingProviderProps>(), {
+    duration: 300
 });
 
 const instance = ref<MLoadingProps | null>(null);
@@ -29,7 +32,8 @@ const createLoading = (): MLoadingInstance => {
         onDestroy: () => {
             instance.value = null;
         },
-        target: "body"
+        target: "body",
+        duration: props.duration
     };
     return {
         destroy: () => {

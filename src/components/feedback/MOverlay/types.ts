@@ -3,7 +3,7 @@ export interface MOverlayProps {
     zIndex?: number; // z-index值
     center?: boolean; // 内容是否垂直居中
     top?: number; // 对话框距离顶部的距离
-    transition?: "fade-translate" | "slide-down" | "none"; // 过渡动画类型
+    transition?: "fade-translate" | "slide-down" | "fade" | "none"; // 过渡动画类型
 }
 export interface MOverlayInstance {
     open: () => void; // 打开对话框

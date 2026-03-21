@@ -11,23 +11,28 @@
                 'm-radiobox--bordered': bordered
             }
         ]">
-        <input type="radio" class="m-radiobox__input" :checked="isChecked" :disabled="disabled" :value="value" @change="handleChange" />
+        <input type="radio" class="m-radiobox__input" :checked="isChecked" :disabled="disabled" :value="value" @change="handleChange" ref="inputRef" />
         <span class="m-radiobox__inner" v-if="radioType === 'box'"></span>
-        <span class="m-radiobox__label">{{ label }}</span>
+        <span class="m-radiobox__label" v-if="label">{{ label }}</span>
     </label>
 </template>
 
 <script lang="ts" setup>
-import { computed, inject } from "vue";
-import type { MRadioBoxGroupContext, MRadioBoxProps } from "./types";
+import { computed, inject, useTemplateRef } from "vue";
+import type { MRadioBoxEmits, MRadioBoxGroupContext, MRadioBoxProps } from "./types";
 import { MRadioBoxGroupContextKey } from "./types";
 
 defineOptions({
     name: "MRadioBox"
 });
-
+const emits = defineEmits<MRadioBoxEmits>();
 const props = defineProps<MRadioBoxProps>();
+const inputRef = useTemplateRef<HTMLInputElement>("inputRef");
 const groupContext = inject<MRadioBoxGroupContext>(MRadioBoxGroupContextKey);
+
+const modelValue = defineModel<boolean>("modelValue", {
+    default: false
+});
 const radioType = computed(() => {
     return groupContext?.type || "box";
 });
@@ -45,13 +50,21 @@ const variant = computed(() => {
     return props.variant || groupContext?.variant || "primary";
 });
 const isChecked = computed(() => {
-    return groupContext?.isChecked(props.value) || false;
+    if (groupContext) {
+        return groupContext.isChecked(props.value!);
+    }
+    return modelValue.value === true;
 });
 const handleChange = () => {
     if (disabled.value) return;
     if (groupContext) {
-        groupContext.toggleChecked(props.value);
+        groupContext.toggleChecked(props.value!);
+        emits("change");
+        return;
     }
+    const checked = !!inputRef.value?.checked;
+    modelValue.value = checked;
+    emits("change");
 };
 </script>
 

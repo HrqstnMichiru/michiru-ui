@@ -9,7 +9,6 @@
         :disabled="disabled"
         :show-arrow="!!context ? false : showArrow"
         :offset="offset"
-        :timer="timer"
         :width="width"
         theme="light">
         <slot>
@@ -51,7 +50,6 @@ const props = withDefaults(defineProps<MDropdownProps>(), {
     placement: "bottom",
     transition: "translate",
     offset: 8,
-    timer: 100,
     showArrow: true
 });
 const emits = defineEmits<MDropdownEmits>();

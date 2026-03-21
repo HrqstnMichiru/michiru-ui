@@ -11,7 +11,6 @@ export interface MTooltipProps {
     block?: boolean; // 是否占满触发元素的宽度
     theme?: "light" | "dark"; // 主题
     offset?: number; // 偏移距离
-    timer?: number; // 自动隐藏的延迟时间
     width?: number; // popper的宽度
     zIndex?: number; // z-index
     syncWidth?: boolean; // 同步popper和trigger的宽度

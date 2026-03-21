@@ -44,7 +44,6 @@ const props = withDefaults(defineProps<MPopconfirmProps>(), {
     disabled: false,
     block: false,
     offset: 10,
-    timer: 100,
     width: 250,
     variant: "primary",
     title: "提示",
@@ -58,7 +57,7 @@ const props = withDefaults(defineProps<MPopconfirmProps>(), {
     negativeIcon: "cancel2",
     loading: false
 });
-const tooltipProps = pick(props, ["placement", "trigger", "transition", "showArrow", "disabled", "block", "offset", "timer", "width", "popperStyle"]);
+const tooltipProps = pick(props, ["placement", "trigger", "transition", "showArrow", "disabled", "block", "offset", "width", "popperStyle"]);
 const emits = defineEmits<MPopconfirmEmits>();
 const tooltipRef = useTemplateRef<MTooltipInstance>("tooltipRef");
 
@@ -107,19 +106,19 @@ defineExpose<MPopconfirmInstance>({
     box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     padding: 8px 12px;
     &.popconfirm--primary .popconfirm__header :deep(.m-icon) {
-        color: #1d4ed8;
+        color: #409eff;
     }
     &.popconfirm--success .popconfirm__header :deep(.m-icon) {
-        color: #1c7a3f;
+        color: #67c23a;
     }
     &.popconfirm--warning .popconfirm__header :deep(.m-icon) {
-        color: #be8b3f;
+        color: #e6a23c;
     }
     &.popconfirm--danger .popconfirm__header :deep(.m-icon) {
-        color: #c0273a;
+        color: #f56c6c;
     }
     &.popconfirm--info .popconfirm__header :deep(.m-icon) {
-        color: #13c2c2;
+        color: #17a2b8;
     }
 
     .popconfirm__header {

@@ -106,55 +106,49 @@ defineExpose({
     padding: 12px 16px;
     font-size: 14px;
     font-weight: 500;
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
 
     // Primary 样式
     &.message--primary {
         background: linear-gradient(135deg, #e9f2ff 0%, #d8e8ff 100%);
         border: 1px solid #a8c7ff;
         color: #1d4ed8;
-        box-shadow: 0 10px 24px rgba(33, 99, 255, 0.16);
     }
     // 警告样式
     &.message--warning {
         background: linear-gradient(135deg, #fff9eb 0%, #ffe8c7 100%);
         border: 1px solid #f2c078;
         color: #b25a00;
-        box-shadow: 0 10px 24px rgba(255, 179, 71, 0.24);
     }
     // 成功样式
     &.message--success {
         background: linear-gradient(135deg, #e9f7ef 0%, #d6f0e1 100%);
         border: 1px solid #8fd4aa;
         color: #1c7a3f;
-        box-shadow: 0 10px 24px rgba(46, 204, 113, 0.16);
     }
     // 危险样式
     &.message--danger {
         background: linear-gradient(135deg, #ffe9ed 0%, #ffd4dc 100%);
         border: 1px solid #f39aa6;
         color: #c0273a;
-        box-shadow: 0 10px 24px rgba(236, 72, 117, 0.16);
     }
     // 信息样式 - 青色
     &.message--info {
         background: linear-gradient(135deg, #ecfcff 0%, #d9f3f8 100%);
         border: 1px solid #7ed3ec;
         color: #0f7490;
-        box-shadow: 0 10px 24px rgba(14, 165, 233, 0.16);
     }
     // 紫色样式
     &.message--purple {
         background: linear-gradient(135deg, #f4f0ff 0%, #e2d8ff 100%);
         border: 1px solid #b9a6ff;
         color: #6d28d9;
-        box-shadow: 0 10px 24px rgba(109, 40, 217, 0.16);
     }
     // 粉色样式
     &.message--pink {
         background: linear-gradient(135deg, #fff0f7 0%, #ffd9ec 100%);
         border: 1px solid #f6a6c2;
         color: #c2185b;
-        box-shadow: 0 10px 24px rgba(244, 114, 182, 0.16);
     }
     .message-icon {
         margin-right: 8px;

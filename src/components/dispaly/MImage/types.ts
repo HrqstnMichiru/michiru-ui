@@ -11,7 +11,7 @@ export interface MImageProps {
     rounded?: boolean; // 胶囊图片
     errorSize?: "small" | "medium" | "large" | number; // 错误文字的大小
     showBorder?: boolean; // 是否显示边框
-    previewDisabled?: boolean; // 是否禁用图片预览功能
+    previewEnabled?: boolean; // 是否启用图片预览功能
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
     lazy?: boolean; // 是否启用懒加载
@@ -30,7 +30,7 @@ export interface MImageGalleryProps {
     fit?: "fill" | "contain" | "cover" | "scale-down" | "none"; // 图片适应方式
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
-    previewDisabled?: boolean; // 是否禁用图片预览功能
+    previewEnabled?: boolean; // 是否启用图片预览功能
     errorSize?: "small" | "medium" | "large" | number; // 错误文字的大小
     lazy?: boolean; // 是否启用懒加载
     urlFormat?: (url: string) => string; // 图片地址的格式化函数
@@ -43,6 +43,7 @@ export interface MImageGroupProps {
     showToolbar?: boolean; // 是否在预览时显示工具栏
     showTooltip?: boolean; // 是否在工具栏按钮上显示工具提示
     lazy?: boolean; // 是否启用懒加载
+    previewEnabled?: boolean; // 是否启用图片预览功能
     urlFormat?: (url: string) => string; // 图片地址的格式化函数
 }
 export interface MImageGroupInstance {

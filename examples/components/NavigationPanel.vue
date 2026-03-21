@@ -207,6 +207,12 @@
                 <MPagination :total-count="180" :page-count="5" variant="primary" outlined />
             </div>
 
+            <p style="margin-top: 16px">禁用状态（disabled）</p>
+            <div style="display: flex; flex-direction: column; gap: 12px">
+                <MPagination :total-count="180" :page-count="5" disabled />
+                <MPagination :total-count="320" show-total show-page-size :page-size-options="[10, 20, 50, 100]" :page-size="20" :page-count="5" variant="primary" plain disabled />
+            </div>
+
             <p style="margin-top: 16px">当前操作：{{ paginationLog }}</p>
         </MCard>
     </div>
@@ -214,7 +220,7 @@
 
 <script lang="ts" setup>
 import type { VMenuInstance } from "@/components";
-import { MButton, MCard, MDropdown, MDropdownItem, MFlex, MHMenu, MHMenuItem, MHSubMenu, MMessage, MPagination, MVMenu, MVMenuItem, MVSubMenu, MTooltipProvider } from "@/components";
+import { MButton, MCard, MDropdown, MDropdownItem, MFlex, MHMenu, MHMenuItem, MHSubMenu, MMessage, MPagination, MTooltipProvider, MVMenu, MVMenuItem, MVSubMenu } from "@/components";
 import { ref } from "vue";
 
 // MVMenu
@@ -226,26 +232,13 @@ const toggleMenu = () => {
     menuCollapsed.value = !menuCollapsed.value;
 };
 
-// EMenu
-const eMenuCollapsed = ref(false);
-const eMenuLog = ref("");
-const onEMenuSelect = (index: string, indexPath: string[]) => {
-    eMenuLog.value = `select: ${index}  path: [${indexPath.join(" >> ")}]`;
-};
-const onEMenuOpen = (index: string) => {
-    eMenuLog.value = `open: ${index}`;
-};
-const onEMenuClose = (index: string) => {
-    eMenuLog.value = `close: ${index}`;
-};
-
 // MDropdown
 const handleDropdownClick = (item: string) => {
     MMessage.success(`点击了：${item}`);
 };
 
 // MPagination
-const paginationLog = ref("当前操作：等待操作...");
+const paginationLog = ref("等待操作...");
 
 const handlePageChange = (page: number) => {
     paginationLog.value = `切换到第${page}页`;

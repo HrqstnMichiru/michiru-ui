@@ -4,7 +4,7 @@
         :style="{
             gap: Array.isArray(gap) ? `${gap[1]}px ${gap[0]}px` : `${gap}px`,
             gridTemplateColumns: templateColumns,
-            placeItems: aligns
+            placeItems: placeItemsValue
         }">
         <slot></slot>
     </div>
@@ -21,12 +21,16 @@ defineOptions({
 const props = withDefaults(defineProps<MGridProps>(), {
     gap: 0,
     aligns: "stretch",
-    cols: 24,
-    minWidth: undefined,
-    maxWidth: undefined
+    cols: 24
 });
 
 const autoLayout = computed(() => !!props.minWidth && props.minWidth > 0);
+const mapGridAlignment = (value: string) => {
+    if (value === "start") return "flex-start";
+    if (value === "end") return "flex-end";
+    return value;
+};
+const placeItemsValue = computed(() => mapGridAlignment(props.aligns));
 const templateColumns = computed(() => {
     if (!autoLayout.value) {
         return `repeat(${props.cols}, 1fr)`;

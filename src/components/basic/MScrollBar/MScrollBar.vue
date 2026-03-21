@@ -1,7 +1,7 @@
 <template>
     <div
-        class="m-scroll-bar"
-        :class="[`m-scroll-bar--${scrollbar}`]"
+        data-overlayscrollbars-initialize
+        ref="scrollbarRef"
         :style="{
             maxHeight: `${maxHeight}px`,
             height: `${height}px`,
@@ -14,40 +14,34 @@
 </template>
 
 <script lang="ts" setup>
+import { OverlayScrollbars } from "OverlayScrollbars";
+import { onMounted, useTemplateRef } from "vue";
 import type { MScrollBarProps } from "./types";
 
 defineOptions({
     name: "MScrollBar"
 });
 const props = withDefaults(defineProps<MScrollBarProps>(), {
-    scrollbar: "always"
+    scrollbar: "always",
+    overflowX: "scroll",
+    overflowY: "scroll"
+});
+const scrollbarRef = useTemplateRef<HTMLDivElement>("scrollbarRef");
+
+onMounted(() => {
+    if (scrollbarRef.value) {
+        OverlayScrollbars(scrollbarRef.value, {
+            scrollbars: {
+                clickScroll: true,
+                theme: "os-theme-dark",
+                visibility: props.scrollbar === "always" ? "visible" : "hidden"
+            },
+            overflow: {
+                x: props.overflowX,
+                y: props.overflowY
+            }
+        });
+    }
 });
 </script>
 
-<style lang="scss" scoped>
-.m-scroll-bar {
-    position: relative;
-    width: 100%;
-    overflow: auto;
-    &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2);
-        border-radius: 3px;
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-    }
-    &.m-scroll-bar--never {
-        &::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-        }
-        &::-webkit-scrollbar-thumb {
-            background-color: transparent;
-        }
-    }
-}
-</style>

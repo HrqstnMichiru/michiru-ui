@@ -66,7 +66,7 @@
                         <span>全选</span>
                     </div>
                 </slot>
-                <MScrollBar :max-height="maxHeight" :right="0">
+                <MScrollBar :max-height="maxHeight">
                     <slot></slot>
                     <span v-if="toggleValueMap.size === 0" class="m-select-empty">暂无数据</span>
                 </MScrollBar>

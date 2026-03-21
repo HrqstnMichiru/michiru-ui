@@ -92,7 +92,9 @@ const iconMap: Record<MNotificationVariant, string> = {
     success: "ooui:success",
     warning: "streamline:warning-octagon-solid",
     danger: "zondicons:close-solid",
-    info: "bi:info-circle-fill"
+    info: "bi:info-circle-fill",
+    purple: "bi:info-circle-fill",
+    pink: "bi:info-circle-fill"
 };
 
 const onAfterLeave = () => {
@@ -141,7 +143,7 @@ defineExpose({
     display: flex;
     transition: all 0.3s ease;
     flex-direction: column;
-    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.12);
     user-select: none;
 
     // Primary 样式
@@ -173,6 +175,18 @@ defineExpose({
         background: linear-gradient(135deg, #ecfcff 0%, #d9f3f8 100%);
         border: 1px solid #7ed3ec;
         color: #0f7490;
+    }
+     // 紫色样式
+    &.message--purple {
+        background: linear-gradient(135deg, #f4f0ff 0%, #e2d8ff 100%);
+        border: 1px solid #b9a6ff;
+        color: #6d28d9;
+    }
+    // 粉色样式
+    &.message--pink {
+        background: linear-gradient(135deg, #fff0f7 0%, #ffd9ec 100%);
+        border: 1px solid #f6a6c2;
+        color: #c2185b;
     }
 
     .notification__header {

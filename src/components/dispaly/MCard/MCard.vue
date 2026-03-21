@@ -1,36 +1,33 @@
 <template>
-    <div class="m-card" :class="[`m-card--shadow-${shadow}`]">
+    <div class="m-card" :class="[`m-card--${shadow}`]">
         <div
             class="m-card__header"
             v-if="slots.header || title"
-            :style="headerStyle"
-            :class="{
-                'm-card__header--centered': center
+            :style="{
+                ...headerStyle,
+                justifyContent: center ? 'center' : 'flex-start'
             }">
-            <template v-if="title">
-                <span class="m-card__header-title">
+            <slot name="header">
+                <span class="m-card-title">
                     <MIcon :name="icon" v-if="icon" :color="colorMap[variant]"></MIcon>
                     <span>{{ title }}</span>
                 </span>
-            </template>
-            <template v-else>
-                <slot name="header"></slot>
-            </template>
+            </slot>
         </div>
         <div
             class="m-card__content"
-            :style="contentStyle"
-            :class="{
-                'm-card__content--centered': center
+            :style="{
+                ...contentStyle,
+                justifyContent: center ? 'center' : 'flex-start'
             }">
             <slot></slot>
         </div>
         <div
             class="m-card__footer"
             v-if="slots.footer"
-            :style="footerStyle"
-            :class="{
-                'm-card__footer--centered': center
+            :style="{
+                ...footerStyle,
+                justifyContent: center ? 'center' : 'flex-end'
             }">
             <slot name="footer"></slot>
         </div>
@@ -71,14 +68,11 @@ const colorMap: Record<MCardIconVariant, string> = {
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid rgb(220, 223, 230);
-    &.m-card--shadow-always {
+    &.m-card--always {
         box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     }
-    &.m-card--shadow-hover:hover {
+    &.m-card--hover:hover {
         box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    &.m-card--shadow-never {
-        box-shadow: none;
     }
     // &.m-card--blurable {
     //     background-color: rgba(255, 255, 255, 0.6);
@@ -88,7 +82,6 @@ const colorMap: Record<MCardIconVariant, string> = {
         display: flex;
         padding: 12px 16px 8px;
         align-items: center;
-        justify-content: space-between;
         gap: 6px;
         border-bottom: 1px solid rgb(220, 223, 230);
         color: rgb(41, 52, 61);
@@ -96,10 +89,7 @@ const colorMap: Record<MCardIconVariant, string> = {
         font-weight: 500;
         line-height: 1.5;
         white-space: nowrap;
-        &.m-card__header--centered {
-            justify-content: center;
-        }
-        .m-card__header-title {
+        .m-card-title {
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -110,20 +100,13 @@ const colorMap: Record<MCardIconVariant, string> = {
         display: flex;
         flex-direction: column;
         padding: 16px 24px;
-        &.m-card__content--centered {
-            justify-content: center;
-        }
     }
     .m-card__footer {
         display: flex;
-        padding: 8px 16px 12px;
+        padding: 8px 12px 12px;
         gap: 12px;
         align-items: center;
         border-top: 1px solid rgb(220, 223, 230);
-        justify-content: flex-end;
-        &.m-card__footer--centered {
-            justify-content: center;
-        }
     }
 }
 </style>

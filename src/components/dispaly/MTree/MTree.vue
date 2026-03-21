@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="tree">
         <TreeNode v-for="node in _data" :key="node.nodeKey" v-bind="node">
             <template #default="{ node: slotNode, data: slotData }: { node: MTreeNodeProps<T>; data: T }">
@@ -29,10 +29,11 @@ const props = withDefaults(defineProps<MTreeProps<T>>(), {
     expandedKeys: (): Array<number | string> => [],
     data: () => []
 });
-const emits = defineEmits<MTreeEmits>();
+const emits = defineEmits<MTreeEmits<T>>();
 
-const selectedNodes = shallowReactive<Set<MTreeNodeProps>>(new Set()); // 当前选中节点集合
+const selectedNodes = shallowReactive<Set<MTreeNodeProps<T>>>(new Set()); // 当前选中节点集合
 const selectedNodeCount = ref<number>(0); // 可选节点总数
+const currentNode = ref<MTreeNodeProps<T> | null>(null); // 当前操作节点
 const getDataKey = (node: T): string | number => node[props.nodeKey];
 const getDataLabel = (node: T): string => node[props.nodeLabel];
 
@@ -285,17 +286,25 @@ if (expandAll.value) {
 }
 
 const nodeClick = (node: MTreeNodeProps<T>) => {
+    if (props.highlightCurrent) {
+        currentNode.value = node;
+    }
     emits("node-click", node);
+};
+
+const isCurrentNode = (nodeKey: string | number) => {
+    return props.highlightCurrent && !!currentNode.value && currentNode.value.nodeKey === nodeKey;
 };
 
 const getSelectedNodes = (): T[] => {
     return Array.from(selectedNodes).map(node => node.data);
 };
 
-provide<MTreeContext>(MTreeContextKey, {
+provide<MTreeContext<T>>(MTreeContextKey, {
     toggleSelect,
     toggleExpand,
     nodeClick,
+    isCurrentNode,
     onlyPrefix: props.onlyPrefix,
     duration: props.duration
 });

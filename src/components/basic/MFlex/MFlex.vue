@@ -5,11 +5,13 @@
             flexDirection: vertical ? 'column' : 'row',
             columnGap: `${gapX}px`,
             rowGap: `${gapY}px`,
-            alignItems: aligns,
-            justifyContent: justify,
+            alignItems: wrap ? undefined : alignItemsValue,
+            alignContent: wrap ? alignItemsValue : undefined,
+            justifyContent: justifyContentValue,
             flexWrap: wrap ? 'wrap' : 'nowrap',
             marginLeft: offsetMargin,
-            flex: flexBasis
+            flex: flexValue,
+            minWidth: 0
         }">
         <slot></slot>
     </div>
@@ -31,7 +33,8 @@ const props = withDefaults(defineProps<MFlexProps>(), {
     wrap: false,
     offset: 0,
     inline: false,
-    span: 0
+    span: 0,
+    fill: false
 });
 
 const parentFlexContext = inject<MFlexContext | null>(MFlexContextKey, null);
@@ -40,6 +43,22 @@ const gapX = computed(() => (Array.isArray(props.gap) ? props.gap[0] : props.gap
 const gapY = computed(() => (Array.isArray(props.gap) ? props.gap[1] : props.gap));
 const gapForSpan = computed(() => (props.vertical ? 0 : gapX.value));
 const parentGapForSpan = computed(() => parentFlexContext?.gapForSpan ?? 0);
+const mapFlexAlignment = (value: string) => {
+    switch (value) {
+        case "start":
+            return "flex-start";
+        case "end":
+            return "flex-end";
+        case "around":
+            return "space-around";
+        case "between":
+            return "space-between";
+        default:
+            return value;
+    }
+};
+const alignItemsValue = computed(() => mapFlexAlignment(props.aligns));
+const justifyContentValue = computed(() => mapFlexAlignment(props.justify));
 
 provide(MFlexContextKey, {
     get gapForSpan() {
@@ -47,7 +66,8 @@ provide(MFlexContextKey, {
     }
 });
 
-const flexBasis = computed(() => {
+const flexValue = computed(() => {
+    if (props.fill) return "1";
     if (props.span <= 0) return "initial";
     const percent = (props.span / 24) * 100;
     const gapOffset = ((24 - props.span) / 24) * parentGapForSpan.value;

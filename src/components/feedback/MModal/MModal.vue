@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <MOverlay @after-close="onAfterClose" ref="overlayRef" :maskClosable="maskClosable" :zIndex="zIndex" :transition="transition" :top="top" :center="center">
         <div @click.stop class="modal" ref="modalRef" :style="dialogStyle">
             <div
@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<MModalProps>(), {
     zIndex: 500,
     top: 100,
     center: false,
-    transition: "slide-down",
+    transition: "fade-translate",
     closable: true,
     footer: true,
     header: true,
@@ -90,7 +90,6 @@ const dialogStyle = computed(() => {
     if (props.draggable) {
         if (dialogPosition.left) style.left = `${dialogPosition.left}px`;
         if (dialogPosition.top) style.top = `${dialogPosition.top}px`;
-        style.transform = "none";
         style.position = "fixed";
     }
 
@@ -142,14 +141,21 @@ const onHeaderMouseDown = (event: MouseEvent) => {
         dragStart.y = event.clientY;
         dragStart.left = rect.left;
         dragStart.top = rect.top;
+        dialogSize.width = rect.width;
+        dialogSize.height = rect.height;
     }
 
     const onMouseMove = (e: MouseEvent) => {
         const deltaX = e.clientX - dragStart.x;
         const deltaY = e.clientY - dragStart.y;
 
-        const newLeft = Math.max(0, Math.min(window.innerWidth - 300, dragStart.left + deltaX));
-        const newTop = Math.max(0, Math.min(window.innerHeight - 200, dragStart.top + deltaY));
+        const currentWidth = dialogSize.width || modalRef.value?.offsetWidth || 0;
+        const currentHeight = dialogSize.height || modalRef.value?.offsetHeight || 0;
+        const maxLeft = Math.max(1, window.innerWidth - currentWidth);
+        const maxTop = Math.max(1, window.innerHeight - currentHeight);
+
+        const newLeft = Math.max(1, Math.min(maxLeft, dragStart.left + deltaX));
+        const newTop = Math.max(1, Math.min(maxTop, dragStart.top + deltaY));
 
         dialogPosition.left = newLeft;
         dialogPosition.top = newTop;
@@ -215,7 +221,7 @@ defineExpose<MModalInstance>({
     }
     .modal__footer {
         display: flex;
-        padding: 12px 16px 16px;
+        padding: 8px 12px 12px;
         gap: 12px;
         align-items: center;
         border-top: 1px solid rgb(220, 223, 230);

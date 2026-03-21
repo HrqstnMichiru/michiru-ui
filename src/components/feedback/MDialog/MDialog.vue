@@ -98,7 +98,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dialog {
-    background: #ffffff;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
     padding: 16px 20px;
@@ -106,7 +106,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: linear-gradient(135deg, #faf5ff 0%, #fef3f2 50%, #f0f9ff 100%);
 
     &.dialog--primary .dialog-icon {
         color: #409eff;

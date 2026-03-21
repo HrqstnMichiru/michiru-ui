@@ -91,6 +91,7 @@ const onClick = () => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    font-family: inherit;
     border: 1px solid transparent;
     white-space: nowrap;
     font-weight: 500;
@@ -123,7 +124,7 @@ const onClick = () => {
 
     // 小尺寸
     &.m-btn--small {
-        padding: 5.2px 7.2px;
+        padding: 5.2px 8.2px;
         height: 28px;
         border-radius: 4px;
         .m-btn__prefix {
@@ -144,7 +145,7 @@ const onClick = () => {
     }
     // 中等尺寸
     &.m-btn--medium {
-        padding: 7.2px 9.2px;
+        padding: 7.2px 10.2px;
         height: 34px;
         border-radius: 6px;
         .m-btn__prefix {
@@ -165,7 +166,7 @@ const onClick = () => {
     }
     // 大尺寸
     &.m-btn--large {
-        padding: 9.2px 11.2px;
+        padding: 9.2px 12.2px;
         height: 40px;
         border-radius: 8px;
         .m-btn__prefix {
@@ -188,6 +189,18 @@ const onClick = () => {
     // 胶囊按钮
     &.m-btn--round {
         border-radius: 20px;
+        &.m-btn--small {
+            padding-left: 13.2px;
+            padding-right: 13.2px;
+        }
+        &.m-btn--medium {
+            padding-left: 16.2px;
+            padding-right: 16.2px;
+        }
+        &.m-btn--large {
+            padding-left: 19.2px;
+            padding-right: 19.2px;
+        }
     }
 
     // 圆形按钮
@@ -196,12 +209,15 @@ const onClick = () => {
         padding: 0;
         &.m-btn--small {
             width: 28px;
+            height: 28px;
         }
         &.m-btn--medium {
             width: 34px;
+            height: 34px;
         }
         &.m-btn--large {
             width: 40px;
+            height: 40px;
         }
     }
 
@@ -213,13 +229,6 @@ const onClick = () => {
     // 加载状态
     &.m-btn--loading {
         cursor: wait;
-    }
-
-    // 禁用状态
-    &.m-btn--disabled {
-        cursor: not-allowed !important;
-        box-shadow: none;
-        pointer-events: none;
     }
 
     // 水平按钮组
@@ -621,19 +630,18 @@ const onClick = () => {
         }
     }
 
-    // 禁用配色（统一收敛到灰阶，不使用透明度）
+    // 禁用配色
     &.m-btn--disabled {
+        cursor: not-allowed !important;
+        pointer-events: none;
+        background-color: #c0c4cc;
+        border-color: #c0c4cc;
+        color: #ffffff;
         &.m-btn--plain,
         &.m-btn--outline {
             background-color: #f5f7fa;
             border-color: #e4e7ed;
             color: #c0c4cc;
-        }
-
-        &:not(.m-btn--plain):not(.m-btn--outline) {
-            background-color: #c0c4cc;
-            border-color: #c0c4cc;
-            color: #ffffff;
         }
     }
 }

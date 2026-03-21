@@ -3,7 +3,7 @@ export interface MModalProps {
     zIndex?: number;
     center?: boolean;
     top?: number;
-    transition?: "fade-translate" | "slide-down" | "none";
+    transition?: "fade-translate" | "slide-down" | "fade" | "none";
 
     title?: string;
     width?: number;

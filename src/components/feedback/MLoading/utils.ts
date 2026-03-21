@@ -3,7 +3,7 @@ import MLoading from "./MLoading.vue";
 import type { MLoadingInstance, MLoadingProps } from "./types";
 
 let globalLoadingInstance: MLoadingInstance | null = null;
-const createLoading = (): MLoadingInstance => {
+const createLoading = (duration?: number): MLoadingInstance => {
     if (globalLoadingInstance !== null) {
         return globalLoadingInstance;
     }
@@ -15,7 +15,8 @@ const createLoading = (): MLoadingInstance => {
             container.remove();
             globalLoadingInstance = null;
         },
-        target: "body"
+        target: "body",
+        duration: duration ?? 300
     };
 
     const vnode = h(MLoading, props);

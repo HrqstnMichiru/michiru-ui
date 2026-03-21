@@ -1,14 +1,25 @@
 <template>
     <div class="m-pagination-wrapper" :style="{ justifyContent: alignMap[position] }">
-        <div class="m-pagination" :class="[`m-pagination-${size}`, `m-pagination--${props.variant}`, `m-pagination-mode--${paginationMode}`]" :style="paginationVars">
+        <div
+            class="m-pagination"
+            :class="[
+                `m-pagination-${size}`,
+                `m-pagination--${variant}`,
+                {
+                    'm-pagination--disabled': disabled,
+                    'm-pagination--outlined': outlined,
+                    'm-pagination--plain': plain
+                }
+            ]"
+            :style="paginationVars">
             <span class="total-text" v-if="showTotal">{{ `共${totalCount}条` }}</span>
 
             <span @click="toPrevPage">
-                <slot name="prev" :disabled="currentPage === 1">
+                <slot name="prev" :disabled="disabled || currentPage === 1">
                     <span
                         class="prev"
                         :class="{
-                            'is-disabled': currentPage === 1
+                            'is-disabled': disabled || currentPage === 1
                         }">
                         <MIcon name="ic:round-arrow-back-ios-new" class="prev-icon"></MIcon>
                     </span>
@@ -24,11 +35,12 @@
                             </span>
                         </template>
                         <template v-else>
-                            <slot :data="item" :active="item.page === currentPage" name="item">
+                            <slot :data="item" :active="item.page === currentPage" :disabled="disabled" name="item">
                                 <span
                                     class="page-item"
                                     :class="{
-                                        'is-active': item.page === currentPage
+                                        'is-active': item.page === currentPage,
+                                        'is-disabled': disabled
                                     }">
                                     {{ item.label }}
                                 </span>
@@ -39,18 +51,18 @@
             </ul>
 
             <span @click="toNextPage">
-                <slot name="next" :disabled="currentPage === totalPages">
+                <slot name="next" :disabled="disabled || currentPage === totalPages">
                     <span
                         class="next"
                         :class="{
-                            'is-disabled': currentPage === totalPages
+                            'is-disabled': disabled || currentPage === totalPages
                         }">
                         <MIcon name="ic:round-arrow-back-ios-new" class="next-icon"></MIcon>
                     </span>
                 </slot>
             </span>
 
-            <MSelect v-if="showPageSize" v-model="pageSize" :width="110" :size="size">
+            <MSelect v-if="showPageSize" v-model="pageSize" :width="110" :size="size" :disabled="disabled">
                 <MOption v-for="size in pageSizeOptions" :key="size" :value="size" :label="`${size}/每页`" />
             </MSelect>
         </div>
@@ -187,6 +199,7 @@ const pageItems = computed(() => {
 });
 
 const handlePageChange = (item: PageItem) => {
+    if (props.disabled) return;
     if (item.type === "ellipsis") return;
     if (item.page === currentPage.value) return;
     currentPage.value = item.page;
@@ -202,6 +215,7 @@ watch(
 );
 
 const toPrevPage = () => {
+    if (props.disabled) return;
     if (currentPage.value > 1) {
         currentPage.value -= 1;
         emits("page-change", currentPage.value);
@@ -209,6 +223,7 @@ const toPrevPage = () => {
 };
 
 const toNextPage = () => {
+    if (props.disabled) return;
     if (currentPage.value < totalPages.value) {
         currentPage.value += 1;
         emits("page-change", currentPage.value);
@@ -421,17 +436,36 @@ const toNextPage = () => {
             align-items: center;
             gap: 8px;
         }
-        &.m-pagination-mode--default {
-            --m-pagination-active-border: var(--m-pagination-variant-color);
-            --m-pagination-active-color: #fff;
-            --m-pagination-active-bg: var(--m-pagination-variant-color);
+        &.m-pagination--disabled {
+            .total-text {
+                background: none;
+                color: #a8abb2;
+                -webkit-text-fill-color: currentColor;
+            }
+            .prev,
+            .next,
+            .page-item {
+                cursor: not-allowed;
+                color: #c0c4cc;
+                background-color: #f5f7fa;
+                border-color: #e4e7ed;
+            }
+            .page-item.is-active {
+                color: #c0c4cc;
+                background-color: #f0f2f5;
+                border-color: #e4e7ed;
+            }
+            .page-item.is-ellipsis {
+                background-color: transparent;
+                border-color: transparent;
+            }
         }
-        &.m-pagination-mode--plain {
+        &.m-pagination--plain {
             --m-pagination-active-border: var(--m-pagination-variant-color);
             --m-pagination-active-color: var(--m-pagination-variant-color);
             --m-pagination-active-bg: var(--m-pagination-variant-light);
         }
-        &.m-pagination-mode--outlined {
+        &.m-pagination--outlined {
             --m-pagination-active-border: var(--m-pagination-variant-color);
             --m-pagination-active-color: var(--m-pagination-variant-color);
             --m-pagination-active-bg: #fff;
